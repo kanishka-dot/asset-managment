@@ -9,7 +9,8 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
 import Button from "@material-ui/core/Button";
 import Link from "@material-ui/core/Link";
-import logoimg from "../assets/images/Arpico1.jpg";
+import logoimg from "../../../assets/images/Arpico1.jpg";
+import { useHistory } from "react-router-dom";
 
 function Copyright() {
   return (
@@ -65,8 +66,20 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+
+
+
 function Login() {
+
   const classes = useStyles();
+  let History = useHistory();
+
+  
+  function handleSubmit(e) {
+   
+    History.push('/app')
+  }
+
 
   return (
     <div className={classes.root}>
@@ -104,7 +117,7 @@ function Login() {
                 <Typography variant="subtitle2" gutterBottom>
                   IT Related Inventory Management
                 </Typography>
-                <form className={classes.form} validate={true}>
+                <form className={classes.form} validate={true} onSubmit={handleSubmit}>
                   <TextField
                     variant="outlined"
                     margin="normal"
@@ -141,15 +154,19 @@ function Login() {
                     control={<Checkbox value="remember" color="primary" />}
                     label="Remember me"
                   />
+               
                   <Button
                     type="submit"
                     fullWidth
                     variant="contained"
                     color="primary"
+                    value="submit"
                     className={classes.submit}
                   >
+                  
                     LOG IN
                   </Button>
+               
                   <Grid container>
                     <Grid item xs>
                       <Link href="#" variant="body2">

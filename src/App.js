@@ -3,21 +3,20 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
-  HashRouter,
 } from "react-router-dom";
 import PrivateRoute from "./auth/privateRoute";
-import Loging from "./main/login";
+import Loging from "./components/pages/login/login";
 import Layout from "./components/layout/Layout";
 
 function App() {
   return (
     <div>
-      <HashRouter>
+      <Router>
         <Switch>
           <Route path="/" exact component={Loging} />
           <PrivateRoute path="/app" component={Layout} />
         </Switch>
-      </HashRouter>
+      </Router>
     </div>
   );
 }
