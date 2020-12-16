@@ -72,6 +72,8 @@ const initalValues = {
 };
 
 export default function InventoryForm() {
+  console.log("Its woeking");
+  
   const handleInputChange = (e) => {
     const { name, value } = e.target;
 

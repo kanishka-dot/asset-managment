@@ -15,7 +15,7 @@ import SidebarListItem from "./SidebarListItem";
 import SideNavItemGroup from "./SideNavItemGroup";
 import Items from "./SideNavData";
 
-const drawerWidth = 300;
+const drawerWidth = 250;
 
 const useStyles = makeStyles((theme) => ({
   timebar: {

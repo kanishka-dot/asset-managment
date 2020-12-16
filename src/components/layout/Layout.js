@@ -8,16 +8,16 @@ import Home from "../../pages/Home/Home";
 
 function Layout() {
   return (
-    <div>
-     
-      <Switch>
-      <Dashboard />
-        <Route exact path="app/home" component={Home} />
-        <Route path="app/inventory/create" component={InventoryForm} />
-        <Route path="app/inventory/search" component={Search} />
-        <Route path="app/inventory/transfer" component={Transfer} />
+    
+<>
+      <Dashboard /> 
+      <Switch> 
+        <Route exact path="/app/home" component={Home} />  
+        <Route path="/app/inventory/create" component={InventoryForm} />
+        <Route path="/app/inventory/search" component={Search} />
+        <Route path="/app/inventory/transfer" component={Transfer} /> 
       </Switch>
-    </div>
+      </>
   );
 }
 

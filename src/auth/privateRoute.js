@@ -2,8 +2,11 @@ import React from "react";
 import { Route, Redirect } from "react-router-dom";
 // import Authentication from "./LogingAuth";
 
+
 function privateRoute(props) {
+  
   return (
+    
     <Route
       path={props.path}
       render={(data) =>
@@ -13,7 +16,9 @@ function privateRoute(props) {
           <Redirect to={{ pathname: "/" }}></Redirect>
         )
       }
+      
     ></Route>
+   
   );
 }
 

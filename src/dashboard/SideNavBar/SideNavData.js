@@ -14,7 +14,7 @@ const Items = [
   {
     title: "Dashboard",
     icon: <DashboardIcon color="primary" />,
-    path: "app/Home",
+    path: "/app/Home",
   },
 
   {
@@ -23,22 +23,22 @@ const Items = [
     items: [
       {
         title: "Create",
-        path: "app/inventory/create",
+        path: "/app/inventory/create",
         icon: <AddIcon color="primary" />,
       },
       {
         title: "Search",
-        path: "app/inventory/search",
+        path:  "/app/inventory/search",
         icon: <SearchIcon color="primary" />,
       },
       {
         title: "Transfer",
-        path: "app/inventory/transfer",
+        path:  "/app/inventory/transfer",
         icon: <CallMadeIcon color="primary" />,
       },
       {
         title: "Receive",
-        path: "app/inventory/receive",
+        path:  "/app/inventory/receive",
         icon: <CallReceivedIcon color="primary" />,
       },
     ],
@@ -49,7 +49,7 @@ const Items = [
     items: [
       {
         title: "Create User",
-        path: "app/users/create",
+        path: "/app/users/create",
         icon: <AddIcon color="primary" />,
       },
     ],
@@ -60,7 +60,7 @@ const Items = [
     items: [
       {
         title: "Create Locations",
-        path: "app/location/create",
+        path: "/app/location/create",
         icon: <AddIcon color="primary" />,
       },
     ],
@@ -71,7 +71,7 @@ const Items = [
     items: [
       {
         title: "Exception Reports",
-        path: "app/reports/create",
+        path: "/app/reports/create",
         icon: <ReportIcon color="primary" />,
       },
     ],
