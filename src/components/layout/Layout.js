@@ -2,7 +2,7 @@ import React from "react";
 import { Switch, Route } from "react-router-dom";
 import Dashboard from "../../dashboard/SideNavBar/SideNav";
 import InventoryForm from "../../pages/Inventory/Create";
-import Search from "../../pages/Inventory/Search";
+import Search from "../pages/Inventory/Search";
 import Transfer from "../../pages/Inventory/Transfer";
 import Home from "../../pages/Home/Home";
 
