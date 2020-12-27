@@ -12,6 +12,8 @@
     "mui-datatables": "^3.7.3",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-form-helper": "^1.0.0-beta.8",
+    "react-hooks-helper": "^1.6.0",
     "react-input-mask": "^2.0.4",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.1",

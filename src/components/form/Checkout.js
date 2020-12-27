@@ -1,20 +1,17 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
+import { useForm } from "react-hooks-helper";
+import { FORM_INITAL_VALUE } from "./DataState";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
 import Paper from "@material-ui/core/Paper";
 import Stepper from "@material-ui/core/Stepper";
 import Step from "@material-ui/core/Step";
 import StepLabel from "@material-ui/core/StepLabel";
 import Button from "@material-ui/core/Button";
-import Link from "@material-ui/core/Link";
 import Typography from "@material-ui/core/Typography";
 import AddressForm from "./AddressForm";
 import PaymentForm from "./PaymentForm";
 import Review from "./Review";
-
-
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -25,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: theme.spacing(2),
     marginRight: theme.spacing(2),
     [theme.breakpoints.up(600 + theme.spacing(2) * 2)]: {
-      width: 1000,
+      width: "auto",
       marginLeft: "auto",
       marginRight: "auto",
     },
@@ -55,21 +52,26 @@ const useStyles = makeStyles((theme) => ({
 
 const steps = ["Basic Details", "More Details", "Review your order"];
 
-function getStepContent(step) {
-  switch (step) {
-    case 0:
-      return <AddressForm />;
-    case 1:
-      return <PaymentForm />;
-    case 2:
-      return <Review />;
-    default:
-      throw new Error("Unknown step");
-  }
-}
-
 export default function Checkout() {
+  const [formData, setValues] = useForm(FORM_INITAL_VALUE);
+
+  const props = { formData, setValues };
+
+  function getStepContent(step) {
+    switch (step) {
+      case 0:
+        return <AddressForm {...props} />;
+      case 1:
+        return <PaymentForm {...props} />;
+      case 2:
+        return <Review {...props} />;
+      default:
+        throw new Error("Unknown step");
+    }
+  }
+
   const classes = useStyles();
+
   const [activeStep, setActiveStep] = React.useState(0);
 
   const handleNext = () => {

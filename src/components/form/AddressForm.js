@@ -1,37 +1,30 @@
-import React, { useState } from "react";
+import React from "react";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
-import Data from "../../data/inventory.create.data";
 import InputMask from "react-input-mask";
-import {FORM_INITAL_VALUE} from "./DataState"
+import {
+  FormControl,
+  FormControlLabel,
+  FormLabel,
+  Radio,
+  RadioGroup,
+} from "@material-ui/core";
 
+export default function AddressForm({ formData, setValues }) {
+  const {
+    itemCode,
+    itemGroup,
+    itemDesc,
+    depRate,
+    supNo,
+    cost,
+    status,
+  } = formData;
 
-
-export default function AddressForm() {
-  
-    const handleInputChange = (e) => {
-
-          const { name, value } = e.target;
-          setValues({ ...values, [name]: value });
-        
-    };
-
-  const [values, setValues] = useState(FORM_INITAL_VALUE);
+  console.log(formData);
 
   /*Drop down list items mapping*/
-
-  const mainCat = Data.mainCat.map((data) => (
-        <option key={data.title} value={data.title}>
-          {data.title}
-        </option>
-    ));
-
-  const subCat = Data.subCat.map((data) => (
-        <option key={data.title} value={data.title}>
-          {data.title}
-        </option>
-    ));
 
   return (
     <React.Fragment>
@@ -45,8 +38,8 @@ export default function AddressForm() {
             id="standard-basic"
             label="Item Code"
             name="itemCode"
-            value={values.itemCode}
-            onChange={handleInputChange}
+            value={itemCode}
+            onChange={setValues}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
@@ -55,8 +48,8 @@ export default function AddressForm() {
             id="standard-basic"
             label="Item Group"
             name="itemGroup"
-            value={values.itemGroup}
-            onChange={handleInputChange}
+            value={itemGroup}
+            onChange={setValues}
           />
         </Grid>
         <Grid item xs={12}>
@@ -65,8 +58,8 @@ export default function AddressForm() {
             id="standard-basic"
             label="Item Description"
             name="itemDesc"
-            value={values.itemDesc}
-            onChange={handleInputChange}
+            value={itemDesc}
+            onChange={setValues}
           />
         </Grid>
         <Grid item xs={12}>
@@ -74,8 +67,8 @@ export default function AddressForm() {
             mask="99"
             disabled={false}
             maskChar=" "
-            value={values.depRate}
-            onChange={handleInputChange}
+            value={depRate}
+            onChange={setValues}
           >
             {() => (
               <TextField
@@ -86,26 +79,43 @@ export default function AddressForm() {
             )}
           </InputMask>
         </Grid>
-        <Grid item xs={12} sm={6}>
+        <Grid item xs={12} sm={3}>
           <TextField
             id="standard-basic"
             label="Supplier ID"
             name="supNo"
-            value={values.supNo}
-            onChange={handleInputChange}
+            value={supNo}
+            onChange={setValues}
           />
         </Grid>
-        <Grid item xs={12} sm={6}>
+        <Grid item xs={12} sm={3}>
           <InputMask
             mask="9999999"
-            onChange={handleInputChange}
+            onChange={setValues}
             maskChar=" "
-            value={values.cost}
+            value={cost}
           >
             {() => (
               <TextField id="standard-basic" label="Cost(Rs)" name="cost" />
             )}
           </InputMask>
+        </Grid>
+        <Grid item xs={12} sm={3}>
+          <FormControl>
+            <FormLabel>Status</FormLabel>
+            <RadioGroup row name="status" value={status} onChange={setValues}>
+              <FormControlLabel
+                value="Active"
+                control={<Radio />}
+                label="Active"
+              />
+              <FormControlLabel
+                value="Incactive"
+                control={<Radio />}
+                label="Inactive"
+              />
+            </RadioGroup>
+          </FormControl>
         </Grid>
       </Grid>
     </React.Fragment>

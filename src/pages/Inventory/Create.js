@@ -3,7 +3,7 @@ import UserCreate from "../../components/form/Checkout";
 import { Grid } from "@material-ui/core";
 
 const divStyle = {
-  marginTop: "2rem",
+  marginTop: "1rem",
   marginLeft: "15rem",
 };
 
