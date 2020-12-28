@@ -9,9 +9,9 @@ import Step from "@material-ui/core/Step";
 import StepLabel from "@material-ui/core/StepLabel";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
-import AddressForm from "./AddressForm";
-import PaymentForm from "./PaymentForm";
-import Review from "./Review";
+import AddressForm from "./FormOne";
+import PaymentForm from "./FormTwo";
+import Review from "./SummaryForm";
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -50,7 +50,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const steps = ["Basic Details", "More Details", "Review your order"];
+const steps = ["Basic Details", "More Details", "Summary"];
+
+
 
 export default function Checkout() {
   const [formData, setValues] = useForm(FORM_INITAL_VALUE);
@@ -102,12 +104,10 @@ export default function Checkout() {
             {activeStep === steps.length ? (
               <React.Fragment>
                 <Typography variant="h5" gutterBottom>
-                  Thank you for your order.
+                  
                 </Typography>
                 <Typography variant="subtitle1">
-                  Your order number is #2001539. We have emailed your order
-                  confirmation, and will send you an update when your order has
-                  shipped.
+                 Item Sucessfully Created
                 </Typography>
               </React.Fragment>
             ) : (
@@ -125,7 +125,7 @@ export default function Checkout() {
                     onClick={handleNext}
                     className={classes.button}
                   >
-                    {activeStep === steps.length - 1 ? "Place order" : "Next"}
+                    {activeStep === steps.length - 1 ? "Create" : "Next"}
                   </Button>
                 </div>
               </React.Fragment>

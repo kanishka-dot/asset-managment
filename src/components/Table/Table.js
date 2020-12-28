@@ -8,7 +8,7 @@ import Select from "@material-ui/core/Select";
 export default function Table() {
 
   const [responsive, setResponsive] = useState("vertical");
-  const [tableBodyHeight, setTableBodyHeight] = useState("400px");
+  const [tableBodyHeight, setTableBodyHeight] = useState("100%");
   const [tableBodyMaxHeight, setTableBodyMaxHeight] = useState("");
 
   const columns = ["Name", "Title", "Location"];
@@ -42,7 +42,7 @@ export default function Table() {
 
   return (
     <React.Fragment>
-      <FormControl>
+      {/* <FormControl>
         <InputLabel id="demo-simple-select-label">Responsive Option</InputLabel>
         <Select
           labelId="demo-simple-select-label"
@@ -76,10 +76,10 @@ export default function Table() {
           <MenuItem value={"800px"}>800px</MenuItem>
           <MenuItem value={"100%"}>100%</MenuItem>
         </Select>
-      </FormControl>
+      </FormControl> */}
 
       <MUIDataTable
-        title={"ACME Employee list"}
+        title={"Search Items"}
         data={data}
         columns={columns}
         options={options}

@@ -5,7 +5,7 @@ const FORM_INITAL_VALUE = {
   depRate: "",
   cost: "",
   supNo: "",
-  status: "active",
+  status: "",
   mainCatgry: "",
   subCatgry: "",
   brand: "",
@@ -17,5 +17,7 @@ const FORM_INITAL_VALUE = {
   ref2: "",
   ref3: "",
 };
+
+
 
 export { FORM_INITAL_VALUE };

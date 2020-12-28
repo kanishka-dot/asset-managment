@@ -1,5 +1,5 @@
 import React from "react";
-import UserCreate from "../../components/form/Checkout";
+import MultiForm from "../../components/form/MultiForm";
 import { Grid } from "@material-ui/core";
 
 const divStyle = {
@@ -12,7 +12,7 @@ function Create() {
     <div style={divStyle}>
       <Grid container>
         <Grid item xs>
-          <UserCreate />
+          <MultiForm />
         </Grid>
       </Grid>
     </div>
