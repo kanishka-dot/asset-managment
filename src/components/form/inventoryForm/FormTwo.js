@@ -2,7 +2,7 @@ import React from "react";
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
-import Data from "../../data/inventory.create.data";
+import Data from "../../../data/inventory.create.data";
 import { InputLabel, Select } from "@material-ui/core";
 
 export default function PaymentForm({ formData, setValues }) {

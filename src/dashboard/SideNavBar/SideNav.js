@@ -116,7 +116,7 @@ function ResponsiveDrawer(props) {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap>
-            Responsive drawer
+            BreadCrumb
           </Typography>
         </Toolbar>
       </AppBar>

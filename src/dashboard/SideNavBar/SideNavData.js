@@ -28,17 +28,17 @@ const Items = [
       },
       {
         title: "Search",
-        path:  "/app/inventory/search",
+        path: "/app/inventory/search",
         icon: <SearchIcon color="primary" />,
       },
       {
         title: "Transfer",
-        path:  "/app/inventory/transfer",
+        path: "/app/inventory/transfer",
         icon: <CallMadeIcon color="primary" />,
       },
       {
         title: "Receive",
-        path:  "/app/inventory/receive",
+        path: "/app/inventory/receive",
         icon: <CallReceivedIcon color="primary" />,
       },
     ],
@@ -49,7 +49,7 @@ const Items = [
     items: [
       {
         title: "Create User",
-        path: "/app/users/create",
+        path: "/app/users/createuser",
         icon: <AddIcon color="primary" />,
       },
     ],
