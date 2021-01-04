@@ -1,15 +1,18 @@
-import React, { useState } from "react";
+import React from "react";
 import MUIDataTable from "mui-datatables";
-import InputLabel from "@material-ui/core/InputLabel";
-import MenuItem from "@material-ui/core/MenuItem";
-import FormControl from "@material-ui/core/FormControl";
-import Select from "@material-ui/core/Select";
+// import InputLabel from "@material-ui/core/InputLabel";
+// import MenuItem from "@material-ui/core/MenuItem";
+// import FormControl from "@material-ui/core/FormControl";
+// import Select from "@material-ui/core/Select";
 
 export default function Table() {
+  const responsive = "vertical";
+  const tableBodyHeight = "100%";
+  const tableBodyMaxHeight = "";
 
-  const [responsive, setResponsive] = useState("vertical");
-  const [tableBodyHeight, setTableBodyHeight] = useState("100%");
-  const [tableBodyMaxHeight, setTableBodyMaxHeight] = useState("");
+  // const [responsive, setResponsive] = useState("vertical");
+  // const [tableBodyHeight, setTableBodyHeight] = useState("100%");
+  // const [tableBodyMaxHeight, setTableBodyMaxHeight] = useState("");
 
   const columns = ["Name", "Title", "Location"];
 
@@ -18,7 +21,7 @@ export default function Table() {
     filterType: "dropdown",
     responsive,
     tableBodyHeight,
-    tableBodyMaxHeight
+    tableBodyMaxHeight,
   };
 
   const data = [
@@ -26,7 +29,7 @@ export default function Table() {
     [
       "Aiden Lloyd",
       "Business Consultant for an International Company and CEO of Tony's Burger Palace",
-      "Dallas"
+      "Dallas",
     ],
     ["Jaden Collins", "Attorney", "Santa Ana"],
     ["Franky Rees", "Business Analyst", "St. Petersburg"],
@@ -37,7 +40,7 @@ export default function Table() {
     ["Joe Jones", "Computer Programmer", "El Paso"],
     ["Jacky Jackson", "Business Consultant", "Baltimore"],
     ["Jo Jo", "Software Developer", "Washington DC"],
-    ["Donna Marie", "Business Manager", "Annapolis"]
+    ["Donna Marie", "Business Manager", "Annapolis"],
   ];
 
   return (
