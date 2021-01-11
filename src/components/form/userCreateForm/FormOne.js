@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
@@ -12,10 +12,11 @@ import {
   Radio,
   RadioGroup,
   Select,
+  FormHelperText,
 } from "@material-ui/core";
 
 export default function AddressForm({ formData, setValues }) {
-  const { userId, userName, NIC, location, role, status } = formData;
+  let { userId, userName, NIC, location, role, status } = formData;
 
   /*Drop down list items mapping*/
   const INITLOCATIONS = INITDATA.LOCATIONS.map((data) => (
@@ -30,6 +31,20 @@ export default function AddressForm({ formData, setValues }) {
     </option>
   ));
 
+  // const [error, setError] = useState(initialState);
+
+
+  function formValidate(){
+
+
+    if(userId ===""){
+      console.log("userId Valid");
+      
+    }
+
+
+  }
+
   return (
     <React.Fragment>
       <Typography variant="h6" gutterBottom>
@@ -38,18 +53,22 @@ export default function AddressForm({ formData, setValues }) {
       <Grid container spacing={3}>
         <Grid item xs={12} sm={12}>
           <InputLabel htmlFor="age-native-simple">Location</InputLabel>
+          <FormControl     fullWidth>
           <Select
             autoFocus
             fullWidth
-            native
             name="location"
             id="location"
             value={location}
             onChange={setValues}
+            onClick={()=>{console.log("onBlur");}
+          }
           >
             <option value="" />
             {INITLOCATIONS}
           </Select>
+          <FormHelperText></FormHelperText>
+          </FormControl>
         </Grid>
         <Grid item xs={12} sm={12}>
           <TextField
@@ -59,6 +78,8 @@ export default function AddressForm({ formData, setValues }) {
             name="userId"
             value={userId}
             onChange={setValues}
+            onBlur={formValidate}
+            
           />
         </Grid>
         <Grid item xs={12}>
@@ -69,6 +90,7 @@ export default function AddressForm({ formData, setValues }) {
             name="userName"
             value={userName}
             onChange={setValues}
+            helperText=""
           />
         </Grid>
         <Grid item xs={12}>
@@ -86,7 +108,6 @@ export default function AddressForm({ formData, setValues }) {
           <InputLabel htmlFor="age-native-simple">Role</InputLabel>
           <Select
             fullWidth
-            native
             name="role"
             id="role"
             value={role}
