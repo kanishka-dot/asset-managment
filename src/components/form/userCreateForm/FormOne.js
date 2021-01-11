@@ -16,7 +16,7 @@ import {
 } from "@material-ui/core";
 
 export default function AddressForm({ formData, setValues }) {
-  let { userId, userName, NIC, location, role, status } = formData;
+  const { userId, userName, NIC, location, role, status } = formData;
 
   /*Drop down list items mapping*/
   const INITLOCATIONS = INITDATA.LOCATIONS.map((data) => (
@@ -35,7 +35,6 @@ export default function AddressForm({ formData, setValues }) {
 
 
   function formValidate(){
-
 
     if(userId ===""){
       console.log("userId Valid");
