@@ -1,8 +1,9 @@
 const FORM_VALIDATION = {
-  userId: {
-    value: "",
-    error: "User Name Required",
-  },
+  userId: "",
+  userName: "",
+  NIC: "",
+  location: "",
+  role: "",
 };
 
-export { FORM_VALIDATION };
+export default { FORM_VALIDATION };

@@ -1,4 +1,4 @@
-import React,{useState} from "react";
+import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { useForm } from "react-hooks-helper";
 import { FORM_INITAL_VALUE } from "./DataState";
@@ -53,15 +53,25 @@ const steps = ["User Details", "Summary"];
 
 export default function Checkout() {
   const [formData, setValues] = useForm(FORM_INITAL_VALUE);
-  const [error, setError] = useState(FORM_INITAL_VALUE);
 
+  let error = false;
 
-  
+  if (formData.NIC === "") {
+    error = true;
+  } else if (formData.location === "") {
+    error = true;
+  } else if (formData.userId === "") {
+    error = true;
+  } else if (formData.userName === "") {
+    error = true;
+  } else if (formData.role === "") {
+    error = true;
+  } else {
+    error = false;
+  }
 
   const props = { formData, setValues };
 
-
-  
   function getStepContent(step) {
     switch (step) {
       case 0:
@@ -122,7 +132,8 @@ export default function Checkout() {
                     variant="contained"
                     color="primary"
                     onClick={handleNext}
-                    className={classes.button}                   
+                    className={classes.button}
+                    disabled={error}
                   >
                     {activeStep === steps.length - 1 ? "Create" : "Next"}
                   </Button>

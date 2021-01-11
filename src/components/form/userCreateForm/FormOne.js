@@ -3,6 +3,7 @@ import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
 import INITDATA from "../../../data/user.create.data";
+import FORM_VALIDATION from "./FormValidation";
 
 import {
   FormControl,
@@ -13,6 +14,7 @@ import {
   RadioGroup,
   Select,
   FormHelperText,
+  MenuItem,
 } from "@material-ui/core";
 
 export default function AddressForm({ formData, setValues }) {
@@ -20,29 +22,18 @@ export default function AddressForm({ formData, setValues }) {
 
   /*Drop down list items mapping*/
   const INITLOCATIONS = INITDATA.LOCATIONS.map((data) => (
-    <option key={data.title} value={data.title}>
+    <MenuItem key={data.title} value={data.title}>
       {data.title}
-    </option>
+    </MenuItem>
   ));
 
   const INITROLES = INITDATA.ROLES.map((data) => (
-    <option key={data.title} value={data.title}>
+    <MenuItem key={data.title} value={data.title}>
       {data.title}
-    </option>
+    </MenuItem>
   ));
 
-  // const [error, setError] = useState(initialState);
-
-
-  function formValidate(){
-
-    if(userId ===""){
-      console.log("userId Valid");
-      
-    }
-
-
-  }
+  const [error, setError] = useState(FORM_VALIDATION);
 
   return (
     <React.Fragment>
@@ -52,21 +43,19 @@ export default function AddressForm({ formData, setValues }) {
       <Grid container spacing={3}>
         <Grid item xs={12} sm={12}>
           <InputLabel htmlFor="age-native-simple">Location</InputLabel>
-          <FormControl     fullWidth>
-          <Select
-            autoFocus
-            fullWidth
-            name="location"
-            id="location"
-            value={location}
-            onChange={setValues}
-            onClick={()=>{console.log("onBlur");}
-          }
-          >
-            <option value="" />
-            {INITLOCATIONS}
-          </Select>
-          <FormHelperText></FormHelperText>
+          <FormControl fullWidth>
+            <Select
+              autoFocus
+              fullWidth
+              name="location"
+              id="location"
+              value={location}
+              onChange={setValues}
+              defaultValue=""
+            >
+              {INITLOCATIONS}
+            </Select>
+            <FormHelperText></FormHelperText>
           </FormControl>
         </Grid>
         <Grid item xs={12} sm={12}>
@@ -77,8 +66,13 @@ export default function AddressForm({ formData, setValues }) {
             name="userId"
             value={userId}
             onChange={setValues}
-            onBlur={formValidate}
-            
+            onBlur={() => {
+              if (userId === "") {
+                setError({ userId: "User ID is Required" });
+              } else setError({ userId: "" });
+            }}
+            error={Boolean(error?.userId)}
+            helperText={error.userId}
           />
         </Grid>
         <Grid item xs={12}>
@@ -89,7 +83,13 @@ export default function AddressForm({ formData, setValues }) {
             name="userName"
             value={userName}
             onChange={setValues}
-            helperText=""
+            onBlur={() => {
+              if (userName === "") {
+                setError({ userName: "User Name is Required" });
+              } else setError({ userName: "" });
+            }}
+            error={Boolean(error?.userName)}
+            helperText={error.userName}
           />
         </Grid>
         <Grid item xs={12}>
@@ -111,8 +111,8 @@ export default function AddressForm({ formData, setValues }) {
             id="role"
             value={role}
             onChange={setValues}
+            defaultValue=""
           >
-            <option value="" />
             {INITROLES}
           </Select>
         </Grid>
