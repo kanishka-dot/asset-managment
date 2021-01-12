@@ -54,23 +54,24 @@ const steps = ["User Details", "Summary"];
 export default function Checkout() {
   const [formData, setValues] = useForm(FORM_INITAL_VALUE);
 
-  let error = false;
+  let btnEnable = false;
+  let errors = false;
 
   if (formData.NIC === "") {
-    error = true;
+    btnEnable = true;
   } else if (formData.location === "") {
-    error = true;
+    btnEnable = true;
   } else if (formData.userId === "") {
-    error = true;
+    btnEnable = true;
   } else if (formData.userName === "") {
-    error = true;
+    btnEnable = true;
   } else if (formData.role === "") {
-    error = true;
+    btnEnable = true;
   } else {
-    error = false;
+    btnEnable = false;
   }
 
-  const props = { formData, setValues };
+  const props = { formData, setValues, errors};
 
   function getStepContent(step) {
     switch (step) {
@@ -133,7 +134,7 @@ export default function Checkout() {
                     color="primary"
                     onClick={handleNext}
                     className={classes.button}
-                    disabled={error}
+                    disabled={btnEnable && errors}
                   >
                     {activeStep === steps.length - 1 ? "Create" : "Next"}
                   </Button>

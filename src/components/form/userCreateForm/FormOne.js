@@ -3,7 +3,7 @@ import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
 import INITDATA from "../../../data/user.create.data";
-import FORM_VALIDATION from "./FormValidation";
+import FORM_VALIDATION from "./formValidation";
 
 import {
   FormControl,
@@ -17,8 +17,9 @@ import {
   MenuItem,
 } from "@material-ui/core";
 
-export default function AddressForm({ formData, setValues }) {
+export default function AddressForm({ formData, setValues,errors }) {
   const { userId, userName, NIC, location, role, status } = formData;
+  const [error, setError] = useState(FORM_VALIDATION);
 
   /*Drop down list items mapping*/
   const INITLOCATIONS = INITDATA.LOCATIONS.map((data) => (
@@ -33,8 +34,7 @@ export default function AddressForm({ formData, setValues }) {
     </MenuItem>
   ));
 
-  const [error, setError] = useState(FORM_VALIDATION);
-
+  
   return (
     <React.Fragment>
       <Typography variant="h6" gutterBottom>
@@ -67,9 +67,11 @@ export default function AddressForm({ formData, setValues }) {
             value={userId}
             onChange={setValues}
             onBlur={() => {
-              if (userId === "") {
+              if (userId.length < 5) {
                 setError({ userId: "User ID is Required" });
+                errors = true;
               } else setError({ userId: "" });
+              errors = false;
             }}
             error={Boolean(error?.userId)}
             helperText={error.userId}
@@ -86,7 +88,9 @@ export default function AddressForm({ formData, setValues }) {
             onBlur={() => {
               if (userName === "") {
                 setError({ userName: "User Name is Required" });
+                errors = true;
               } else setError({ userName: "" });
+              errors = false;
             }}
             error={Boolean(error?.userName)}
             helperText={error.userName}
