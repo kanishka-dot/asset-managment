@@ -17,7 +17,7 @@ import {
   MenuItem,
 } from "@material-ui/core";
 
-export default function AddressForm({ formData, setValues,errors }) {
+export default function AddressForm({ formData, setValues }) {
   const { userId, userName, NIC, location, role, status } = formData;
   const [error, setError] = useState(FORM_VALIDATION);
 
@@ -34,7 +34,6 @@ export default function AddressForm({ formData, setValues,errors }) {
     </MenuItem>
   ));
 
-  
   return (
     <React.Fragment>
       <Typography variant="h6" gutterBottom>
@@ -43,7 +42,7 @@ export default function AddressForm({ formData, setValues,errors }) {
       <Grid container spacing={3}>
         <Grid item xs={12} sm={12}>
           <InputLabel htmlFor="age-native-simple">Location</InputLabel>
-          <FormControl fullWidth>
+          <FormControl fullWidth error={Boolean(error?.location)}>
             <Select
               autoFocus
               fullWidth
@@ -52,10 +51,15 @@ export default function AddressForm({ formData, setValues,errors }) {
               value={location}
               onChange={setValues}
               defaultValue=""
+              onBlur={() => {
+                if (location === "") {
+                  setError({ location: "Location is Required" });
+                } else setError({ location: "" });
+              }}
             >
               {INITLOCATIONS}
             </Select>
-            <FormHelperText></FormHelperText>
+            <FormHelperText>{error.location}</FormHelperText>
           </FormControl>
         </Grid>
         <Grid item xs={12} sm={12}>
@@ -69,9 +73,7 @@ export default function AddressForm({ formData, setValues,errors }) {
             onBlur={() => {
               if (userId.length < 5) {
                 setError({ userId: "User ID is Required" });
-                errors = true;
               } else setError({ userId: "" });
-            
             }}
             error={Boolean(error?.userId)}
             helperText={error.userId}
@@ -88,9 +90,7 @@ export default function AddressForm({ formData, setValues,errors }) {
             onBlur={() => {
               if (userName === "") {
                 setError({ userName: "User Name is Required" });
-                errors = true;
               } else setError({ userName: "" });
-              errors = false;
             }}
             error={Boolean(error?.userName)}
             helperText={error.userName}
@@ -104,21 +104,41 @@ export default function AddressForm({ formData, setValues,errors }) {
             name="NIC"
             value={NIC}
             onChange={setValues}
+            onBlur={() => {
+              if (NIC.trim() === "") {
+                setError({ NIC: "NIC No is Required" });
+              } else if (!(NIC.length === 10 || NIC.length === 12)) {
+                setError({ NIC: "Invalid NIC No Format" });
+              } else {
+                setError({ NIC: "" });
+              }
+            }}
+            error={Boolean(error?.NIC)}
+            helperText={error.NIC}
           />
         </Grid>
 
         <Grid item xs={12}>
           <InputLabel htmlFor="age-native-simple">Role</InputLabel>
-          <Select
-            fullWidth
-            name="role"
-            id="role"
-            value={role}
-            onChange={setValues}
-            defaultValue=""
-          >
-            {INITROLES}
-          </Select>
+          <FormControl fullWidth error={Boolean(error?.role)}>
+            <Select
+              fullWidth
+              name="role"
+              id="role"
+              value={role}
+              onChange={setValues}
+              defaultValue=""
+              onBlur={() => {
+                if (role === "") {
+                  setError({ role: "Role is Required" });
+                } else setError({ role: "" });
+              }}
+            >
+              {INITROLES}
+            </Select>
+            <FormHelperText>{error.role}</FormHelperText>
+          </FormControl>
+        
         </Grid>
         <Grid item xs={12} sm={12}>
           <FormControl>
