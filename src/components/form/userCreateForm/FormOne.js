@@ -3,7 +3,6 @@ import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
 import INITDATA from "../../../data/user.create.data";
-import FORM_VALIDATION from "./formValidation";
 
 import {
   FormControl,
@@ -17,9 +16,79 @@ import {
   MenuItem,
 } from "@material-ui/core";
 
-export default function AddressForm({ formData, setValues }) {
+export default function AddressForm({
+  formData,
+  setValues,
+  isError,
+  setFinalError,
+}) {
   const { userId, userName, NIC, location, role, status } = formData;
-  const [error, setError] = useState(FORM_VALIDATION);
+
+  const [error, setError] = useState({
+    userId: "",
+    userName: "",
+    NIC: "",
+    location: "",
+    role: "",
+  });
+
+  /*Form Validation*/
+
+  const ValidateUserName = () => {
+    if (userName === "") {
+      setError({ ...error, userName: "User Name is Required" });
+
+      return false;
+    } else setError({ ...error, userName: "" });
+    return true;
+  };
+
+  const ValidateLocation = () => {
+    if (location === "") {
+      setError({ location: "Location is Required" });
+
+      return false;
+    } else setError({ location: "" });
+    return true;
+  };
+
+  const ValidateUserID = () => {
+    if (userId.length < 5) {
+      setError({ userId: "User ID is Required" });
+
+      return false;
+    } else setError({ userId: "" });
+    return true;
+  };
+
+  const ValidateNIC = () => {
+    if (NIC.trim() === "") {
+      setError({ NIC: "NIC No is Required" });
+
+      return false;
+    } else if (!(NIC.length === 10 || NIC.length === 12)) {
+      setError({ NIC: "Invalid NIC No Format" });
+      return false;
+    } else {
+      setError({ NIC: "" });
+      return true;
+    }
+  };
+
+  const ValidateUserRole = () => {
+    if (role === "") {
+      setError({ role: "Role is Required" });
+      return false;
+    } else setError({ role: "" });
+    return true;
+  };
+
+  setFinalError =
+    ValidateUserName &&
+    ValidateLocation &&
+    ValidateUserID &&
+    ValidateNIC &&
+    ValidateUserRole;
 
   /*Drop down list items mapping*/
   const INITLOCATIONS = INITDATA.LOCATIONS.map((data) => (
@@ -51,11 +120,7 @@ export default function AddressForm({ formData, setValues }) {
               value={location}
               onChange={setValues}
               defaultValue=""
-              onBlur={() => {
-                if (location === "") {
-                  setError({ location: "Location is Required" });
-                } else setError({ location: "" });
-              }}
+              onBlur={ValidateLocation}
             >
               {INITLOCATIONS}
             </Select>
@@ -70,11 +135,7 @@ export default function AddressForm({ formData, setValues }) {
             name="userId"
             value={userId}
             onChange={setValues}
-            onBlur={() => {
-              if (userId.length < 5) {
-                setError({ userId: "User ID is Required" });
-              } else setError({ userId: "" });
-            }}
+            onBlur={ValidateUserID}
             error={Boolean(error?.userId)}
             helperText={error.userId}
           />
@@ -87,11 +148,7 @@ export default function AddressForm({ formData, setValues }) {
             name="userName"
             value={userName}
             onChange={setValues}
-            onBlur={() => {
-              if (userName === "") {
-                setError({ userName: "User Name is Required" });
-              } else setError({ userName: "" });
-            }}
+            onBlur={ValidateUserName}
             error={Boolean(error?.userName)}
             helperText={error.userName}
           />
@@ -104,15 +161,7 @@ export default function AddressForm({ formData, setValues }) {
             name="NIC"
             value={NIC}
             onChange={setValues}
-            onBlur={() => {
-              if (NIC.trim() === "") {
-                setError({ NIC: "NIC No is Required" });
-              } else if (!(NIC.length === 10 || NIC.length === 12)) {
-                setError({ NIC: "Invalid NIC No Format" });
-              } else {
-                setError({ NIC: "" });
-              }
-            }}
+            onBlur={ValidateNIC}
             error={Boolean(error?.NIC)}
             helperText={error.NIC}
           />
@@ -128,17 +177,12 @@ export default function AddressForm({ formData, setValues }) {
               value={role}
               onChange={setValues}
               defaultValue=""
-              onBlur={() => {
-                if (role === "") {
-                  setError({ role: "Role is Required" });
-                } else setError({ role: "" });
-              }}
+              onBlur={ValidateUserRole}
             >
               {INITROLES}
             </Select>
             <FormHelperText>{error.role}</FormHelperText>
           </FormControl>
-        
         </Grid>
         <Grid item xs={12} sm={12}>
           <FormControl>

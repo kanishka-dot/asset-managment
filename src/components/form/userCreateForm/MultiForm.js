@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { useForm } from "react-hooks-helper";
 import { FORM_INITAL_VALUE } from "./DataState";
@@ -11,6 +11,7 @@ import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import UserForm from "./FormOne";
 import Review from "./SummaryForm";
+import Error from "./Error";
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -53,30 +54,13 @@ const steps = ["User Details", "Summary"];
 
 export default function Checkout() {
   const [formData, setValues] = useForm(FORM_INITAL_VALUE);
-
-  let btnEnable = false;
-  let errors = false;
-
-  if (formData.NIC === "") {
-    btnEnable = true;
-  } else if (formData.location === "") {
-    btnEnable = true;
-  } else if (formData.userId === "") {
-    btnEnable = true;
-  } else if (formData.userName === "") {
-    btnEnable = true;
-  } else if (formData.role === "") {
-    btnEnable = true;
-  } else {
-    btnEnable = false;
-  }
-
-  const props = { formData, setValues, errors};
+  const [isError, setFinalError] = useForm(Error);
+  const props = { formData, setValues, isError, setFinalError };
 
   function getStepContent(step) {
     switch (step) {
       case 0:
-        return <UserForm {...props} />;
+        return <UserForm {...props} {...isError} />;
       case 1:
         return <Review {...props} />;
       default:
@@ -89,7 +73,10 @@ export default function Checkout() {
   const [activeStep, setActiveStep] = React.useState(0);
 
   const handleNext = () => {
-    setActiveStep(activeStep + 1);
+    console.log(isError);
+    if (isError.isError) {
+      setActiveStep(activeStep + 1);
+    }
   };
 
   const handleBack = () => {
@@ -134,7 +121,6 @@ export default function Checkout() {
                     color="primary"
                     onClick={handleNext}
                     className={classes.button}
-                    disabled={btnEnable && errors}
                   >
                     {activeStep === steps.length - 1 ? "Create" : "Next"}
                   </Button>
