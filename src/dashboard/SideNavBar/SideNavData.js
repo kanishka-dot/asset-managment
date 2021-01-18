@@ -14,7 +14,7 @@ const Items = [
   {
     title: "Dashboard",
     icon: <DashboardIcon color="primary" />,
-    path: "/app/Home",
+    path: "/app/home",
   },
 
   {

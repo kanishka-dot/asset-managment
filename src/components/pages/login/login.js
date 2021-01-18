@@ -77,7 +77,7 @@ function Login() {
   
   function handleSubmit(e) {
    
-    History.push('/app')
+    History.push('/app/home')
   }
 
 
