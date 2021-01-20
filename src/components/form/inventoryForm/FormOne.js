@@ -32,7 +32,7 @@ export default function AddressForm({ formData, setValues }) {
         Basic Details
       </Typography>
       <Grid container spacing={3}>
-        <Grid item xs={12} sm={6}>
+        <Grid item xs={12} >
           <TextField
             fullWidth
             id="standard-basic"
@@ -42,7 +42,7 @@ export default function AddressForm({ formData, setValues }) {
             onChange={setValues}
           />
         </Grid>
-        <Grid item xs={12} sm={6}>
+        <Grid item xs={12}>
           <TextField
             fullWidth
             id="standard-basic"

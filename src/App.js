@@ -11,13 +11,14 @@ import Loging from "./components/pages/login/login";
 //  import Barchart from "./dashboard/gadgets/Barchart"
 import Layout from "./components/layout/Layout";
 import InventoryIN from "./components/form/inventoryIN/InventoryIN"
+import Grn from "./components/pages/Inventory/Grn"
 
 function App() {
   return (
     <div>
       <Router>
         <Switch>
-          <Route path="/" exact component={InventoryIN} />
+          <Route path="/" exact component={Grn} />
           <PrivateRoute path="/app" component={Layout} />
         </Switch>
       </Router>
