@@ -5,7 +5,9 @@ import MUIDataTable from "mui-datatables";
 // import FormControl from "@material-ui/core/FormControl";
 // import Select from "@material-ui/core/Select";
 
-export default function Table() {
+export default function Table(props) {
+  const header = props.header;
+  const dataAdd = props.tableData;
   const responsive = "vertical";
   const tableBodyHeight = "100%";
   const tableBodyMaxHeight = "";
@@ -14,7 +16,7 @@ export default function Table() {
   // const [tableBodyHeight, setTableBodyHeight] = useState("100%");
   // const [tableBodyMaxHeight, setTableBodyMaxHeight] = useState("");
 
-  const columns = ["Name", "Title", "Location"];
+  
 
   const options = {
     filter: true,
@@ -24,24 +26,10 @@ export default function Table() {
     tableBodyMaxHeight,
   };
 
-  const data = [
-    ["Gabby George", "Business Analyst", "Minneapolis"],
-    [
-      "Aiden Lloyd",
-      "Business Consultant for an International Company and CEO of Tony's Burger Palace",
-      "Dallas",
-    ],
-    ["Jaden Collins", "Attorney", "Santa Ana"],
-    ["Franky Rees", "Business Analyst", "St. Petersburg"],
-    ["Aaren Rose", null, "Toledo"],
-    ["Johnny Jones", "Business Analyst", "St. Petersburg"],
-    ["Jimmy Johns", "Business Analyst", "Baltimore"],
-    ["Jack Jackson", "Business Analyst", "El Paso"],
-    ["Joe Jones", "Computer Programmer", "El Paso"],
-    ["Jacky Jackson", "Business Consultant", "Baltimore"],
-    ["Jo Jo", "Software Developer", "Washington DC"],
-    ["Donna Marie", "Business Manager", "Annapolis"],
-  ];
+  // const data = [
+  //   // ["1103568", "21/01/2021", "IT031","11054","125465IT","12124587112545","30,000","5","Sadun"],
+  //   dataAdd
+  // ];
 
   return (
     <React.Fragment>
@@ -81,10 +69,10 @@ export default function Table() {
         </Select>
       </FormControl> */}
 
-      <MUIDataTable
+      <MUIDataTable   
         title={"Search Items"}
-        data={data}
-        columns={columns}
+        data={dataAdd}
+        columns={header}
         options={options}
       />
     </React.Fragment>
