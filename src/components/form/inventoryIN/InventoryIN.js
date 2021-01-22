@@ -112,6 +112,9 @@ export default function InventoryIN() {
   };
 
   const addData = () => {
+    Object.keys(value).map(function(key, index) {
+      value[key];
+    });
     data = value.map((data)=>data.join(" "));
     tableData.push(data);
     setData(tableData);
