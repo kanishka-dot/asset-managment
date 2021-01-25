@@ -12,13 +12,14 @@ import Loging from "./components/pages/login/login";
 import Layout from "./components/layout/Layout";
 import InventoryIN from "./components/form/inventoryIN/InventoryIN"
 import Grn from "./components/pages/Inventory/Grn"
+import Supplier from "./components/pages/supplier/Supplier"
 
 function App() {
   return (
     <div>
       <Router>
         <Switch>
-          <Route path="/" exact component={Grn} />
+          <Route path="/" exact component={Supplier} />
           <PrivateRoute path="/app" component={Layout} />
         </Switch>
       </Router>
