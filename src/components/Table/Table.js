@@ -16,8 +16,6 @@ export default function Table(props) {
   // const [tableBodyHeight, setTableBodyHeight] = useState("100%");
   // const [tableBodyMaxHeight, setTableBodyMaxHeight] = useState("");
 
-  
-
   const options = {
     filter: true,
     filterType: "dropdown",
@@ -26,10 +24,11 @@ export default function Table(props) {
     tableBodyMaxHeight,
   };
 
-  // const data = [
-  //   // ["1103568", "21/01/2021", "IT031","11054","125465IT","12124587112545","30,000","5","Sadun"],
-  //   dataAdd
-  // ];
+  const data = [
+    // ["1103568", "21/01/2021", "IT031","11054","125465IT","12124587112545","30,000","5","Sadun"],
+  ];
+  data.push(dataAdd);
+  console.log(data);
 
   return (
     <React.Fragment>
@@ -69,9 +68,9 @@ export default function Table(props) {
         </Select>
       </FormControl> */}
 
-      <MUIDataTable   
+      <MUIDataTable
         title={"Search Items"}
-        data={dataAdd}
+        data={data}
         columns={header}
         options={options}
       />

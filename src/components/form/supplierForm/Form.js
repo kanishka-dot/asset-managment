@@ -54,7 +54,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function InventoryIN() {
+export default function Form() {
   const classes = useStyles();
 
   const [fldEnable, setFldEnable] = React.useState(true);

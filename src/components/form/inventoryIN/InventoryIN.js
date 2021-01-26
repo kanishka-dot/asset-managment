@@ -9,6 +9,7 @@ import CurrentDate from "../../utils/Date";
 import Table from "../../Table/Table";
 import { MuiPickersUtilsProvider, DatePicker } from "@material-ui/pickers";
 import { Paper, Box, Button } from "@material-ui/core";
+import MUIDataTable from "mui-datatables";
 
 const useStyles = makeStyles((theme) => ({
   layout: {
@@ -58,6 +59,21 @@ const useStyles = makeStyles((theme) => ({
 
 export default function InventoryIN() {
   const classes = useStyles();
+  const data = [];
+  const responsive = "vertical";
+  const tableBodyHeight = "100%";
+  const tableBodyMaxHeight = "";
+
+  const options = {
+    elevation:5,
+    filter: false,
+    print:false,
+    download:false,
+    filterType: "dropdown",
+    responsive,
+    tableBodyHeight,
+    tableBodyMaxHeight,
+  };
   const header = [
     "Document No",
     "Date",
@@ -74,7 +90,7 @@ export default function InventoryIN() {
 
   const [value, setValue] = React.useState({
     docno: "",
-    date: new Date(CurrentDate()),
+    date: CurrentDate(),
     itemcode: "",
     supplierno: "",
     serialno: "",
@@ -84,11 +100,9 @@ export default function InventoryIN() {
     diliveryperson: "",
   });
 
-  var data =[]
-
   const initialState = {
     docno: "",
-    date: new Date(CurrentDate()),
+    date: CurrentDate(),
     itemcode: "",
     itemid: "",
     diliveryperson: "",
@@ -112,14 +126,13 @@ export default function InventoryIN() {
   };
 
   const addData = () => {
-  
-    data = value.map((data)=>data.join(" "));
-    tableData.push(data);
-    setData(tableData);
-    setValue({ ...initialState });
+    if(value.docno){
+      const arry = Object.values(value);
+      tableData.push(arry)
+      setValue({ ...initialState });
+    }
+ 
   };
-
-  const props = { header, tableData };
 
   return (
     <React.Fragment>
@@ -243,7 +256,13 @@ export default function InventoryIN() {
             </Grid>
           </Grid>
           <Grid>
-            <Table {...props} />
+            <MUIDataTable
+            
+              title={"Search Items"}
+              data={tableData}
+              columns={header}
+              options={options}
+            />
           </Grid>
           <Box className={classes.btn}>
             <Button

@@ -19,7 +19,7 @@ function App() {
     <div>
       <Router>
         <Switch>
-          <Route path="/" exact component={Supplier} />
+          <Route path="/" exact component={InventoryIN} />
           <PrivateRoute path="/app" component={Layout} />
         </Switch>
       </Router>
