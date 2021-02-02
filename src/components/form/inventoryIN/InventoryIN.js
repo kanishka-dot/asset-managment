@@ -3,13 +3,10 @@ import Grid from "@material-ui/core/Grid";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
-import InputMask from "react-input-mask";
-import DateFnsUtils from "@date-io/date-fns";
-import CurrentDate from "../../utils/Date";
-import Table from "../../Table/Table";
-import { MuiPickersUtilsProvider, DatePicker } from "@material-ui/pickers";
 import { Paper, Box, Button } from "@material-ui/core";
+import CurrentDate from "../../utils/Date";
 import MUIDataTable from "mui-datatables";
+import Autocomplete from "@material-ui/lab/Autocomplete";
 
 const useStyles = makeStyles((theme) => ({
   layout: {
@@ -59,20 +56,20 @@ const useStyles = makeStyles((theme) => ({
 
 export default function InventoryIN() {
   const classes = useStyles();
-  const data = [];
   const responsive = "vertical";
   const tableBodyHeight = "100%";
   const tableBodyMaxHeight = "";
 
   const options = {
-    elevation:5,
+    elevation: 5,
     filter: false,
-    print:false,
-    download:false,
+    print: false,
+    download: false,
     filterType: "dropdown",
     responsive,
     tableBodyHeight,
     tableBodyMaxHeight,
+    onRowsDelete: false,
   };
   const header = [
     "Document No",
@@ -117,21 +114,37 @@ export default function InventoryIN() {
     setValue({ ...value, [props]: event.target.value });
   };
 
-  const handleDateChange = (date) => {
-    setValue({ ...value, date: date });
-  };
+  const top100Films = [
+    { name: "Atec pvt ltd", no: 1994 },
+    { name: "Dell co", no: 1972 },
+    { name: "Mega", no: 1974 },
+  ];
+
+  function handleDateChange(event) {
+    setValue({ ...value, date: event.target.value });
+    console.log(event.persist);
+  }
 
   const handleClear = () => {
     setValue({ ...initialState });
   };
 
   const addData = () => {
-    if(value.docno){
-      const arry = Object.values(value);
-      tableData.push(arry)
+    if (value.docno) {
+      tableData.push([
+        value.docno,
+        value.date,
+        value.itemcode,
+        value.supplierno,
+        value.serialno,
+        value.barcode,
+        value.cost,
+        value.warranty,
+        value.diliveryperson,
+      ]);
       setValue({ ...initialState });
     }
- 
+    console.log(value);
   };
 
   return (
@@ -144,15 +157,15 @@ export default function InventoryIN() {
           <Grid container spacing={3}>
             <Box component="span">
               <Grid item xs={12}>
-                <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                  <DatePicker
-                    disablePast
-                    label="Date"
-                    format="MM/dd/yyyy"
-                    value={value.date}
-                    onChange={handleDateChange}
-                  />
-                </MuiPickersUtilsProvider>
+                <TextField
+                  type="date"
+                  label="Date"
+                  defaultValue={CurrentDate()}
+                  onChange={handleDateChange}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                />
               </Grid>
 
               <Grid item xs={12}>
@@ -165,12 +178,19 @@ export default function InventoryIN() {
                 />
               </Grid>
               <Grid item xs={12}>
-                <TextField
-                  id="supplierno"
-                  label="Supplier No"
-                  name="supplierno"
-                  value={value.supplierno}
-                  onChange={handleChange("supplierno")}
+                <Autocomplete
+
+                  id="combo-box-demo"
+                  options={top100Films}
+                  getOptionSelected={value.supplierno}
+                  getOptionLabel={(option) => option.name}
+                  style={{ width: 200 }}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Supplier No"         
+                    />
+                  )}
                 />
               </Grid>
 
@@ -257,7 +277,6 @@ export default function InventoryIN() {
           </Grid>
           <Grid>
             <MUIDataTable
-            
               title={"Search Items"}
               data={tableData}
               columns={header}

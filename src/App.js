@@ -13,6 +13,7 @@ import Layout from "./components/layout/Layout";
 import InventoryIN from "./components/form/inventoryIN/InventoryIN"
 import Grn from "./components/pages/Inventory/Grn"
 import Supplier from "./components/pages/supplier/Supplier"
+import Table from "./components/form/inventoryIN/Table"
 
 function App() {
   return (
