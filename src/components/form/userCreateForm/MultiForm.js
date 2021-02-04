@@ -54,6 +54,7 @@ const steps = ["User Details", "Summary"];
 
 export default function Checkout() {
   const [formData, setValues] = useForm(FORM_INITAL_VALUE);
+
   const [isError, setFinalError] = useForm(Error);
   const props = { formData, setValues, isError, setFinalError };
 
@@ -73,10 +74,7 @@ export default function Checkout() {
   const [activeStep, setActiveStep] = React.useState(0);
 
   const handleNext = () => {
-    console.log(isError);
-    if (isError.isError) {
-      setActiveStep(activeStep + 1);
-    }
+    setActiveStep(activeStep + 1);
   };
 
   const handleBack = () => {
@@ -101,12 +99,7 @@ export default function Checkout() {
           </Stepper>
           <React.Fragment>
             {activeStep === steps.length ? (
-              <React.Fragment>
-                <Typography variant="h5" gutterBottom></Typography>
-                <Typography variant="subtitle1">
-                  Item Sucessfully Created
-                </Typography>
-              </React.Fragment>
+              setActiveStep(0)
             ) : (
               <React.Fragment>
                 {getStepContent(activeStep)}

@@ -1,9 +1,9 @@
 import React, { useState } from "react";
+import { axios } from "../../../connection/axios";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
 import INITDATA from "../../../data/user.create.data";
-
 import {
   FormControl,
   FormControlLabel,
@@ -32,8 +32,17 @@ export default function AddressForm({
     role: "",
   });
 
-  /*Form Validation*/
+  /*Check user in db*/
+  const getUser = async () => {
+    const response = await axios
+      .get("/user/getuser/10/kumara")
+      .catch((err) => console.log("Error ", err));
+    if (response) {
+      console.log(response.data);
+    }
+  };
 
+  /*Form Validation*/
   const ValidateUserName = () => {
     if (userName === "") {
       setError({ ...error, userName: "User Name is Required" });
@@ -49,6 +58,7 @@ export default function AddressForm({
 
       return false;
     } else setError({ location: "" });
+    getUser();
     return true;
   };
 
@@ -57,8 +67,11 @@ export default function AddressForm({
       setError({ userId: "User ID is Required" });
 
       return false;
-    } else setError({ userId: "" });
-    return true;
+    } else {
+      setError({ userId: "" });
+
+      return true;
+    }
   };
 
   const ValidateNIC = () => {
@@ -82,16 +95,6 @@ export default function AddressForm({
     } else setError({ role: "" });
     return true;
   };
-
-  setFinalError =
-    ValidateUserName &&
-    ValidateLocation &&
-    ValidateUserID &&
-    ValidateNIC &&
-    ValidateUserRole;
-
-    console.log(setFinalError);
-    
 
   /*Drop down list items mapping*/
   const INITLOCATIONS = INITDATA.LOCATIONS.map((data) => (
