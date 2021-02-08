@@ -14,6 +14,7 @@ import Box from "@material-ui/core/Box";
 import SidebarListItem from "./SidebarListItem";
 import SideNavItemGroup from "./SideNavItemGroup";
 import Items from "./SideNavData";
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 
 const drawerWidth = 250;
 
@@ -32,6 +33,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   appBar: {
+   
     [theme.breakpoints.up("sm")]: {
       width: `calc(100% - ${drawerWidth}px)`,
       marginLeft: drawerWidth,
@@ -105,7 +107,7 @@ function ResponsiveDrawer(props) {
     <div className={classes.root}>
       <CssBaseline />
       <AppBar position="fixed" className={classes.appBar}>
-        <Toolbar>
+        <Toolbar>    
           <IconButton
             color="inherit"
             aria-label="open drawer"
@@ -115,9 +117,19 @@ function ResponsiveDrawer(props) {
           >
             <MenuIcon />
           </IconButton>
+         
           <Typography variant="h6" noWrap>
             BreadCrumb
           </Typography>
+          <IconButton
+           color="inherit"
+           aria-label="open drawer"
+           edge="end"
+          //  className={classes.menuButton}
+          
+          >
+          <AccountCircleIcon />
+          </IconButton>
         </Toolbar>
       </AppBar>
       <nav className={classes.drawer} aria-label="mailbox folders">
