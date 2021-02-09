@@ -5,10 +5,12 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
+import SimpleCard from "../../../dashboard/charts/Card"
 
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
+    marginLeft: "15rem",
   },
   toolbar: {
     paddingRight: 24, // keep right padding when drawer closed
@@ -59,20 +61,17 @@ export default function Dashboard() {
       <CssBaseline />
 
       <main className={classes.content}>
-        <div className={classes.appBarSpacer} />
-        <Container maxWidth="lg" className={classes.container}>
-          <Grid container spacing={3}>
+        <Container maxWidth="lg" className={classes.container} >
+          <Grid container justify="center" spacing={5}>
             {/* Chart */}
-            <Grid item xs={12} md={8} lg={9}>
-              <Paper className={fixedHeightPaper}></Paper>
+            <Grid item>
+              <SimpleCard bkcolor="#1565c2" />
             </Grid>
-            {/* Recent Deposits */}
-            <Grid item xs={12} md={4} lg={3}>
-              <Paper className={fixedHeightPaper}></Paper>
+            <Grid item>
+              <SimpleCard bkcolor="#00b0ff"  />
             </Grid>
-            {/* Recent Orders */}
-            <Grid item xs={12}>
-              <Paper className={classes.paper}></Paper>
+            <Grid item>
+              <SimpleCard  bkcolor="#3492ca"  />
             </Grid>
           </Grid>
         </Container>

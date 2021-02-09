@@ -15,6 +15,7 @@ import SidebarListItem from "./SidebarListItem";
 import SideNavItemGroup from "./SideNavItemGroup";
 import Items from "./SideNavData";
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import { Menu, MenuItem } from "@material-ui/core";
 
 const drawerWidth = 250;
 
@@ -33,7 +34,6 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   appBar: {
-   
     [theme.breakpoints.up("sm")]: {
       width: `calc(100% - ${drawerWidth}px)`,
       marginLeft: drawerWidth,
@@ -54,16 +54,21 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
     padding: theme.spacing(3),
   },
+  title: {
+    flexGrow: 1,
+  },
 }));
 
 function ResponsiveDrawer(props) {
-  const { window } = props;
   const classes = useStyles();
-  const theme = useTheme();
-  const [mobileOpen, setMobileOpen] = React.useState(false);
+  const [anchorEl, setAnchorEl] = React.useState(null);
 
-  const handleDrawerToggle = () => {
-    setMobileOpen(!mobileOpen);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
   };
 
   let sideNavDataDisplay = Items.map((data, index) => {
@@ -100,69 +105,51 @@ function ResponsiveDrawer(props) {
     </div>
   );
 
-  const container =
-    window !== undefined ? () => window().document.body : undefined;
-
   return (
     <div className={classes.root}>
       <CssBaseline />
-      <AppBar position="fixed" className={classes.appBar}>
-        <Toolbar>    
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            edge="start"
-            className={classes.menuButton}
-            onClick={handleDrawerToggle}
-          >
-            <MenuIcon />
-          </IconButton>
-         
-          <Typography variant="h6" noWrap>
+      <AppBar position="static" className={classes.appBar}>
+        <Toolbar>
+          <Typography variant="h6" noWrap className={classes.title}>
             BreadCrumb
           </Typography>
-          <IconButton
-           color="inherit"
-           aria-label="open drawer"
-           edge="end"
-          //  className={classes.menuButton}
-          
-          >
-          <AccountCircleIcon />
-          </IconButton>
+          <div>
+            <IconButton
+              color="inherit"
+              aria-haspopup="true"
+              onClick={handleClick}
+            >
+              <AccountCircleIcon fontSize="large" />
+            </IconButton>
+            <Menu
+              anchorEl={anchorEl}
+              keepMounted
+              open={Boolean(anchorEl)}
+              onClose={handleClose}
+            >
+              <Typography align="center">
+                Kanishka
+          </Typography>
+              <Typography align="center" >
+                Homagama SC
+          </Typography>
+              <hr></hr>
+              <MenuItem onClick={handleClose}>Change Password</MenuItem>
+              <MenuItem onClick={handleClose}>Logout</MenuItem>
+            </Menu>
+          </div>
         </Toolbar>
       </AppBar>
-      <nav className={classes.drawer} aria-label="mailbox folders">
-        {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
-        <Hidden smUp implementation="css">
-          <Drawer
-            container={container}
-            variant="temporary"
-            anchor={theme.direction === "rtl" ? "right" : "left"}
-            open={mobileOpen}
-            onClose={handleDrawerToggle}
-            classes={{
-              paper: classes.drawerPaper,
-            }}
-            ModalProps={{
-              keepMounted: true, // Better open performance on mobile.
-            }}
-          >
-            {drawer}
-          </Drawer>
-        </Hidden>
-        <Hidden xsDown implementation="css">
-          <Drawer
-            classes={{
-              paper: classes.drawerPaper,
-            }}
-            variant="permanent"
-            open
-          >
-            {drawer}
-          </Drawer>
-        </Hidden>
-      </nav>
+      {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
+      <Drawer
+        classes={{
+          paper: classes.drawerPaper,
+        }}
+        variant="permanent"
+        open
+      >
+        {drawer}
+      </Drawer>
     </div>
   );
 }
