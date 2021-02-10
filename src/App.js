@@ -11,6 +11,7 @@ import Grn from "./components/pages/Inventory/Grn";
 import Supplier from "./components/pages/supplier/Supplier";
 import Table from "./components/form/inventoryIN/Table";
 import Test from "./Test";
+import Barchart from "./dashboard/charts/Barchart"
 
 function App() {
   return (
