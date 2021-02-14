@@ -5,10 +5,10 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
-import SimpleCard from "../../../dashboard/charts/Card"
-import Barchart from "../../../dashboard/charts/Barchart"
-import Piechart from "../../../dashboard/charts/Piechart"
-import SimpleTable from "../../../components/Table/DataTable"
+import SimpleCard from "../../../dashboard/charts/Card";
+import Barchart from "../../../dashboard/charts/Barchart";
+import Piechart from "../../../dashboard/charts/Piechart";
+import SimpleTable from "../../../components/Table/DataTable";
 import { Typography } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
@@ -64,37 +64,35 @@ export default function Dashboard() {
     <div className={classes.root}>
       <CssBaseline />
 
-      <main className={classes.content}>
-        <Container maxWidth="lg" className={classes.container} >
-          <Grid container justify="center" spacing={5}>
-            {/* Chart */}
-            <Grid item>
-              <SimpleCard bkcolor="#1565c2" count="25"/>
-            </Grid>
-            <Grid item>
-              <SimpleCard bkcolor="#00b0ff" count="15"/>
-            </Grid>
-            <Grid item>
-              <SimpleCard bkcolor="#3492ca" count="05"/>
-            </Grid>
-
-            <Grid item xs={8}>
-              <Barchart />
-            </Grid>
-            <Grid item xs={4}>
-              <Piechart />
-            </Grid>
-
-            <Typography >Recent User Login</Typography>
-
-            
-            <Grid item xs={12}>
-              <SimpleTable />
-            </Grid>
+      {/* <main className={classes.content}> */}
+      <Container maxWidth="lg" className={classes.container}>
+        <Grid container justify="center" spacing={5}>
+          {/* Chart */}
+          <Grid item xs={4}>
+            <SimpleCard bkcolor="#1565c2" count="25" />
           </Grid>
-          
-        </Container>
-      </main>
+          <Grid item xs={4}>
+            <SimpleCard bkcolor="#00b0ff" count="15" />
+          </Grid>
+          <Grid item xs={4}>
+            <SimpleCard bkcolor="#3492ca" count="05" />
+          </Grid>
+
+          <Grid item xs={8}>
+            <Barchart />
+          </Grid>
+          <Grid item xs={4}>
+            <Piechart />
+          </Grid>
+
+          <Typography>Recent User Login</Typography>
+
+          <Grid item xs={12}>
+            <SimpleTable />
+          </Grid>
+        </Grid>
+      </Container>
+      {/* </main> */}
     </div>
   );
 }
