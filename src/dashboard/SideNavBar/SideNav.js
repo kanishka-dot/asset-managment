@@ -14,7 +14,7 @@ import Box from "@material-ui/core/Box";
 import SidebarListItem from "./SidebarListItem";
 import SideNavItemGroup from "./SideNavItemGroup";
 import Items from "./SideNavData";
-import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import { Menu, MenuItem } from "@material-ui/core";
 
 const drawerWidth = 250;
@@ -26,6 +26,9 @@ const useStyles = makeStyles((theme) => ({
   },
   root: {
     display: "flex",
+    "& .MuiToolbar-root.MuiToolbar-regular.MuiToolbar-gutters": {
+      backgroundColor: "#3f51b5",
+    },
   },
   drawer: {
     [theme.breakpoints.up("sm")]: {
@@ -39,6 +42,7 @@ const useStyles = makeStyles((theme) => ({
       marginLeft: drawerWidth,
     },
   },
+
   menuButton: {
     marginRight: theme.spacing(2),
     [theme.breakpoints.up("sm")]: {
@@ -127,12 +131,8 @@ function ResponsiveDrawer(props) {
               open={Boolean(anchorEl)}
               onClose={handleClose}
             >
-              <Typography align="center">
-                Kanishka
-          </Typography>
-              <Typography align="center" >
-                Homagama SC
-          </Typography>
+              <Typography align="center">Kanishka</Typography>
+              <Typography align="center">Homagama SC</Typography>
               <hr></hr>
               <MenuItem onClick={handleClose}>Change Password</MenuItem>
               <MenuItem onClick={handleClose}>Logout</MenuItem>
