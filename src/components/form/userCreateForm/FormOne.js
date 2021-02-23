@@ -16,85 +16,27 @@ import {
   MenuItem,
 } from "@material-ui/core";
 
-export default function AddressForm({
-  formData,
-  setValues,
-  isError,
-  setFinalError,
-}) {
+export default function AddressForm({formData, setValues}) {
+
+
   const { userId, userName, NIC, location, role, status } = formData;
 
-  const [error, setError] = useState({
-    userId: "",
-    userName: "",
-    NIC: "",
-    location: "",
-    role: "",
-  });
 
-  /*Check user in db*/
-  const getUser = async () => {
-    const response = await axios
-      .get("/user/getuser/10/kumara")
-      .catch((err) => console.log("Error ", err));
-    if (response) {
-      console.log(response.data);
-    }
-  };
 
-  /*Form Validation*/
-  const ValidateUserName = () => {
-    if (userName === "") {
-      setError({ ...error, userName: "User Name is Required" });
+const handleInputChange = (event) =>{
 
-      return false;
-    } else setError({ ...error, userName: "" });
-    return true;
-  };
+}
 
-  const ValidateLocation = () => {
-    if (location === "") {
-      setError({ location: "Location is Required" });
 
-      return false;
-    } else setError({ location: "" });
-    getUser();
-    return true;
-  };
 
-  const ValidateUserID = () => {
-    if (userId.length < 5) {
-      setError({ userId: "User ID is Required" });
-
-      return false;
-    } else {
-      setError({ userId: "" });
-
-      return true;
-    }
-  };
-
-  const ValidateNIC = () => {
-    if (NIC.trim() === "") {
-      setError({ NIC: "NIC No is Required" });
-
-      return false;
-    } else if (!(NIC.length === 10 || NIC.length === 12)) {
-      setError({ NIC: "Invalid NIC No Format" });
-      return false;
-    } else {
-      setError({ NIC: "" });
-      return true;
-    }
-  };
-
-  const ValidateUserRole = () => {
-    if (role === "") {
-      setError({ role: "Role is Required" });
-      return false;
-    } else setError({ role: "" });
-    return true;
-  };
+  // const getUser = async () => {
+  //   const response = await axios
+  //     .get("/user/getuser/10/kumara")
+  //     .catch((err) => console.log("Error ", err));
+  //   if (response) {
+  //     console.log(response.data);
+  //   }
+  // };
 
   /*Drop down list items mapping*/
   const INITLOCATIONS = INITDATA.LOCATIONS.map((data) => (
@@ -117,20 +59,20 @@ export default function AddressForm({
       <Grid container spacing={3}>
         <Grid item xs={12} sm={12}>
           <InputLabel htmlFor="age-native-simple">Location</InputLabel>
-          <FormControl fullWidth error={Boolean(error?.location)}>
+          <FormControl fullWidth >
             <Select
               autoFocus
               fullWidth
               name="location"
               id="location"
               value={location}
-              onChange={setValues}
+              onChange={}
               defaultValue=""
-              onBlur={ValidateLocation}
+
             >
               {INITLOCATIONS}
             </Select>
-            <FormHelperText>{error.location}</FormHelperText>
+            <FormHelperText></FormHelperText>
           </FormControl>
         </Grid>
         <Grid item xs={12} sm={12}>
@@ -140,10 +82,8 @@ export default function AddressForm({
             label="User ID"
             name="userId"
             value={userId}
-            onChange={setValues}
-            onBlur={ValidateUserID}
-            error={Boolean(error?.userId)}
-            helperText={error.userId}
+            onChange={}
+
           />
         </Grid>
         <Grid item xs={12}>
@@ -153,10 +93,9 @@ export default function AddressForm({
             label="User Name"
             name="userName"
             value={userName}
-            onChange={setValues}
-            onBlur={ValidateUserName}
-            error={Boolean(error?.userName)}
-            helperText={error.userName}
+            onChange={}
+           
+
           />
         </Grid>
         <Grid item xs={12}>
@@ -166,34 +105,33 @@ export default function AddressForm({
             label="NIC"
             name="NIC"
             value={NIC}
-            onChange={setValues}
-            onBlur={ValidateNIC}
-            error={Boolean(error?.NIC)}
-            helperText={error.NIC}
+            onChange={}
+
+
           />
         </Grid>
 
         <Grid item xs={12}>
           <InputLabel htmlFor="age-native-simple">Role</InputLabel>
-          <FormControl fullWidth error={Boolean(error?.role)}>
+          <FormControl fullWidth >
             <Select
               fullWidth
               name="role"
               id="role"
               value={role}
-              onChange={setValues}
+              onChange={}
               defaultValue=""
-              onBlur={ValidateUserRole}
+
             >
               {INITROLES}
             </Select>
-            <FormHelperText>{error.role}</FormHelperText>
+            <FormHelperText></FormHelperText>
           </FormControl>
         </Grid>
         <Grid item xs={12} sm={12}>
           <FormControl>
             <FormLabel>Status</FormLabel>
-            <RadioGroup row name="status" value={status} onChange={setValues}>
+            <RadioGroup row name="status" value={status} >
               <FormControlLabel
                 value="active"
                 control={<Radio />}

@@ -18,7 +18,7 @@ function App() {
     <div>
       <Router>
         <Switch>
-          <Route path="/" exact component={Layout} />
+          <Route path="/" exact component={Grn} />
           <PrivateRoute path="/app" component={Layout} />
         </Switch>
       </Router>

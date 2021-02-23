@@ -53,15 +53,15 @@ const useStyles = makeStyles((theme) => ({
 const steps = ["User Details", "Summary"];
 
 export default function Checkout() {
-  const [formData, setValues] = useForm(FORM_INITAL_VALUE);
+  const [formData, setValues] = React.useState(FORM_INITAL_VALUE);
 
-  const [isError, setFinalError] = useForm(Error);
-  const props = { formData, setValues, isError, setFinalError };
+
+  const props = { formData, setValues};
 
   function getStepContent(step) {
     switch (step) {
       case 0:
-        return <UserForm {...props} {...isError} />;
+        return <UserForm {...props}  />;
       case 1:
         return <Review {...props} />;
       default:
