@@ -9,12 +9,13 @@ import CallMadeIcon from "@material-ui/icons/CallMade";
 import CallReceivedIcon from "@material-ui/icons/CallReceived";
 import PeopleIcon from "@material-ui/icons/People";
 import LocationCityIcon from "@material-ui/icons/LocationCity";
-import StarsIcon from '@material-ui/icons/Stars';
-import BuildIcon from '@material-ui/icons/Build';
-import DoneIcon from '@material-ui/icons/Done';
-import SupervisedUserCircleIcon from '@material-ui/icons/SupervisedUserCircle';
-import SyncAltIcon from '@material-ui/icons/SyncAlt';
-import DirectionsBoatIcon from '@material-ui/icons/DirectionsBoat';
+import StarsIcon from "@material-ui/icons/Stars";
+import BuildIcon from "@material-ui/icons/Build";
+import DoneIcon from "@material-ui/icons/Done";
+import SupervisedUserCircleIcon from "@material-ui/icons/SupervisedUserCircle";
+import SyncAltIcon from "@material-ui/icons/SyncAlt";
+import DirectionsBoatIcon from "@material-ui/icons/DirectionsBoat";
+import AutorenewIcon from "@material-ui/icons/Autorenew";
 
 const Items = [
   {
@@ -33,10 +34,10 @@ const Items = [
       },
       {
         title: "Create Item Group",
-        path: "/app/inventory/group/create",
+        path: "/app/inventory/item_group",
         icon: <AddIcon color="primary" />,
       },
-    ]
+    ],
   },
 
   {
@@ -44,19 +45,19 @@ const Items = [
     icon: <SyncAltIcon color="primary" />,
     items: [
       {
-        title: "Inventory GRN",       
+        title: "Inventory GRN",
         path: "/app/inventory/receive_out",
         icon: <DirectionsBoatIcon color="primary" />,
       },
 
       {
-        title: "Inventory GTN IN",       
+        title: "Inventory GTN IN",
         path: "/app/inventory/receive",
         icon: <CallReceivedIcon color="primary" />,
       },
       {
         title: "Inventory GTN OUT",
-        path: "/app/inventory/transfer",   
+        path: "/app/inventory/transfer",
         icon: <CallMadeIcon color="primary" />,
       },
     ],
@@ -66,18 +67,18 @@ const Items = [
     icon: <BuildIcon color="primary" />,
     items: [
       {
-        title: "Repair IN",       
+        title: "Repair IN",
         path: "/app/inventory/repair/add",
         icon: <AddIcon color="primary" />,
       },
 
       {
-        title: "Repair OUT",       
+        title: "Repair OUT",
         path: "/app/inventory/repair/complete",
         icon: <DoneIcon color="primary" />,
       },
       {
-        title: "Search",       
+        title: "Search",
         path: "/app/inventory/repair/search",
         icon: <SearchIcon color="primary" />,
       },
@@ -112,6 +113,11 @@ const Items = [
         title: "Search Users",
         path: "/app/users/search",
         icon: <SearchIcon color="primary" />,
+      },
+      {
+        title: "Reset Password",
+        path: "/app/users/reset_password",
+        icon: <AutorenewIcon color="primary" />,
       },
     ],
   },

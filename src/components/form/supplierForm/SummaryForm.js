@@ -19,21 +19,31 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Review(props) {
   const classes = useStyles();
-  const { userName, NIC, location, userId, role, status } = props.userValues;
+
+  const {
+    suppname,
+    NIC,
+    suppadd,
+    telephone,
+    remark,
+    refno,
+    status,
+  } = props.userValues;
 
   const summary = [
-    { name: "", label: "User ID", value: userId },
-    { name: "", label: "User Name", value: userName },
+    { name: "", label: "Supplier Name", value: suppname },
+    { name: "", label: "Supplier Address", value: suppadd },
     { name: "", label: "NIC", value: NIC },
-    { name: "", label: "Location", value: location },
-    { name: "", label: "Role", value: role },
+    { name: "", label: "Telephone", value: telephone },
+    { name: "", label: "Remark", value: remark },
+    { name: "", label: "Referance No", value: refno },
     { name: "", label: "Status", value: status },
   ];
 
   return (
     <React.Fragment>
       <Typography variant="h6" gutterBottom>
-        User Details Summary
+        Supplier Details Summary
       </Typography>
       <List disablePadding>
         {summary.map((data) => (

@@ -6,6 +6,10 @@ import Search from "../pages/Inventory/Search";
 import Transfer from "../../components/pages/Inventory/Transfer";
 import Home from "../../components/pages/Home/Home";
 import CreateUserForm from "../../components/pages/users/CreateUser";
+import ResetPassword from "../pages/users/ResetPassword";
+import Supplier from "../../components/pages/supplier/Supplier";
+import Locations from "../../components/pages/locations/Locations";
+import ItemGroup from "../../components/pages/Inventory/item_group/ItemGroup";
 
 function Layout() {
   return (
@@ -17,6 +21,10 @@ function Layout() {
         <Route path="/app/inventory/search" component={Search} />
         <Route path="/app/inventory/transfer" component={Transfer} />
         <Route path="/app/users/createuser" component={CreateUserForm} />
+        <Route path="/app/users/reset_password" component={ResetPassword} />
+        <Route path="/app/suppliers/create" component={Supplier} />
+        <Route path="/app/location/create" component={Locations} />
+        <Route path="/app/inventory/item_group" component={ItemGroup} />
       </Switch>
     </>
   );

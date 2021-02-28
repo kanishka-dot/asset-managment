@@ -3,31 +3,30 @@ import { axios } from "../../../connection/axios";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
-import INITDATA from "../../../data/user.create.data";
 import {
   FormControl,
   FormControlLabel,
   FormLabel,
-  InputLabel,
   Radio,
   RadioGroup,
-  Select,
-  FormHelperText,
-  MenuItem,
-  Button,
 } from "@material-ui/core";
 
-export default function AddressForm(props) {
-  const { userName, NIC, location, userId, role, status } = props.userValues;
+export default function FormOne(props) {
+  const {
+    suppname,
+    NIC,
+    suppadd,
+    telephone,
+    remark,
+    refno,
+    status,
+  } = props.userValues;
 
   const errors = props.userErrors;
 
   const dirty = props.userDirty;
 
   const handleOnChange = props.handleChanges;
-
-  console.log("Errors ==>", errors);
-  console.log("dirty ==>", dirty);
 
   // const getUser = async () => {
   //   const response = await axios
@@ -39,70 +38,38 @@ export default function AddressForm(props) {
   // };
 
   /*Drop down list items mapping*/
-  const INITLOCATIONS = INITDATA.LOCATIONS.map((data) => (
-    <MenuItem key={data.title} value={data.title}>
-      {data.title}
-    </MenuItem>
-  ));
-
-  const INITROLES = INITDATA.ROLES.map((data) => (
-    <MenuItem key={data.title} value={data.title}>
-      {data.title}
-    </MenuItem>
-  ));
 
   return (
     <React.Fragment>
       <Typography variant="h6" gutterBottom>
-        User Form
+        Supplier Form
       </Typography>
       <Grid container spacing={3}>
         <Grid item xs={12} sm={12}>
-          <InputLabel htmlFor="age-native-simple">Location</InputLabel>
-          <FormControl fullWidth>
-            <Select
-              autoFocus
-              fullWidth
-              name="location"
-              id="location"
-              value={location}
-              defaultValue=""
-              onChange={handleOnChange}
-            >
-              {INITLOCATIONS}
-            </Select>
-            <FormHelperText>
-              {Boolean(errors.location && dirty.location)
-                ? errors.location
-                : ""}
-            </FormHelperText>
-          </FormControl>
-        </Grid>
-        <Grid item xs={12} sm={12}>
           <TextField
             fullWidth
-            error={Boolean(errors.userId && dirty.userId)}
+            error={Boolean(errors.suppname && dirty.suppname)}
             id="standard-basic"
-            label="User ID"
-            name="userId"
-            value={userId}
+            label="Supplier Name"
+            name="suppname"
+            value={suppname}
             onChange={handleOnChange}
             helperText={
-              Boolean(errors.userId && dirty.userId) ? errors.userId : ""
+              Boolean(errors.suppname && dirty.suppname) ? errors.suppname : ""
             }
           />
         </Grid>
         <Grid item xs={12}>
           <TextField
             fullWidth
-            error={Boolean(errors.userName && dirty.userName)}
+            error={Boolean(errors.suppadd && dirty.suppadd)}
             id="standard-basic"
-            label="User Name"
-            name="userName"
-            value={userName}
+            label="Supplier Address"
+            name="suppadd"
+            value={suppadd}
             onChange={handleOnChange}
             helperText={
-              Boolean(errors.userName && dirty.userName) ? errors.userName : ""
+              Boolean(errors.suppadd && dirty.suppadd) ? errors.suppadd : ""
             }
           />
         </Grid>
@@ -118,24 +85,49 @@ export default function AddressForm(props) {
             helperText={Boolean(errors.NIC && dirty.NIC) ? errors.NIC : ""}
           />
         </Grid>
-
         <Grid item xs={12}>
-          <InputLabel htmlFor="age-native-simple">Role</InputLabel>
-          <FormControl fullWidth error={Boolean(errors.role && dirty.role)}>
-            <Select
-              fullWidth
-              name="role"
-              id="role"
-              value={role}
-              defaultValue=""
-              onClick={handleOnChange}
-            >
-              {INITROLES}
-            </Select>
-            <FormHelperText>
-              {Boolean(errors.role && dirty.role) ? errors.role : ""}
-            </FormHelperText>
-          </FormControl>
+          <TextField
+            fullWidth
+            error={Boolean(errors.telephone && dirty.telephone)}
+            id="standard-basic"
+            label="Telephone"
+            name="telephone"
+            value={telephone}
+            onChange={handleOnChange}
+            helperText={
+              Boolean(errors.telephone && dirty.telephone)
+                ? errors.telephone
+                : ""
+            }
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <TextField
+            fullWidth
+            error={Boolean(errors.refno && dirty.refno)}
+            id="standard-basic"
+            label="Referance No"
+            name="refno"
+            value={refno}
+            onChange={handleOnChange}
+            helperText={
+              Boolean(errors.refno && dirty.refno) ? errors.refno : ""
+            }
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <TextField
+            fullWidth
+            error={Boolean(errors.remark && dirty.remark)}
+            id="standard-basic"
+            label="Remark"
+            name="remark"
+            value={remark}
+            onChange={handleOnChange}
+            helperText={
+              Boolean(errors.remark && dirty.remark) ? errors.remark : ""
+            }
+          />
         </Grid>
         <Grid item xs={12} sm={12}>
           <FormControl>

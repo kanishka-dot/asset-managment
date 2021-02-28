@@ -1,5 +1,5 @@
-import { useState, useEffect, useCallback } from 'react';
-import { get_prop_values, is_object, is_required, VALUE, ERROR } from './utils';
+import { useState, useEffect, useCallback } from "react";
+import { get_prop_values, is_object, is_required, VALUE, ERROR } from "./utils";
 
 /**
  * useForm hooks to handle your validation in your forms
@@ -29,7 +29,7 @@ function useForm(
     setInitialErrorState();
   }, []); // eslint-disable-line
 
-  // Set a brand new field values and errors 
+  // Set a brand new field values and errors
   // If stateSchema changes
   useEffect(() => {
     const values = get_prop_values(state, VALUE);
@@ -52,13 +52,13 @@ function useForm(
 
   // Set a value of a specific field
   const setFieldValue = ({ name, value }) => {
-    setValues(prevState => ({ ...prevState, [name]: value }));
-    setDirty(prevState => ({ ...prevState, [name]: true }));
+    setValues((prevState) => ({ ...prevState, [name]: value }));
+    setDirty((prevState) => ({ ...prevState, [name]: true }));
   };
 
   // Set an error of a specific field
   const setFieldError = ({ name, error }) =>
-    setErrors(prevState => ({ ...prevState, [name]: error }));
+    setErrors((prevState) => ({ ...prevState, [name]: error }));
 
   // Validate fields in forms
   const validateField = useCallback(
@@ -70,15 +70,15 @@ function useForm(
 
       const field = validator[name];
 
-      let error = '';
+      let error = "";
       error = is_required(value, field.required);
 
-      if (is_object(field['validator']) && error === '') {
-        const validateFieldByCallback = field['validator'];
+      if (is_object(field["validator"]) && error === "") {
+        const validateFieldByCallback = field["validator"];
 
         // Test the function callback if the value is meet the criteria
-        if (!validateFieldByCallback['func'](value, values)) {
-          error = validateFieldByCallback['error'];
+        if (!validateFieldByCallback["func"](value, values)) {
+          error = validateFieldByCallback["error"];
         }
       }
 
@@ -90,7 +90,7 @@ function useForm(
   // Set Initial Error State
   // When hooks was first rendered...
   const setInitialErrorState = useCallback(() => {
-    Object.keys(errors).map(name =>
+    Object.keys(errors).map((name) =>
       setFieldError({ name, error: validateField(name, values[name]) })
     );
   }, [errors, values, validateField]);
@@ -100,14 +100,14 @@ function useForm(
   // Wrapped in useCallback to cached the function to avoid intensive memory leaked
   // in every re-render in component
   const validateErrorState = useCallback(
-    () => Object.values(errors).some(error => error),
+    () => Object.values(errors).some((error) => error),
     [errors]
   );
 
   // Use this callback function to safely submit the form
   // without any errors in state...
   const handleOnSubmit = useCallback(
-    event => {
+    (event) => {
       event.preventDefault();
 
       // Making sure that there's no error in the state
@@ -121,14 +121,13 @@ function useForm(
 
   // Event handler for handling changes in input.
   const handleOnChange = useCallback(
-    event => {
+    (event) => {
       setIsDirty(true);
 
       const name = event.target.name;
       const value = event.target.value;
 
       const error = validateField(name, value);
-
       setFieldValue({ name, value });
       setFieldError({ name, error });
     },

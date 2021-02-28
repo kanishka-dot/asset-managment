@@ -1,65 +1,36 @@
+import React from "react";
 
-  // const [error, setError] = useState({
-  //   userId: "",
-  //   userName: "",
-  //   NIC: "",
-  //   location: "",
-  //   role: "",
-  // });
+function reducer(state, action) {
+  switch (action.type) {
+    case "add_todo":
+      return {
+        todos: [...state.todos, { text: action.todo, status: false }],
+      };
+    default:
+      return state;
+  }
+}
 
-  // /*Check user in db*/
- 
-  // /*Form Validation*/
-  // const ValidateUserName = () => {
-  //   if (userName === "") {
-  //     setError({ ...error, userName: "User Name is Required" });
+function Test() {
+  const [{ todos }, dispatch] = React.useReducer(reducer, { todos: [] });
+  const [todo, setTodo] = React.useState([]);
 
-  //     return false;
-  //   } else setError({ ...error, userName: "" });
-  //   return true;
-  // };
+  React.useEffect(() => {
+    console.log("Render");
+  }, [todo]);
 
-  // const ValidateLocation = () => {
-  //   if (location === "") {
-  //     setError({ location: "Location is Required" });
+  return (
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        dispatch({ type: "add_todo", todo });
+        setTodo("");
+      }}
+    >
+      <input value={todo} onChange={(e) => setTodo(e.target.value)}></input>
+      <pre>{JSON.stringify(todos, null, 2)}</pre>
+    </form>
+  );
+}
 
-  //     return false;
-  //   } else setError({ location: "" });
-  //   getUser();
-  //   return true;
-  // };
-
-  // const ValidateUserID = () => {
-  //   if (userId.length < 5) {
-  //     setError({ userId: "User ID is Required" });
-
-  //     return false;
-  //   } else {
-  //     setError({ userId: "" });
-
-  //     return true;
-  //   }
-  // };
-
-  // const ValidateNIC = () => {
-  //   if (NIC.trim() === "") {
-  //     setError({ NIC: "NIC No is Required" });
-
-  //     return false;
-  //   } else if (!(NIC.length === 10 || NIC.length === 12)) {
-  //     setError({ NIC: "Invalid NIC No Format" });
-  //     return false;
-  //   } else {
-  //     setError({ NIC: "" });
-  //     return true;
-  //   }
-  // };
-
-  // const ValidateUserRole = () => {
-  //   if (role === "") {
-  //     setError({ role: "Role is Required" });
-  //     return false;
-  //   } else setError({ role: "" });
-  //   return true;
-  // };
-    
+export default Test;

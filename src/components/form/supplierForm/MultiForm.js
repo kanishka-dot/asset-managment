@@ -49,37 +49,35 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const steps = ["User Details", "Summary"];
+const steps = ["Supplier Details", "Summary"];
 
 export default function Checkout() {
   const stateSchema = {
-    userName: { value: "", error: "" },
+    suppname: { value: "", error: "" },
     NIC: { value: "", error: "" },
-    location: { value: "", error: "" },
-    userId: { value: "", error: "" },
-    role: { value: "", error: "" },
+    suppadd: { value: "", error: "" },
+    telephone: { value: "", error: "" },
+    refno: { value: "", error: "" },
+    remark: { value: "", error: "" },
     status: { value: "active", error: "" },
   };
 
   const stateValidatorSchema = {
-    userId: {
+    suppname: {
       required: true,
       validator: {
         func: (value) =>
           /^([A-Za-z][A-Za-z'-])+([A-Za-z][A-Za-z'-]+)+([A-Za-z][A-Za-z'-]+)*/.test(
             value
           ),
-        error: "User ID must be more than 3 character",
+        error: "Supplier name must be more than 3 character",
       },
     },
-    userName: {
+    suppadd: {
       required: true,
       validator: {
-        func: (value) =>
-          /^([A-Za-z][A-Za-z'-])+([A-Za-z][A-Za-z'-]+)+([A-Za-z][A-Za-z'-]+)+([A-Za-z][A-Za-z'-]+)*/.test(
-            value
-          ),
-        error: "User Name must be more than 5 character",
+        func: (value) => /./.test(value),
+        error: "Supplier address Invalid",
       },
     },
     NIC: {
@@ -89,18 +87,25 @@ export default function Checkout() {
         error: "Invalid NIC Number",
       },
     },
-    location: {
+    telephone: {
       required: true,
       validator: {
-        func: (value) => /^(\w+\S+)$/.test(value),
-        error: "Invalid Location",
+        func: (value) => /^[1-9]\d{8}$/.test(value),
+        error: "Invalid Telephone No",
       },
     },
-    role: {
+    refno: {
       required: true,
       validator: {
-        func: (value) => /^(\w+\S+)$/.test(value),
-        error: "Invalid Role",
+        func: (value) => /./.test(value),
+        error: "Invalid Refernace",
+      },
+    },
+    remark: {
+      required: true,
+      validator: {
+        func: (value) => /./.test(value),
+        error: "Invalid Remark",
       },
     },
     status: {
@@ -116,7 +121,7 @@ export default function Checkout() {
     stateSchema,
     stateValidatorSchema
   );
-  const { userName, NIC, location, userId, role } = errors;
+  const { suppname, NIC, suppadd, telephone } = errors;
 
   // if (
   //   userName === "" &&
@@ -174,7 +179,7 @@ export default function Checkout() {
       <main className={classes.layout}>
         <Paper className={classes.paper}>
           <Typography component="h5" variant="h5" align="left">
-            User Create
+            Supplier
           </Typography>
           <Stepper activeStep={activeStep} className={classes.stepper}>
             {steps.map((label) => (
@@ -206,11 +211,10 @@ export default function Checkout() {
                     onClick={handleNext}
                     className={classes.button}
                     disabled={
-                      userName === "" &&
+                      suppname === "" &&
                       NIC === "" &&
-                      location === "" &&
-                      userId === "" &&
-                      role === ""
+                      suppadd === "" &&
+                      telephone === ""
                         ? false
                         : true
                     }
