@@ -100,10 +100,10 @@ export default function AddressForm({ formData, setValues }) {
             )}
           </InputMask>
         </Grid>
-        <Grid item xs={12} sm={3}>
+        <Grid item xs={12} sm={12}>
           <FormControl>
             <FormLabel>Status</FormLabel>
-            <RadioGroup row name="status" value={status} onChange={setValues}>
+            <RadioGroup name="status" value={status} onChange={setValues}>
               <FormControlLabel
                 value="Active"
                 control={<Radio />}

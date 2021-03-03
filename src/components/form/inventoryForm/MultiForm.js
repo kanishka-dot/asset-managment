@@ -18,11 +18,11 @@ const useStyles = makeStyles((theme) => ({
     position: "relative",
   },
   layout: {
-    width: "auto",
+    width: "50rem",
     marginLeft: theme.spacing(2),
     marginRight: theme.spacing(2),
     [theme.breakpoints.up(600 + theme.spacing(2) * 2)]: {
-      width: "auto",
+      width: "50rem",
       marginLeft: "auto",
       marginRight: "auto",
     },

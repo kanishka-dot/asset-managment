@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Paper from "@material-ui/core/Paper";
@@ -50,6 +50,36 @@ const useStyles = makeStyles((theme) => ({
 export default function ItemGroup() {
   const classes = useStyles();
 
+  const  [values, setValues ] = useState({
+    Itmgrp: '', ItmGrpNm: ''
+  })
+
+  const itmgrpRef = useRef(null);
+  const createBtnRef = useRef(null);
+
+
+  const handleChange = (event) => {
+    let nam = event.target.name;
+    let val = event.target.value;
+    setValues({...values,[nam]:val});   
+  }
+
+
+  const changeFocus = (event) =>{
+    if(event.target.name ==='Itmgrp'){
+      if (event.key === 'Enter') {
+        itmgrpRef.current.focus();
+      }
+    }else{
+      if (event.key === 'Enter') {
+        createBtnRef.current.focus();
+      }
+    }
+
+   
+  }
+
+
   return (
     <React.Fragment>
       <CssBaseline />
@@ -65,7 +95,10 @@ export default function ItemGroup() {
                 fullWidth
                 id="standard-basic"
                 label="Item Group"
-                name="Itemgrp"
+                name="Itmgrp"
+                value={values.Itmgrp}
+                onChange={handleChange}
+                onKeyPress={changeFocus}
               />
             </Grid>
 
@@ -74,7 +107,7 @@ export default function ItemGroup() {
                 fullWidth
                 variant="outlined"
                 id="standard-basic"
-                name="Itemgrp"
+                name="ItemgrpLabl"
                 disabled
               />
             </Grid>
@@ -83,7 +116,11 @@ export default function ItemGroup() {
                 fullWidth
                 id="standard-basic"
                 label="Item Group Name"
-                name="Itemgrp"
+                name="ItmGrpNm"
+                inputRef={itmgrpRef}
+                onChange={handleChange}
+                value={values.ItmGrpNm}
+                onKeyPress={changeFocus}
               />
             </Grid>
 
@@ -92,7 +129,7 @@ export default function ItemGroup() {
                 fullWidth
                 variant="outlined"
                 id="standard-basic"
-                name="Itemgrp"
+                name="Itemgrpnamelabel"
                 disabled
               />
             </Grid>
@@ -102,6 +139,7 @@ export default function ItemGroup() {
               variant="contained"
               color="primary"
               className={classes.button}
+              innerRef={createBtnRef}
             >
               Create
             </Button>
