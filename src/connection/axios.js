@@ -1,6 +1,6 @@
 import Axios from "axios";
 
 export const axios = Axios.create({
-  baseURL: "http://localhost:8081",
+  baseURL: "https://jsonplaceholder.typicode.com",
   timeout: 3000,
 });

@@ -1,9 +1,11 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
+import { axios } from "../../../../connection/axios";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import { Button, Grid, TextField } from "@material-ui/core";
+import { lastDayOfDecade } from "date-fns";
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -35,10 +37,6 @@ const useStyles = makeStyles((theme) => ({
 
   button: {
     marginTop: theme.spacing(3),
-    marginLeft: theme.spacing(1),
-    marginTop: theme.spacing(3),
-    marginLeft: theme.spacing(1),
-    marginRight: theme.spacing(3),
     width: 100,
   },
   btn: {
@@ -50,33 +48,68 @@ const useStyles = makeStyles((theme) => ({
 export default function ItemGroup() {
   const classes = useStyles();
 
-  const  [values, setValues ] = useState({
-    Itmgrp: '', ItmGrpNm: ''
+  const [value, setValue] = useState({ hits: [] });
+  const [ItemGrp, setItmGrp] = useState('');
+
+
+  const [values, setValues] = useState({
+    Itmgrp: '', ItmGrpNm: '', ItemgrpLabl: '', Itemgrpnamelabel:'111'
   })
 
   const itmgrpRef = useRef(null);
   const createBtnRef = useRef(null);
 
 
+
+  // const getUser = async (prop) => {
+  //   const response = await axios
+  //     .get(`https://jsonplaceholder.typicode.com/todos/${prop}`)
+  //     .catch((err) => console.log("Error ", err));
+  //   if (response) {
+  //     // console.log(response.data);
+
+  //     setValue(response.data)
+
+  //   }
+  // };
+
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const result = await axios(
+        `https://jsonplaceholder.typicode.com/todos/${ItemGrp}`,
+      );
+        console.log(result);
+        
+      setValues({...values,[values.Itemgrpnamelabel]:result.data.title});
+    };
+ 
+    fetchData();
+  }, [ItemGrp]);
+
+
+
   const handleChange = (event) => {
     let nam = event.target.name;
     let val = event.target.value;
-    setValues({...values,[nam]:val});   
+    setValues({ ...values, [nam]: val });
   }
 
 
-  const changeFocus = (event) =>{
-    if(event.target.name ==='Itmgrp'){
+  const changeFocus = (event) => {
+    if (event.target.name === 'Itmgrp') {
       if (event.key === 'Enter') {
+        setItmGrp(event.target.value);
+        // setValues({ ...values, ItemgrpLabl: value.title })
         itmgrpRef.current.focus();
       }
-    }else{
+    } else {
+
       if (event.key === 'Enter') {
         createBtnRef.current.focus();
       }
     }
 
-   
   }
 
 
@@ -96,8 +129,6 @@ export default function ItemGroup() {
                 id="standard-basic"
                 label="Item Group"
                 name="Itmgrp"
-                value={values.Itmgrp}
-                onChange={handleChange}
                 onKeyPress={changeFocus}
               />
             </Grid>
@@ -108,6 +139,7 @@ export default function ItemGroup() {
                 variant="outlined"
                 id="standard-basic"
                 name="ItemgrpLabl"
+                value={values.ItemgrpLabl}
                 disabled
               />
             </Grid>
@@ -130,6 +162,7 @@ export default function ItemGroup() {
                 variant="outlined"
                 id="standard-basic"
                 name="Itemgrpnamelabel"
+                value={values.Itemgrpnamelabel}
                 disabled
               />
             </Grid>
