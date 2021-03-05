@@ -53,7 +53,7 @@ export default function ItemGroup() {
 
 
   const [values, setValues] = useState({
-    Itmgrp: '', ItmGrpNm: '', ItemgrpLabl: '', Itemgrpnamelabel:'111'
+    Itmgrp: '', ItmGrpNm: '', ItemgrpLabl: '', Itemgrpnamelabel:''
   })
 
   const itmgrpRef = useRef(null);
@@ -61,20 +61,6 @@ export default function ItemGroup() {
 
 
 
-  // const getUser = async (prop) => {
-  //   const response = await axios
-  //     .get(`https://jsonplaceholder.typicode.com/todos/${prop}`)
-  //     .catch((err) => console.log("Error ", err));
-  //   if (response) {
-  //     // console.log(response.data);
-
-  //     setValue(response.data)
-
-  //   }
-  // };
-
-
-  useEffect(() => {
     const fetchData = async () => {
       const result = await axios(
         `https://jsonplaceholder.typicode.com/todos/${ItemGrp}`,
@@ -84,8 +70,8 @@ export default function ItemGroup() {
       setValues({...values,[values.Itemgrpnamelabel]:result.data.title});
     };
  
-    fetchData();
-  }, [ItemGrp]);
+
+
 
 
 
