@@ -10,6 +10,7 @@ import ResetPassword from "../pages/users/ResetPassword";
 import Supplier from "../../components/pages/supplier/Supplier";
 import Locations from "../../components/pages/locations/Locations";
 import ItemGroup from "../../components/pages/Inventory/item_group/ItemGroup";
+import SearchItemGroup from "../../components/pages/Inventory/item_group/search_itemgrps";
 
 function Layout() {
   return (
@@ -25,6 +26,10 @@ function Layout() {
         <Route path="/app/suppliers/create" component={Supplier} />
         <Route path="/app/location/create" component={Locations} />
         <Route path="/app/inventory/item_group" component={ItemGroup} />
+        <Route
+          path="/app/inventory/itemgroup/search"
+          component={SearchItemGroup}
+        />
       </Switch>
     </>
   );

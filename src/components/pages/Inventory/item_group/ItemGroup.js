@@ -5,7 +5,8 @@ import { axios } from "../../../../connection/axios";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import { Button, Grid, TextField } from "@material-ui/core";
-import { lastDayOfDecade } from "date-fns";
+import Snackbar from "@material-ui/core/Snackbar";
+import { Alert } from "@material-ui/lab";
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -44,65 +45,107 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "flex-end",
   },
 }));
-
 export default function ItemGroup() {
   const classes = useStyles();
 
   const [value, setValue] = useState({ hits: [] });
-  const [ItemGrp, setItmGrp] = useState('');
+  const [ItemGrp, setItmGrp] = useState("");
 
+  const FORM_INITAL_VALUE = {
+    Itmgrp: "",
+    ItmGrpNm: "",
+    ItemgrpLabl: "",
+    Itemgrpnamelabel: "",
+  };
 
   const [values, setValues] = useState({
-    Itmgrp: '', ItmGrpNm: '', ItemgrpLabl: '', Itemgrpnamelabel:''
-  })
+    Itmgrp: "",
+    ItmGrpNm: "",
+    ItemgrpLabl: "",
+    Itemgrpnamelabel: "",
+  });
 
   const itmgrpRef = useRef(null);
   const createBtnRef = useRef(null);
+  const [open, setOpen] = useState(false);
 
+  const popSucessNotify = () => {
+    setOpen(true);
+  };
 
+  const clearData = () => {
+    setValues(FORM_INITAL_VALUE);
+  };
 
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpen(false);
+  };
+
+  const createItemGroup = () => {
     const fetchData = async () => {
-      const result = await axios(
-        `https://jsonplaceholder.typicode.com/todos/${ItemGrp}`,
-      );
-        console.log(result);
-        
-      setValues({...values,[values.Itemgrpnamelabel]:result.data.title});
+      axios
+        .post("http://localhost:8081/itemgroup/createnewitemgroup", {
+          id: values.Itmgrp,
+          name: values.ItmGrpNm,
+          mod_by: "kanishka",
+          mod_date: "2021-03-07",
+          cre_by: "kanishka",
+          cre_date: "2021-03-07",
+        })
+        .then(
+          (response) => {
+            console.log(response);
+            popSucessNotify();
+            clearData();
+          },
+          (error) => {
+            console.log(error);
+          }
+        );
     };
- 
-
-
-
-
+    fetchData();
+  };
 
   const handleChange = (event) => {
     let nam = event.target.name;
     let val = event.target.value;
     setValues({ ...values, [nam]: val });
-  }
-
+  };
 
   const changeFocus = (event) => {
-    if (event.target.name === 'Itmgrp') {
-      if (event.key === 'Enter') {
+    if (event.target.name === "Itmgrp") {
+      if (event.key === "Enter") {
         setItmGrp(event.target.value);
         // setValues({ ...values, ItemgrpLabl: value.title })
         itmgrpRef.current.focus();
       }
     } else {
-
-      if (event.key === 'Enter') {
+      if (event.key === "Enter") {
         createBtnRef.current.focus();
       }
     }
-
-  }
-
+  };
 
   return (
     <React.Fragment>
       <CssBaseline />
-
+      <Snackbar
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "right",
+        }}
+        open={open}
+        autoHideDuration={6000}
+        message="Item Group Sucessfully Created"
+      >
+        <Alert onClose={handleClose} severity="success">
+          Item Group Sucessfully Created.
+        </Alert>
+      </Snackbar>
       <main className={classes.layout}>
         <Paper className={classes.paper}>
           <Typography component="h6" variant="h6" align="left">
@@ -114,7 +157,9 @@ export default function ItemGroup() {
                 fullWidth
                 id="standard-basic"
                 label="Item Group"
+                value={values.Itmgrp}
                 name="Itmgrp"
+                onChange={handleChange}
                 onKeyPress={changeFocus}
               />
             </Grid>
@@ -159,6 +204,7 @@ export default function ItemGroup() {
               color="primary"
               className={classes.button}
               innerRef={createBtnRef}
+              onClick={createItemGroup}
             >
               Create
             </Button>

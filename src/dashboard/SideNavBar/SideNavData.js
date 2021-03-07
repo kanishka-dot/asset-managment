@@ -37,6 +37,11 @@ const Items = [
         path: "/app/inventory/item_group",
         icon: <AddIcon color="primary" />,
       },
+      {
+        title: "Search Item Group",
+        path: "/app/inventory/itemgroup/search",
+        icon: <SearchIcon color="primary" />,
+      },
     ],
   },
 
