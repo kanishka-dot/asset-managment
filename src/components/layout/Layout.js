@@ -11,6 +11,7 @@ import Supplier from "../../components/pages/supplier/Supplier";
 import Locations from "../../components/pages/locations/Locations";
 import ItemGroup from "../../components/pages/Inventory/item_group/ItemGroup";
 import SearchItemGroup from "../../components/pages/Inventory/item_group/search_itemgrps";
+import SearchLocations from "../../components/pages/locations/searchlocation";
 
 function Layout() {
   return (
@@ -29,6 +30,10 @@ function Layout() {
         <Route
           path="/app/inventory/itemgroup/search"
           component={SearchItemGroup}
+        />
+         <Route
+          path="/app/location/search"
+          component={SearchLocations}
         />
       </Switch>
     </>
