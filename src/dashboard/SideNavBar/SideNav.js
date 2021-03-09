@@ -16,19 +16,24 @@ import SideNavItemGroup from "./SideNavItemGroup";
 import Items from "./SideNavData";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import { Menu, MenuItem } from "@material-ui/core";
+import logoimg from "../../assets/images/Arpico1.jpg";
 
-const drawerWidth = 250;
+const drawerWidth = 260;
 
 const useStyles = makeStyles((theme) => ({
   timebar: {
     marginTop: 10,
     textAlign: "center",
   },
+
   root: {
     display: "flex",
-    "& .MuiToolbar-root.MuiToolbar-regular.MuiToolbar-gutters": {
-      backgroundColor: "#3f51b5",
-    },
+
+   
+  },
+  logo: {
+    width: "40%",
+    height: "30%",
   },
   drawer: {
     [theme.breakpoints.up("sm")]: {
@@ -40,7 +45,9 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.up("sm")]: {
       width: `calc(100% - ${drawerWidth}px)`,
       marginLeft: drawerWidth,
+   
     },
+    backgroundColor: "#1565C0"
   },
 
   menuButton: {
@@ -53,6 +60,7 @@ const useStyles = makeStyles((theme) => ({
   toolbar: theme.mixins.toolbar,
   drawerPaper: {
     width: drawerWidth,
+    backgroundColor: "#1565C0"
   },
   content: {
     flexGrow: 1,
@@ -66,7 +74,7 @@ const useStyles = makeStyles((theme) => ({
 function ResponsiveDrawer(props) {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
-
+  const color = "#FFFFFF" 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -97,20 +105,23 @@ function ResponsiveDrawer(props) {
   });
 
   const drawer = (
-    <div>
+    <React.Fragment >
       <Box mt={4} textAlign="center">
-        <Typography color="primary" variant="h5">
-          <Time />
+        <Typography style={{ color: color }}  variant="h5">
+        <img src={logoimg} alt="Logo" className={classes.logo} />
+                <Typography variant="subtitle2" gutterBottom>
+                  IT Related Inventory Management
+                </Typography>
         </Typography>
       </Box>
-      <div className={classes.toolbar} />
+      {/* <div className={classes.toolbar} /> */}
       <Divider />
       {sideNavDataDisplay}
-    </div>
+    </React.Fragment>
   );
 
   return (
-    <div className={classes.root}>
+    <React.Fragment className={classes.root}>
       <CssBaseline />
       <AppBar position="static" className={classes.appBar}>
         <Toolbar>
@@ -150,7 +161,7 @@ function ResponsiveDrawer(props) {
       >
         {drawer}
       </Drawer>
-    </div>
+    </React.Fragment>
   );
 }
 

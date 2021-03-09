@@ -12,6 +12,8 @@ import Locations from "../../components/pages/locations/Locations";
 import ItemGroup from "../../components/pages/Inventory/item_group/ItemGroup";
 import SearchItemGroup from "../../components/pages/Inventory/item_group/search_itemgrps";
 import SearchLocations from "../../components/pages/locations/searchlocation";
+import SearchSupplier from "../../components/pages/supplier/SearchSupplier";
+import InventoryGrn from "../../components/pages/Inventory/Grn";
 
 function Layout() {
   return (
@@ -27,6 +29,8 @@ function Layout() {
         <Route path="/app/suppliers/create" component={Supplier} />
         <Route path="/app/location/create" component={Locations} />
         <Route path="/app/inventory/item_group" component={ItemGroup} />
+        <Route path="/app/suppliers/search" component={SearchSupplier} />
+        <Route path="/app/inventory/grn" component={InventoryGrn} />
         <Route
           path="/app/inventory/itemgroup/search"
           component={SearchItemGroup}

@@ -37,9 +37,9 @@ function SideNavItemGroup(props) {
     <List>
       <ListItem button onClick={handleInput}>
         <ListItemIcon>{icon}</ListItemIcon>
-        <ListItemText primary={title} />
+        <ListItemText primary={title}   style={{ textDecoration: "none", color: "#FFFFFF" }}/>
 
-        {open ? <ExpandLess /> : <ExpandMore />}
+        {open ? <ExpandLess style={{  color: "#FFFFFF" }}/> : <ExpandMore style={{  color: "#FFFFFF" }}/>}
       </ListItem>
       <Collapse in={open} timeout="auto" unmountOnExit>
         <List className={classes.content}>{itemGroup}</List>

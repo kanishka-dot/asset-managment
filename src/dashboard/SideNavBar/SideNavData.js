@@ -17,139 +17,142 @@ import SyncAltIcon from "@material-ui/icons/SyncAlt";
 import DirectionsBoatIcon from "@material-ui/icons/DirectionsBoat";
 import AutorenewIcon from "@material-ui/icons/Autorenew";
 
+const color = "#FFFFFF" 
+
+
 const Items = [
   {
     title: "Dashboard",
-    icon: <DashboardIcon color="primary" />,
+    icon: <DashboardIcon style={{ color: color }}  />,
     path: "/app/home",
   },
   {
     title: "Items",
-    icon: <StarsIcon color="primary" />,
+    icon: <StarsIcon style={{ color: color }} />,
     items: [
       {
         title: "Create Item Code",
         path: "/app/inventory/create",
-        icon: <AddIcon color="primary" />,
+        icon: <AddIcon style={{ color: color }}  />,
       },
       {
         title: "Create Item Group",
         path: "/app/inventory/item_group",
-        icon: <AddIcon color="primary" />,
+        icon: <AddIcon style={{ color: color }}  />,
       },
       {
         title: "Search Item Group",
         path: "/app/inventory/itemgroup/search",
-        icon: <SearchIcon color="primary" />,
+        icon: <SearchIcon style={{ color: color }}  />,
       },
     ],
   },
 
   {
     title: "Transcations",
-    icon: <SyncAltIcon color="primary" />,
+    icon: <SyncAltIcon style={{ color: color }}  />,
     items: [
       {
-        title: "Inventory GRN",
-        path: "/app/inventory/receive_out",
-        icon: <DirectionsBoatIcon color="primary" />,
+        title: "GRN",
+        path: "/app/inventory/grn",
+        icon: <DirectionsBoatIcon style={{ color: color }}  />,
       },
 
       {
-        title: "Inventory GTN IN",
+        title: "GTN IN",
         path: "/app/inventory/receive",
-        icon: <CallReceivedIcon color="primary" />,
+        icon: <CallReceivedIcon style={{ color: color }}  />,
       },
       {
-        title: "Inventory GTN OUT",
+        title: "GTN OUT",
         path: "/app/inventory/transfer",
-        icon: <CallMadeIcon color="primary" />,
+        icon: <CallMadeIcon style={{ color: color }}  />,
       },
     ],
   },
   {
     title: "Repair Items",
-    icon: <BuildIcon color="primary" />,
+    icon: <BuildIcon style={{ color: color }}  />,
     items: [
       {
         title: "Repair IN",
         path: "/app/inventory/repair/add",
-        icon: <AddIcon color="primary" />,
+        icon: <AddIcon style={{ color: color }}  />,
       },
 
       {
         title: "Repair OUT",
         path: "/app/inventory/repair/complete",
-        icon: <DoneIcon color="primary" />,
+        icon: <DoneIcon style={{ color: color }}  />,
       },
       {
         title: "Search",
         path: "/app/inventory/repair/search",
-        icon: <SearchIcon color="primary" />,
+        icon: <SearchIcon style={{ color: color }}  />,
       },
     ],
   },
   {
     title: "Suppliers",
-    icon: <SupervisedUserCircleIcon color="primary" />,
+    icon: <SupervisedUserCircleIcon style={{ color: color }}  />,
     items: [
       {
         title: "Create Suppliers",
         path: "/app/suppliers/create",
-        icon: <AddIcon color="primary" />,
+        icon: <AddIcon style={{ color: color }}  />,
       },
       {
         title: "Search Suppliers",
         path: "/app/suppliers/search",
-        icon: <SearchIcon color="primary" />,
+        icon: <SearchIcon style={{ color: color }}  />,
       },
     ],
   },
   {
     title: "Users",
-    icon: <PeopleIcon color="primary" />,
+    icon: <PeopleIcon style={{ color: color }} />,
     items: [
       {
         title: "Create User",
         path: "/app/users/createuser",
-        icon: <AddIcon color="primary" />,
+        icon: <AddIcon style={{ color: color }}  />,
       },
       {
         title: "Search Users",
         path: "/app/users/search",
-        icon: <SearchIcon color="primary" />,
+        icon: <SearchIcon style={{ color: color }}  />,
       },
       {
         title: "Reset Password",
         path: "/app/users/reset_password",
-        icon: <AutorenewIcon color="primary" />,
+        icon: <AutorenewIcon style={{ color: color }}  />,
       },
     ],
   },
   {
     title: "Locations",
-    icon: <LocationCityIcon color="primary" />,
+    icon: <LocationCityIcon style={{ color: color }}  />,
     items: [
       {
         title: "Create Locations",
         path: "/app/location/create",
-        icon: <AddIcon color="primary" />,
+        icon: <AddIcon style={{ color: color }}  />,
       },
       {
         title: "Search locations",
         path: "/app/location/search",
-        icon: <SearchIcon color="primary" />,
+        icon: <SearchIcon style={{ color: color }}  />,
       },
     ],
   },
   {
     title: "Reports",
-    icon: <FileCopyIcon color="primary" />,
+    icon: <FileCopyIcon style={{ color: color }} />,
     items: [
       {
         title: "Exception Reports",
         path: "/app/reports/create",
-        icon: <ReportIcon color="primary" />,
+        icon: <ReportIcon style={{ color: color }} />,
       },
     ],
   },

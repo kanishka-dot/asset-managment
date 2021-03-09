@@ -10,7 +10,7 @@ function SidebarListItem(props) {
     <List>
       <Link
         to={props.route}
-        style={{ textDecoration: "none", color: "#000000" }}
+        style={{ textDecoration: "none", color: "#FFFFFF" }}
       >
         <ListItem button>
           <ListItemIcon>{props.icon}</ListItemIcon>
