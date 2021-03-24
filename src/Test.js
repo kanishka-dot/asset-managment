@@ -1,36 +1,31 @@
-import React from "react";
+import React, { useEffect,useState } from "react";
 
-function reducer(state, action) {
-  switch (action.type) {
-    case "add_todo":
-      return {
-        todos: [...state.todos, { text: action.todo, status: false }],
-      };
-    default:
-      return state;
-  }
+function Test(){
+
+  const [state,setState] = useState(1);
+
+function buttonClick(){
+  setState(state+1)
 }
 
-function Test() {
-  const [{ todos }, dispatch] = React.useReducer(reducer, { todos: [] });
-  const [todo, setTodo] = React.useState([]);
+console.log(state);
 
-  React.useEffect(() => {
-    console.log("Render");
-  }, [todo]);
+  useEffect(()=>{
+    console.log("component did mount");  
+  },[])
 
-  return (
-    <form
-      onSubmit={(e) => {
-        e.preventDefault();
-        dispatch({ type: "add_todo", todo });
-        setTodo("");
-      }}
-    >
-      <input value={todo} onChange={(e) => setTodo(e.target.value)}></input>
-      <pre>{JSON.stringify(todos, null, 2)}</pre>
-    </form>
-  );
+  useEffect(()=>{
+    console.log("Button clicked");  
+  },[state])
+
+
+return(
+  <div>
+    <button onClick={()=>buttonClick()}>Click Me</button>
+  </div>
+  
+)
 }
+
 
 export default Test;

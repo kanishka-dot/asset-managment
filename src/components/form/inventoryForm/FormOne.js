@@ -80,13 +80,6 @@ export default function AddressForm({ formData, setValues }) {
           </InputMask>
         </Grid>
         <Grid item xs={12} sm={3}>
-          <TextField
-            id="standard-basic"
-            label="Supplier ID"
-            name="supNo"
-            value={supNo}
-            onChange={setValues}
-          />
         </Grid>
         <Grid item xs={12} sm={3}>
           <InputMask

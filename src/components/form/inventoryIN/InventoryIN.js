@@ -3,18 +3,19 @@ import Grid from "@material-ui/core/Grid";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
-import { Paper, Box, Button } from "@material-ui/core";
+import { Paper, Box, Button, FormControl, InputLabel, Input, InputAdornment, IconButton } from "@material-ui/core";
 import CurrentDate from "../../utils/Date";
 import MUIDataTable from "mui-datatables";
-import Autocomplete from "@material-ui/lab/Autocomplete";
+import clsx from "clsx"
+import AddIcon from "@material-ui/icons/Add";
 
 const useStyles = makeStyles((theme) => ({
   layout: {
-    width: "auto",
+    width: "60rem",
     marginLeft: theme.spacing(2),
     marginRight: theme.spacing(2),
     [theme.breakpoints.up(600 + theme.spacing(2) * 2)]: {
-      width: "auto",
+      width: "60rem",
       marginLeft: "auto",
       marginRight: "auto",
     },
@@ -52,6 +53,12 @@ const useStyles = makeStyles((theme) => ({
   heading: {
     marginBottom: theme.spacing(3),
   },
+  margin: {
+    margin: theme.spacing(0),
+  },
+  textField: {
+    width: '25ch',
+  },
 }));
 
 export default function InventoryIN() {
@@ -70,6 +77,7 @@ export default function InventoryIN() {
     tableBodyHeight,
     tableBodyMaxHeight,
     onRowsDelete: false,
+    selectableRows: false
   };
   const header = [
     "Document No",
@@ -130,7 +138,7 @@ export default function InventoryIN() {
   };
 
   const addData = () => {
-    if (value.docno) {
+   
       tableData.push([
         value.docno,
         value.date,
@@ -143,7 +151,7 @@ export default function InventoryIN() {
         value.diliveryperson,
       ]);
       setValue({ ...initialState });
-    }
+   
     console.log(value);
   };
 
@@ -155,108 +163,115 @@ export default function InventoryIN() {
             Inventory GRN
           </Typography>
           <Grid container spacing={3}>
-            <Box component="span">
-              <Grid item xs={12}>
-                <TextField
-                  type="date"
-                  label="Date"
-                  defaultValue={CurrentDate()}
-                  onChange={handleDateChange}
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                />
-              </Grid>
+            <Grid item xs={12}>
+              <TextField
+                type="date"
+                label="Date"
+                defaultValue={CurrentDate()}
+                onChange={handleDateChange}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+              />
+            </Grid>
 
-              <Grid item xs={12}>
-                <TextField
-                  id="docno"
-                  label="Document No"
-                  name="docno"
-                  value={value.docno}
-                  onChange={handleChange("docno")}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <Autocomplete
 
-                  id="combo-box-demo"
-                  options={top100Films}
-                  getOptionSelected={value.supplierno}
-                  getOptionLabel={(option) => option.name}
-                  style={{ width: 200 }}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      label="Supplier No"         
-                    />
-                  )}
+            <Grid item xs={3}>
+              <FormControl className={clsx(classes.margin, classes.textField)}>
+                <InputLabel htmlFor="standard-adornment-password">Supplier No</InputLabel>
+                <Input
+                  id="standard-adornment-password"
+                  value={value.supplierno}
+                  onChange={handleChange("supplierno")}
+                  endAdornment={
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={()=>{console.log("click")}
+                        }
+                      >
+                       <AddIcon />
+                      </IconButton>
+                    </InputAdornment>
+                  }
                 />
-              </Grid>
+              </FormControl>
+            </Grid>
 
-              <Grid item xs={12}>
-                <TextField
-                  id="itemcode"
-                  label="Item Code"
-                  name="itemcode"
+            <Grid item xs={3}>
+              <FormControl className={clsx(classes.margin, classes.textField)}>
+                <InputLabel htmlFor="standard-adornment-password">Item Code</InputLabel>
+                <Input
+                  id="standard-adornment-password"
                   value={value.itemcode}
                   onChange={handleChange("itemcode")}
+                  endAdornment={
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={()=>{console.log("click")}
+                        }
+                      >
+                       <AddIcon />
+                      </IconButton>
+                    </InputAdornment>
+                  }
                 />
-              </Grid>
-            </Box>
-            <Grid container spacing={3}>
-              <Grid item xs={3}>
-                <TextField
-                  fullWidth
-                  id="diliveryperson"
-                  label="Delivery person"
-                  name="diliveryperson"
-                  value={value.diliveryperson}
-                  onChange={handleChange("diliveryperson")}
-                />
-              </Grid>
-              <Grid item xs={3}>
-                <TextField
-                  fullWidth
-                  id="cost"
-                  label="Cost"
-                  name="cost"
-                  value={value.cost}
-                  onChange={handleChange("cost")}
-                />
-              </Grid>
-              <Grid item xs={3}>
-                <TextField
-                  fullWidth
-                  id="barcode"
-                  label="Barcode"
-                  name="barcode"
-                  value={value.barcode}
-                  onChange={handleChange("barcode")}
-                />
-              </Grid>
-              <Grid item xs={3}>
-                <TextField
-                  fullWidth
-                  id="serialno"
-                  label="Serial No"
-                  name="serialno"
-                  value={value.serialno}
-                  onChange={handleChange("serialno")}
-                />
-              </Grid>
-              <Grid item xs={3}>
-                <TextField
-                  fullWidth
-                  id="warranty"
-                  label="Warranty"
-                  name="warranty"
-                  value={value.warranty}
-                  onChange={handleChange("warranty")}
-                />
-              </Grid>
+              </FormControl>
             </Grid>
-            <Grid item xs={3} spacing={1}>
+
+            <Grid item xs={3}>
+              <TextField
+                fullWidth
+                id="diliveryperson"
+                label="Delivery person"
+                name="diliveryperson"
+                value={value.diliveryperson}
+                onChange={handleChange("diliveryperson")}
+              />
+            </Grid>
+            <Grid item xs={3}>
+              <TextField
+                fullWidth
+                id="cost"
+                label="Cost"
+                name="cost"
+                value={value.cost}
+                onChange={handleChange("cost")}
+              />
+            </Grid>
+            <Grid item xs={3}>
+              <TextField
+                fullWidth
+                id="barcode"
+                label="Barcode"
+                name="barcode"
+                value={value.barcode}
+                onChange={handleChange("barcode")}
+              />
+            </Grid>
+            <Grid item xs={3}>
+              <TextField
+                fullWidth
+                id="serialno"
+                label="Serial No"
+                name="serialno"
+                value={value.serialno}
+                onChange={handleChange("serialno")}
+              />
+            </Grid>
+            <Grid item xs={3}>
+              <TextField
+                fullWidth
+                id="warranty"
+                label="Warranty"
+                name="warranty"
+                value={value.warranty}
+                onChange={handleChange("warranty")}
+              />
+            </Grid>
+
+            <Grid item xs={12} spacing={1}>
               <Button
                 className={classes.button}
                 variant="contained"
