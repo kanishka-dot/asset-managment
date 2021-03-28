@@ -32,7 +32,7 @@ export default function AddressForm({ formData, setValues }) {
         Basic Details
       </Typography>
       <Grid container spacing={3}>
-        <Grid item xs={12} >
+        <Grid item xs={12}>
           <TextField
             fullWidth
             id="standard-basic"
@@ -79,8 +79,7 @@ export default function AddressForm({ formData, setValues }) {
             )}
           </InputMask>
         </Grid>
-        <Grid item xs={12} sm={3}>
-        </Grid>
+
         <Grid item xs={12} sm={3}>
           <InputMask
             mask="9999999"

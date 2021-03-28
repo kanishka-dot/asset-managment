@@ -74,28 +74,9 @@ export default function Location() {
             <Grid item xs={6}>
               <TextField
                 fullWidth
-                variant="outlined"
-                id="standard-basic"
-                name="location"
-                disabled
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <TextField
-                fullWidth
                 id="standard-basic"
                 label="Location Name"
                 name="locname"
-              />
-            </Grid>
-
-            <Grid item xs={6}>
-              <TextField
-                fullWidth
-                variant="outlined"
-                id="standard-basic"
-                name="locname"
-                disabled
               />
             </Grid>
           </Grid>

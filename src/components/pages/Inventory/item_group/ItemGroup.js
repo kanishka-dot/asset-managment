@@ -47,41 +47,39 @@ const useStyles = makeStyles((theme) => ({
 }));
 export default function ItemGroup() {
   const classes = useStyles();
+  const itmgrpRef = useRef(null);
+  const createBtnRef = useRef(null);
+  const [open, setOpen] = useState(false);
+  const [severity, setSeverity] = useState("error");
+  const [message, setMessage] = useState("");
 
-  const [value, setValue] = useState({ hits: [] });
-  const [ItemGrp, setItmGrp] = useState("");
-
-  const FORM_INITAL_VALUE = {
+  const FormClear = {
     Itmgrp: "",
     ItmGrpNm: "",
-    ItemgrpLabl: "",
-    Itemgrpnamelabel: "",
   };
 
   const [values, setValues] = useState({
     Itmgrp: "",
     ItmGrpNm: "",
-    ItemgrpLabl: "",
-    Itemgrpnamelabel: "",
   });
 
-  const itmgrpRef = useRef(null);
-  const createBtnRef = useRef(null);
-  const [open, setOpen] = useState(false);
-
-  const popSucessNotify = () => {
-    setOpen(true);
+  const popNotify = (result) => {
+    if (result === 1) {
+      setSeverity("success");
+      setMessage("Item Group Sucessfully Created.");
+      setOpen(true);
+    } else if (result === 0) {
+      setSeverity("error");
+      setMessage("Item Group Already Exsist.");
+      setOpen(true);
+    }
   };
 
   const clearData = () => {
-    setValues(FORM_INITAL_VALUE);
+    setValues(FormClear);
   };
 
-  const handleClose = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-
+  const handleClose = () => {
     setOpen(false);
   };
 
@@ -98,16 +96,31 @@ export default function ItemGroup() {
         })
         .then(
           (response) => {
-            console.log(response);
-            popSucessNotify();
-            clearData();
+            if (response.data === 1) {
+              popNotify(1);
+              clearData();
+            } else if (response.data === 0) {
+              popNotify(0);
+              clearData();
+            }
           },
           (error) => {
-            console.log(error);
+            setSeverity("error");
+            setMessage(error);
+            setOpen(true);
           }
         );
     };
-    fetchData();
+
+    if (values.Itmgrp.trim.length === 0 || values.ItmGrpNm.trim.length === 0) {
+      console.log("Item group -->", values.Itmgrp);
+      setSeverity("error");
+      setMessage("Pleses provide details. Fields can't be blank");
+      setOpen(true);
+    } else {
+      console.log("Item group -->", values.Itmgrp);
+      fetchData();
+    }
   };
 
   const handleChange = (event) => {
@@ -119,8 +132,6 @@ export default function ItemGroup() {
   const changeFocus = (event) => {
     if (event.target.name === "Itmgrp") {
       if (event.key === "Enter") {
-        setItmGrp(event.target.value);
-        // setValues({ ...values, ItemgrpLabl: value.title })
         itmgrpRef.current.focus();
       }
     } else {
@@ -139,11 +150,11 @@ export default function ItemGroup() {
           horizontal: "right",
         }}
         open={open}
-        autoHideDuration={6000}
-        message="Item Group Sucessfully Created"
+        autoHideDuration={3000}
+        message={message}
       >
-        <Alert onClose={handleClose} severity="success">
-          Item Group Sucessfully Created.
+        <Alert onClose={handleClose} severity={severity}>
+          {message}
         </Alert>
       </Snackbar>
       <main className={classes.layout}>
@@ -163,17 +174,6 @@ export default function ItemGroup() {
                 onKeyPress={changeFocus}
               />
             </Grid>
-
-            <Grid item xs={6}>
-              <TextField
-                fullWidth
-                variant="outlined"
-                id="standard-basic"
-                name="ItemgrpLabl"
-                value={values.ItemgrpLabl}
-                disabled
-              />
-            </Grid>
             <Grid item xs={6}>
               <TextField
                 fullWidth
@@ -184,17 +184,6 @@ export default function ItemGroup() {
                 onChange={handleChange}
                 value={values.ItmGrpNm}
                 onKeyPress={changeFocus}
-              />
-            </Grid>
-
-            <Grid item xs={6}>
-              <TextField
-                fullWidth
-                variant="outlined"
-                id="standard-basic"
-                name="Itemgrpnamelabel"
-                value={values.Itemgrpnamelabel}
-                disabled
               />
             </Grid>
           </Grid>
