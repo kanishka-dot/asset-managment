@@ -53,7 +53,14 @@ export default function SearchItemGroups() {
   const [fetchTableData, setFetchTableData] = useState();
   const [open, setOpen] = useState(false);
 
-  const header = ["Item Group", "Item Group Name", "Create By", "Create Date"];
+  const header = [
+    "Item Group",
+    "Item Group Name",
+    "Modify By",
+    "Modify Date",
+    "Create By",
+    "Create Date",
+  ];
   const tableData = fetchTableData;
   const options = {
     elevation: 5,
@@ -83,6 +90,8 @@ export default function SearchItemGroups() {
           const data = response.data.map((data) => [
             data.id,
             data.name,
+            data.mod_by,
+            data.mod_date,
             data.cre_by,
             data.cre_date,
           ]);

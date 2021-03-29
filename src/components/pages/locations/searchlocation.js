@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
-// import { axios } from "../../../../connection/axios";
+import { axios } from "../../../connection/axios";
 import MUIDataTable from "mui-datatables";
-import { Button } from "@material-ui/core";
+import Snackbar from "@material-ui/core/Snackbar";
+import { Alert } from "@material-ui/lab";
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
     position: "relative",
   },
   layout: {
+    paddingTop: "3rem",
     width: "50rem",
     marginLeft: theme.spacing(2),
     marginRight: theme.spacing(2),
@@ -49,9 +51,17 @@ export default function SearchLocations() {
   const tableBodyHeight = "100%";
   const tableBodyMaxHeight = "";
   const [fetchTableData, setFetchTableData] = useState();
+  const [open, setOpen] = useState(false);
 
-  const header = ["Item Group", "Item Group Name", "Create By", "Create Date"];
-  const tableData = [[<Button>Test</Button>,"name","year","age"]];
+  const header = [
+    "Location Code",
+    "Location Name",
+    "Modify By",
+    "Modify Date",
+    "Create By",
+    "Create Date",
+  ];
+  const tableData = fetchTableData;
   const options = {
     elevation: 5,
     filter: false,
@@ -62,32 +72,56 @@ export default function SearchLocations() {
     tableBodyHeight,
     tableBodyMaxHeight,
     onRowsDelete: false,
-    selectableRows: false
+    selectableRows: false,
   };
 
-//   useEffect(() => {
-//     const fetchData = async () => {
-//       const result = await axios(
-//         "http://localhost:8081/itemgroup/getitemgroups"
-//       );
+  const popErrorNotify = () => {
+    setOpen(true);
+  };
 
-//       const data = result.data.map((data) => [
-//         data.id,
-//         data.name,
-//         data.cre_by,
-//         data.cre_date,
-//       ]);
-//       console.log(data);
-//       setFetchTableData(data);
-//     };
+  const handleClose = () => {
+    setOpen(false);
+  };
 
-//     fetchData();
-//   }, []);
+  useEffect(() => {
+    const fetchData = async () => {
+      axios.get("http://localhost:8081/location/get_all_locations").then(
+        (response) => {
+          const data = response.data.map((data) => [
+            data.locationid,
+            data.locationname,
+            data.mod_by,
+            data.mod_date,
+            data.cre_by,
+            data.cre_date,
+          ]);
+          setFetchTableData(data);
+        },
+        (error) => {
+          popErrorNotify();
+          console.log(error);
+        }
+      );
+    };
+    fetchData();
+  }, []);
 
   return (
     <React.Fragment>
       <CssBaseline />
-
+      <Snackbar
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "right",
+        }}
+        open={open}
+        autoHideDuration={6000}
+        message="Problem in Network Connection. Please Check"
+      >
+        <Alert onClose={handleClose} severity="error">
+          Problem in Network Connection. Please Check
+        </Alert>
+      </Snackbar>
       <main className={classes.layout}>
         <MUIDataTable
           title={"Search Locations"}
