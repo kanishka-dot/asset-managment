@@ -15,12 +15,27 @@ import SidebarListItem from "./SidebarListItem";
 import SideNavItemGroup from "./SideNavItemGroup";
 import Items from "./SideNavData";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
-import { Menu, MenuItem } from "@material-ui/core";
+import { Menu, MenuItem, Button, Grid } from "@material-ui/core";
 import logoimg from "../../assets/images/Arpico1.jpg";
+import Modal from '@material-ui/core/Modal';
+
 
 const drawerWidth = 260;
 
 const useStyles = makeStyles((theme) => ({
+
+  paper: {
+    position: 'absolute',
+    width: 400,
+    backgroundColor: 'white',
+    padding: theme.spacing(2, 4, 3),
+  },
+
+  modal: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   timebar: {
     marginTop: 10,
     textAlign: "center",
@@ -29,8 +44,16 @@ const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
 
-   
   },
+  
+  btn: {
+    marginLeft: theme.spacing(1),
+    float: "right",
+  },
+  btnyes: {
+    float: "right",
+  },
+
   logo: {
     width: "40%",
     height: "30%",
@@ -45,7 +68,7 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.up("sm")]: {
       width: `calc(100% - ${drawerWidth}px)`,
       marginLeft: drawerWidth,
-   
+
     },
     backgroundColor: "#1565C0"
   },
@@ -71,10 +94,25 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+
+
 function ResponsiveDrawer(props) {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const color = "#FFFFFF" 
+  const color = "#FFFFFF"
+  const [open, setOpen] = React.useState(false);
+
+
+  const handleModalOpen = () => {
+    setOpen(true);
+  };
+
+  const handleModalClose = () => {
+    setOpen(false);
+  };
+
+
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -107,10 +145,10 @@ function ResponsiveDrawer(props) {
   const drawer = (
     <React.Fragment >
       <Box mt={4} textAlign="center">
-        <Typography style={{ color: color }}  variant="h5">
-        <img src={logoimg} alt="Logo" className={classes.logo} />
-                <Typography variant="subtitle2" gutterBottom>
-                  IT Related Inventory Management
+        <Typography style={{ color: color }} variant="h5">
+          <img src={logoimg} alt="Logo" className={classes.logo} />
+          <Typography variant="subtitle2" gutterBottom>
+            IT Related Inventory Management
                 </Typography>
         </Typography>
       </Box>
@@ -120,47 +158,72 @@ function ResponsiveDrawer(props) {
     </React.Fragment>
   );
 
+  const body = (
+    <Grid className={classes.paper} >
+      <p id="simple-modal-description">
+        Are you sure to logout?
+      </p>
+      <Grid >
+        <Button className={classes.btn} variant="contained" color="secondary" onClick={handleModalClose}>No</Button>
+        <Button className={classes.btnyes} variant="contained" color="primary">Yes</Button>
+
+      </Grid>
+
+    </Grid>
+  );
+
   return (
-    <React.Fragment className={classes.root}>
-      <CssBaseline />
-      <AppBar position="static" className={classes.appBar}>
-        <Toolbar>
-          <Typography variant="h6" noWrap className={classes.title}>
-            BreadCrumb
+    <React.Fragment >
+      <div className={classes.root}>
+        <CssBaseline />
+        <Modal
+          open={open}
+          onClose={handleModalClose}
+          aria-labelledby="simple-modal-title"
+          aria-describedby="simple-modal-description"
+          className={classes.modal}
+        >
+          {body}
+        </Modal>
+        <AppBar position="static" className={classes.appBar}>
+          <Toolbar>
+            <Typography variant="h6" noWrap className={classes.title}>
+              BreadCrumb
           </Typography>
-          <div>
-            <IconButton
-              color="inherit"
-              aria-haspopup="true"
-              onClick={handleClick}
-            >
-              <AccountCircleIcon fontSize="large" />
-            </IconButton>
-            <Menu
-              anchorEl={anchorEl}
-              keepMounted
-              open={Boolean(anchorEl)}
-              onClose={handleClose}
-            >
-              <Typography align="center">Kanishka</Typography>
-              <Typography align="center">Homagama SC</Typography>
-              <hr></hr>
-              <MenuItem onClick={handleClose}>Change Password</MenuItem>
-              <MenuItem onClick={handleClose}>Logout</MenuItem>
-            </Menu>
-          </div>
-        </Toolbar>
-      </AppBar>
-      {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
-      <Drawer
-        classes={{
-          paper: classes.drawerPaper,
-        }}
-        variant="permanent"
-        open
-      >
-        {drawer}
-      </Drawer>
+            <div>
+              <IconButton
+                color="inherit"
+                aria-haspopup="true"
+                onClick={handleClick}
+              >
+                <AccountCircleIcon fontSize="large" />
+              </IconButton>
+              <Menu
+                anchorEl={anchorEl}
+                keepMounted
+                open={Boolean(anchorEl)}
+                onClose={handleClose}
+              >
+                <Typography align="center">Kanishka</Typography>
+                <Typography align="center">Homagama SC</Typography>
+                <hr></hr>
+                <MenuItem onClick={handleClose}>Change Password</MenuItem>
+                <MenuItem onClick={handleModalOpen}>Logout</MenuItem>
+              </Menu>
+            </div>
+          </Toolbar>
+        </AppBar>
+        {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
+        <Drawer
+          classes={{
+            paper: classes.drawerPaper,
+          }}
+          variant="permanent"
+          open
+        >
+          {drawer}
+        </Drawer>
+      </div>
     </React.Fragment>
   );
 }
