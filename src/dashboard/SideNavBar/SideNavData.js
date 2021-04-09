@@ -41,6 +41,11 @@ const Items = [
         icon: <AddIcon style={{ color: color }}  />,
       },
       {
+        title: "Search Item Codes",
+        path: "/app/inventory/itemgroup/search",
+        icon: <SearchIcon style={{ color: color }}  />,
+      },
+      {
         title: "Search Item Group",
         path: "/app/inventory/itemgroup/search",
         icon: <SearchIcon style={{ color: color }}  />,
@@ -68,6 +73,11 @@ const Items = [
         path: "/app/inventory/transfer",
         icon: <CallMadeIcon style={{ color: color }}  />,
       },
+      {
+        title: "Approve GRN",
+        path: "/app/inventory/grn",
+        icon: <DirectionsBoatIcon style={{ color: color }}  />,
+      },
     ],
   },
   {
@@ -90,6 +100,46 @@ const Items = [
         path: "/app/inventory/repair/search",
         icon: <SearchIcon style={{ color: color }}  />,
       },
+    ],
+  },
+  {
+    title: "MRO Supplies",
+    icon: <BuildIcon style={{ color: color }}  />,
+    items: [
+      {
+        title: "GRN",
+        path: "/app/inventory/repair/add",
+        icon: <AddIcon style={{ color: color }}  />,
+      },
+
+      {
+        title: "Repair OUT",
+        path: "/app/inventory/repair/complete",
+        icon: <DoneIcon style={{ color: color }}  />,
+      },
+      {
+        title: "Search",
+        path: "/app/inventory/repair/search",
+        icon: <SearchIcon style={{ color: color }}  />,
+      },
+    ],
+  },
+  {
+    title: "Dispose Inventory",
+    icon: <BuildIcon style={{ color: color }}  />,
+    items: [
+      {
+        title: "Add Inventory",
+        path: "/app/inventory/repair/add",
+        icon: <AddIcon style={{ color: color }}  />,
+      },
+
+      {
+        title: "Approve Dispose Inventory",
+        path: "/app/inventory/repair/complete",
+        icon: <DoneIcon style={{ color: color }}  />,
+      },
+     
     ],
   },
   {

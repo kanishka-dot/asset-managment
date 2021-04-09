@@ -112,7 +112,7 @@ export default function ItemGroup() {
         );
     };
 
-    if (values.Itmgrp.trim.length === 0 || values.ItmGrpNm.trim.length === 0) {
+    if (values.Itmgrp.trim() === '' || values.ItmGrpNm.trim() === '') {
       console.log("Item group -->", values.Itmgrp);
       setSeverity("error");
       setMessage("Pleses provide details. Fields can't be blank");
