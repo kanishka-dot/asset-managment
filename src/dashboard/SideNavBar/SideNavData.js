@@ -16,6 +16,9 @@ import SupervisedUserCircleIcon from "@material-ui/icons/SupervisedUserCircle";
 import SyncAltIcon from "@material-ui/icons/SyncAlt";
 import DirectionsBoatIcon from "@material-ui/icons/DirectionsBoat";
 import AutorenewIcon from "@material-ui/icons/Autorenew";
+import ThumbUpIcon from '@material-ui/icons/ThumbUp';
+import AirportShuttleIcon from '@material-ui/icons/AirportShuttle';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 const color = "#FFFFFF" 
 
@@ -75,8 +78,8 @@ const Items = [
       },
       {
         title: "Approve GRN",
-        path: "/app/inventory/grn",
-        icon: <DirectionsBoatIcon style={{ color: color }}  />,
+        path: "/app/inventory/approve_grn",
+        icon: <ThumbUpIcon style={{ color: color }}  />,
       },
     ],
   },
@@ -104,7 +107,7 @@ const Items = [
   },
   {
     title: "MRO Supplies",
-    icon: <BuildIcon style={{ color: color }}  />,
+    icon: <AirportShuttleIcon style={{ color: color }}  />,
     items: [
       {
         title: "GRN",
@@ -126,7 +129,7 @@ const Items = [
   },
   {
     title: "Dispose Inventory",
-    icon: <BuildIcon style={{ color: color }}  />,
+    icon: <DeleteIcon style={{ color: color }}  />,
     items: [
       {
         title: "Add Inventory",
@@ -137,7 +140,7 @@ const Items = [
       {
         title: "Approve Dispose Inventory",
         path: "/app/inventory/repair/complete",
-        icon: <DoneIcon style={{ color: color }}  />,
+        icon: <ThumbUpIcon style={{ color: color }}  />,
       },
      
     ],

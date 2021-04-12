@@ -14,7 +14,10 @@ import SearchItemGroup from "../../components/pages/Inventory/item_group/search_
 import SearchLocations from "../../components/pages/locations/searchlocation";
 import SearchSupplier from "../../components/pages/supplier/SearchSupplier";
 import InventoryGrn from "../../components/pages/Inventory/Grn";
-
+import AppGRN from "../../components/pages/Inventory/AppGRN";
+import Receive from "../../components/pages/Inventory/Receive";
+import RepairIN from "../../components/pages/repair/Repair";
+import RepairOUT from "../../components/pages/repair/RepairOUT";
 
 function Routes() {
   return (
@@ -32,7 +35,10 @@ function Routes() {
         <Route path="/app/inventory/item_group" component={ItemGroup} />
         <Route path="/app/suppliers/search" component={SearchSupplier} />
         <Route path="/app/inventory/grn" component={InventoryGrn} />
-       
+        <Route path="/app/inventory/approve_grn" component={AppGRN} />
+        <Route path="/app/inventory/receive" component={Receive} />
+        <Route path="/app/inventory/repair/add" component={RepairIN} />
+        <Route path="/app/inventory/repair/complete" component={RepairOUT} />
         <Route
           path="/app/inventory/itemgroup/search"
           component={SearchItemGroup}
