@@ -7,6 +7,8 @@ import Typography from "@material-ui/core/Typography";
 import { Button, Grid, TextField } from "@material-ui/core";
 import Snackbar from "@material-ui/core/Snackbar";
 import { Alert } from "@material-ui/lab";
+import InputMask from "react-input-mask";
+import { PORT, URL } from "../../../../connection/defaultconfig";
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -48,6 +50,7 @@ const useStyles = makeStyles((theme) => ({
 export default function ItemGroup() {
   const classes = useStyles();
   const itmgrpRef = useRef(null);
+  const depriciationRef = useRef(null);
   const createBtnRef = useRef(null);
   const [open, setOpen] = useState(false);
   const [severity, setSeverity] = useState("error");
@@ -56,11 +59,13 @@ export default function ItemGroup() {
   const FormClear = {
     Itmgrp: "",
     ItmGrpNm: "",
+    depriciation: "",
   };
 
   const [values, setValues] = useState({
     Itmgrp: "",
     ItmGrpNm: "",
+    depriciation: "",
   });
 
   const popNotify = (result) => {
@@ -71,6 +76,10 @@ export default function ItemGroup() {
     } else if (result === 0) {
       setSeverity("error");
       setMessage("Item Group Already Exsist.");
+      setOpen(true);
+    } else {
+      setSeverity("error");
+      setMessage("Connection Error. Please check the connection.");
       setOpen(true);
     }
   };
@@ -84,11 +93,12 @@ export default function ItemGroup() {
   };
 
   const createItemGroup = () => {
-    const fetchData = async () => {
+    const pushData = async () => {
       axios
-        .post("http://localhost:8081/itemgroup/createnewitemgroup", {
+        .post(`http://${URL}:${PORT}/itemgroup/createnewitemgroup`, {
           id: values.Itmgrp,
           name: values.ItmGrpNm,
+          depriciation: values.depriciation,
           mod_by: "kanishka",
           mod_date: "2021-03-07",
           cre_by: "kanishka",
@@ -105,21 +115,35 @@ export default function ItemGroup() {
             }
           },
           (error) => {
-            setSeverity("error");
-            setMessage(error);
-            setOpen(true);
+            popNotify(3);
+            clearData();
+            console.log(error);
           }
         );
     };
 
-    if (values.Itmgrp.trim() === '' || values.ItmGrpNm.trim() === '') {
+    if (values.Itmgrp.trim() === "") {
       console.log("Item group -->", values.Itmgrp);
       setSeverity("error");
-      setMessage("Pleses provide details. Fields can't be blank");
+      setMessage("Pleses provide details. Item Group Field can't be blank");
       setOpen(true);
+    } else if (values.ItmGrpNm.trim() === "") {
+      setSeverity("error");
+      setMessage(
+        "Pleses provide details. Item Group Name Field can't be blank"
+      );
+      setOpen(true);
+      console.log("Item group Name-->", values.ItmGrpNm);
+    } else if (values.depriciation.trim() === "") {
+      setSeverity("error");
+      setMessage("Pleses provide details. Depriciation Field can't be blank");
+      setOpen(true);
+      console.log("Item group Dep-->", values.depriciation);
     } else {
       console.log("Item group -->", values.Itmgrp);
-      fetchData();
+      console.log("Item group Name -->", values.ItmGrpNm);
+      console.log("Item group Dep-->", values.depriciation);
+      pushData();
     }
   };
 
@@ -133,6 +157,10 @@ export default function ItemGroup() {
     if (event.target.name === "Itmgrp") {
       if (event.key === "Enter") {
         itmgrpRef.current.focus();
+      }
+    } else if (event.target.name === "ItmGrpNm") {
+      if (event.key === "Enter") {
+        depriciationRef.current.focus();
       }
     } else {
       if (event.key === "Enter") {
@@ -150,7 +178,8 @@ export default function ItemGroup() {
           horizontal: "right",
         }}
         open={open}
-        autoHideDuration={3000}
+        autoHideDuration={2000}
+        onClose={handleClose}
         message={message}
       >
         <Alert onClose={handleClose} severity={severity}>
@@ -163,10 +192,10 @@ export default function ItemGroup() {
             Create Item Group
           </Typography>
           <Grid container spacing={3}>
-            <Grid item xs={6}>
+            <Grid item xs={3}>
               <TextField
                 fullWidth
-                id="standard-basic"
+                id="Itmgrp"
                 label="Item Group"
                 value={values.Itmgrp}
                 name="Itmgrp"
@@ -177,7 +206,7 @@ export default function ItemGroup() {
             <Grid item xs={6}>
               <TextField
                 fullWidth
-                id="standard-basic"
+                id="ItmGrpNm"
                 label="Item Group Name"
                 name="ItmGrpNm"
                 inputRef={itmgrpRef}
@@ -185,6 +214,25 @@ export default function ItemGroup() {
                 value={values.ItmGrpNm}
                 onKeyPress={changeFocus}
               />
+            </Grid>
+            <Grid item xs={3}>
+              <InputMask
+                mask="99"
+                disabled={false}
+                maskChar=""
+                onChange={handleChange}
+                value={values.depriciation}
+              >
+                {() => (
+                  <TextField
+                    id="depriciation"
+                    label="Depriciation Rate"
+                    name="depriciation"
+                    inputRef={depriciationRef}
+                    onKeyPress={changeFocus}
+                  />
+                )}
+              </InputMask>
             </Grid>
           </Grid>
           <div className={classes.btn}>

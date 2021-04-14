@@ -7,6 +7,8 @@ import { axios } from "../../../connection/axios";
 import { Button, Grid, TextField } from "@material-ui/core";
 import Snackbar from "@material-ui/core/Snackbar";
 import { Alert } from "@material-ui/lab";
+import { PORT, URL } from "../../../connection/defaultconfig";
+
 const useStyles = makeStyles((theme) => ({
   appBar: {
     position: "relative",
@@ -110,7 +112,7 @@ export default function Location() {
   const createLocationCode = () => {
     const fetchData = async () => {
       axios
-        .post("http://localhost:8081/location/createnewlocation", {
+        .post(`http://${URL}:${PORT}/location/createnewlocation`, {
           locationid: values.location,
           locationname: values.locname,
           mod_by: "kanishka",
@@ -137,11 +139,15 @@ export default function Location() {
         );
     };
 
-    if (values.location.trim() === "" || values.locname.trim() === "") {
+    if (values.location.trim() === "") {
       console.log("location Code -->", values.location);
       console.log("location Name -->", values.locname);
       setSeverity("error");
-      setMessage("Pleses provide details. Fields can't be blank");
+      setMessage("Pleses provide details. Location Field can't be blank");
+      setOpen(true);
+    } else if (values.locname.trim() === "") {
+      setSeverity("error");
+      setMessage("Pleses provide details. Location Name Field can't be blank");
       setOpen(true);
     } else {
       fetchData();
@@ -157,8 +163,9 @@ export default function Location() {
           horizontal: "right",
         }}
         open={open}
-        autoHideDuration={3000}
+        autoHideDuration={2000}
         message={message}
+        onClose={handleClose}
       >
         <Alert onClose={handleClose} severity={severity}>
           {message}
