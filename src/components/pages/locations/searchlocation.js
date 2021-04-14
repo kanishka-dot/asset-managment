@@ -5,6 +5,7 @@ import { axios } from "../../../connection/axios";
 import MUIDataTable from "mui-datatables";
 import Snackbar from "@material-ui/core/Snackbar";
 import { Alert } from "@material-ui/lab";
+import { PORT, URL } from "../../../connection/defaultconfig";
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -85,7 +86,7 @@ export default function SearchLocations() {
 
   useEffect(() => {
     const fetchData = async () => {
-      axios.get("http://localhost:8081/location/get_all_locations").then(
+      axios.get(`http://${URL}:${PORT}/location/get_all_locations`).then(
         (response) => {
           const data = response.data.map((data) => [
             data.locationid,

@@ -11,16 +11,8 @@ import {
   RadioGroup,
 } from "@material-ui/core";
 
-export default function AddressForm({ formData, setValues }) {
-  const {
-    itemCode,
-    itemGroup,
-    itemDesc,
-    depRate,
-    supNo,
-    cost,
-    status,
-  } = formData;
+export default function Form_1({ formData, setValues }) {
+  const { itemCode, itemGroup, itemDesc, supNo, status } = formData;
 
   console.log(formData);
 
@@ -32,65 +24,46 @@ export default function AddressForm({ formData, setValues }) {
         Basic Details
       </Typography>
       <Grid container spacing={3}>
-        <Grid item xs={12}>
+        <Grid item xs={6}>
           <TextField
             fullWidth
-            id="standard-basic"
+            id="itemCode"
             label="Item Code"
             name="itemCode"
             value={itemCode}
             onChange={setValues}
           />
         </Grid>
-        <Grid item xs={12}>
+        <Grid item xs={6}>
           <TextField
             fullWidth
-            id="standard-basic"
+            id="itemGroup"
             label="Item Group"
             name="itemGroup"
             value={itemGroup}
             onChange={setValues}
           />
         </Grid>
+
         <Grid item xs={12}>
           <TextField
             fullWidth
-            id="standard-basic"
+            id="itemDesc"
             label="Item Description"
             name="itemDesc"
             value={itemDesc}
             onChange={setValues}
           />
         </Grid>
-        <Grid item xs={12}>
-          <InputMask
-            mask="99"
-            disabled={false}
-            maskChar=" "
-            value={depRate}
+        <Grid item xs={3}>
+          <TextField
+            fullWidth
+            id="supNo"
+            label="Supplier No"
+            name="supNo"
+            value={supNo}
             onChange={setValues}
-          >
-            {() => (
-              <TextField
-                id="standard-basic"
-                label="Depriciation Rate(%)"
-                name="depRate"
-              />
-            )}
-          </InputMask>
-        </Grid>
-
-        <Grid item xs={12} sm={3}>
-          <InputMask
-            mask="9999999"
-            onChange={setValues}
-            maskChar=" "
-            value={cost}
-          >
-            {() => (
-              <TextField id="standard-basic" label="Cost(Rs)" name="cost" />
-            )}
-          </InputMask>
+          />
         </Grid>
         <Grid item xs={12} sm={12}>
           <FormControl>

@@ -5,6 +5,7 @@ import { axios } from "../../../../connection/axios";
 import MUIDataTable from "mui-datatables";
 import Snackbar from "@material-ui/core/Snackbar";
 import { Alert } from "@material-ui/lab";
+import { PORT, URL } from "../../../../connection/defaultconfig";
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -56,6 +57,7 @@ export default function SearchItemGroups() {
   const header = [
     "Item Group",
     "Item Group Name",
+    "Depriciation Rate(%)",
     "Modify By",
     "Modify Date",
     "Create By",
@@ -72,7 +74,7 @@ export default function SearchItemGroups() {
     tableBodyHeight,
     tableBodyMaxHeight,
     onRowsDelete: false,
-    selectableRows: false,
+    selectableRows: "none",
   };
 
   const popErrorNotify = () => {
@@ -85,11 +87,12 @@ export default function SearchItemGroups() {
 
   useEffect(() => {
     const fetchData = async () => {
-      axios.get("http://localhost:8081/itemgroup/getitemgroups").then(
+      axios.get(`http://${URL}:${PORT}/itemgroup/getitemgroups`).then(
         (response) => {
           const data = response.data.map((data) => [
             data.id,
             data.name,
+            data.depriciation,
             data.mod_by,
             data.mod_date,
             data.cre_by,

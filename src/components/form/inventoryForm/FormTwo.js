@@ -37,36 +37,6 @@ export default function PaymentForm({ formData, setValues }) {
       </Typography>
       <Grid container spacing={3}>
         <Grid item xs={12} md={6}>
-          <InputLabel htmlFor="age-native-simple">Main Catagory</InputLabel>
-          <Select
-            fullWidth
-            native
-            labelId="label"
-            id="select"
-            name="mainCatgry"
-            value={mainCatgry}
-            onChange={setValues}
-          >
-            <option value="" />
-            {mainCat}
-          </Select>
-        </Grid>
-        <Grid item xs={12} md={6}>
-          <InputLabel htmlFor="age-native-simple">Sub Catagory</InputLabel>
-          <Select
-            fullWidth
-            native
-            labelId="label"
-            name="subCatgry"
-            id="select"
-            value={subCatgry}
-            onChange={setValues}
-          >
-            <option value="" />
-            {subCat}
-          </Select>
-        </Grid>
-        <Grid item xs={12} md={6}>
           <TextField
             fullWidth
             id="standard-basic"

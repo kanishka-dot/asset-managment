@@ -101,7 +101,6 @@ export default function Repair() {
     serialno: "",
     itemcode: "",
     remark: "",
-   
   };
 
   const [value, setValue] = useState({
@@ -228,9 +227,7 @@ export default function Repair() {
   };
 
   const handleChange = (props) => (event) => {
-   
-      setValue({ ...value, [props]: event.target.value });
-    
+    setValue({ ...value, [props]: event.target.value });
   };
 
   function handleDateChange(event) {
@@ -241,7 +238,6 @@ export default function Repair() {
   const handleClear = () => {
     setValue({ ...initialState });
   };
-
 
   const body = (
     <div className={classes.paper_modal}>
@@ -283,6 +279,7 @@ export default function Repair() {
           <Grid container spacing={3}>
             <Grid item xs={12}>
               <TextField
+                disabled
                 type="date"
                 label="Date"
                 defaultValue={CurrentDate()}
@@ -292,21 +289,8 @@ export default function Repair() {
                 }}
               />
             </Grid>
-
             <Grid item xs={3}>
-            <TextField
-                fullWidth
-                id="serialno"
-                label="Serial No"
-                name="serialno"
-                value={value.serialno}
-                onChange={handleChange("serialno")}
-              />
-            </Grid>
-
-            
-            <Grid item xs={3}>
-            <TextField
+              <TextField
                 fullWidth
                 id="itemcode"
                 label="Item Code"
@@ -315,8 +299,19 @@ export default function Repair() {
                 onChange={handleChange("itemcode")}
               />
             </Grid>
+            <Grid item xs={3}>
+              <TextField
+                disabled
+                fullWidth
+                id="docod"
+                label="Document"
+                name="docod"
+                value={value.docod}
+                onChange={handleChange("docod")}
+              />
+            </Grid>
             <Grid item xs={12}>
-            <TextField
+              <TextField
                 fullWidth
                 multiline
                 id="remark"
@@ -326,13 +321,12 @@ export default function Repair() {
                 onChange={handleChange("remark")}
               />
             </Grid>
-           
+
             <Grid item xs={12} spacing={1}>
               <Button
                 className={classes.button}
                 variant="contained"
                 color="primary"
-               
               >
                 Add
               </Button>

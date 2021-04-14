@@ -5,7 +5,6 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 
-
 const useStyles = makeStyles((theme) => ({
   listItem: {
     padding: theme.spacing(1, 0),
@@ -40,19 +39,13 @@ export default function Review({ formData }) {
     ref3,
   } = formData;
 
-
-
   const summary = [
-    { name: "itemCode", label: "Item Code", value:itemCode },
+    { name: "itemCode", label: "Item Code", value: itemCode },
     { name: "itemGroup", label: "Item Group", value: itemGroup },
     { name: "itemDesc", label: "Item Description", value: itemDesc },
-    { name: "depRate", label: "Depriciation Rate", value:depRate },
-    { name: "cost", label: "Cost", value: cost},
     { name: "supNo", label: "Supplier No", value: supNo },
     { name: "status", label: "Status", value: status },
-    { name: "mainCatgry", label: "Main Category", value: mainCatgry },
-    { name: "subCatgry", label: "Sub Category", value: subCatgry },
-    { name: "brand", label: "Brand", value:brand},
+    { name: "brand", label: "Brand", value: brand },
     { name: "model", label: "Model", value: model },
     { name: "processor", label: "Processor", value: processor },
     { name: "ram", label: "RAM", value: ram },
@@ -70,7 +63,7 @@ export default function Review({ formData }) {
       <List disablePadding>
         {summary.map((data) => (
           <ListItem className={classes.listItem} key={data.label}>
-            <ListItemText primary={data.label}  />
+            <ListItemText primary={data.label} />
             <Typography variant="body2">{data.value}</Typography>
           </ListItem>
         ))}
