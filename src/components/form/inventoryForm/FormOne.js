@@ -34,7 +34,7 @@ export default function AddressForm({ formData, setValues }) {
       <Grid container spacing={3}>
         <Grid item xs={12}>
           <TextField
-            fullWidth
+            
             id="standard-basic"
             label="Item Code"
             name="itemCode"
