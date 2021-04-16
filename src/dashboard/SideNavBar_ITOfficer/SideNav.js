@@ -78,7 +78,9 @@ function SideNav() {
       <Box mt={4} textAlign="center">
         <Typography style={{ color: color }} variant="h5">
           <img src={logoimg} alt="Logo" className={classes.logo} />
-         
+          <Typography variant="subtitle2" gutterBottom>
+            IT Related Inventory Management
+          </Typography>
         </Typography>
       </Box>
       {/* <div className={classes.toolbar} /> */}

@@ -16,9 +16,6 @@ import SupervisedUserCircleIcon from "@material-ui/icons/SupervisedUserCircle";
 import SyncAltIcon from "@material-ui/icons/SyncAlt";
 import DirectionsBoatIcon from "@material-ui/icons/DirectionsBoat";
 import AutorenewIcon from "@material-ui/icons/Autorenew";
-import ThumbUpIcon from '@material-ui/icons/ThumbUp';
-import AirportShuttleIcon from '@material-ui/icons/AirportShuttle';
-import DeleteIcon from '@material-ui/icons/Delete';
 
 const color = "#FFFFFF" 
 
@@ -42,11 +39,6 @@ const Items = [
         title: "Create Item Group",
         path: "/app/inventory/item_group",
         icon: <AddIcon style={{ color: color }}  />,
-      },
-      {
-        title: "Search Item Codes",
-        path: "/app/inventory/itemgroup/search",
-        icon: <SearchIcon style={{ color: color }}  />,
       },
       {
         title: "Search Item Group",
@@ -76,11 +68,6 @@ const Items = [
         path: "/app/inventory/transfer",
         icon: <CallMadeIcon style={{ color: color }}  />,
       },
-      {
-        title: "Approve GRN",
-        path: "/app/inventory/approve_grn",
-        icon: <ThumbUpIcon style={{ color: color }}  />,
-      },
     ],
   },
   {
@@ -103,46 +90,6 @@ const Items = [
         path: "/app/inventory/repair/search",
         icon: <SearchIcon style={{ color: color }}  />,
       },
-    ],
-  },
-  {
-    title: "MRO Supplies",
-    icon: <AirportShuttleIcon style={{ color: color }}  />,
-    items: [
-      {
-        title: "GRN",
-        path: "/app/inventory/repair/add",
-        icon: <AddIcon style={{ color: color }}  />,
-      },
-
-      {
-        title: "Repair OUT",
-        path: "/app/inventory/repair/complete",
-        icon: <DoneIcon style={{ color: color }}  />,
-      },
-      {
-        title: "Search",
-        path: "/app/inventory/repair/search",
-        icon: <SearchIcon style={{ color: color }}  />,
-      },
-    ],
-  },
-  {
-    title: "Dispose Inventory",
-    icon: <DeleteIcon style={{ color: color }}  />,
-    items: [
-      {
-        title: "Add Inventory",
-        path: "/app/inventory/repair/add",
-        icon: <AddIcon style={{ color: color }}  />,
-      },
-
-      {
-        title: "Approve Dispose Inventory",
-        path: "/app/inventory/repair/complete",
-        icon: <ThumbUpIcon style={{ color: color }}  />,
-      },
-     
     ],
   },
   {

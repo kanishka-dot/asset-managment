@@ -5,7 +5,7 @@ import PrivateRoute from "./auth/privateRoute";
 // import Password from "./components/pages/login/Password";
 // import Card from "./dashboard/gadgets/Card"
 //  import Barchart from "./dashboard/gadgets/Barchart"
-import Layout from "./components/layout/Layout";
+import Routes from "./components/routes/Routes";
 // import InventoryIN from "./components/form/inventoryIN/InventoryIN";
 // import Grn from "./components/pages/Inventory/Grn";
 // import Supplier from "./components/pages/supplier/Supplier";
@@ -18,8 +18,8 @@ function App() {
     <div>
       <Router>
         <Switch>
-          <Route path="/" exact component={Layout} />
-          <PrivateRoute path="/app" component={Layout} />
+          <Route path="/" exact component={Routes} />
+          <PrivateRoute path="/app" component={Routes} />
           <Route path="/test" component={Test} />
         </Switch>
       </Router>

@@ -84,7 +84,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function InventoryIN() {
+export default function Repair() {
   const classes = useStyles();
   const responsive = "vertical";
   const tableBodyHeight = "100%";
@@ -98,28 +98,17 @@ export default function InventoryIN() {
   const initialState = {
     docno: "",
     date: CurrentDate(),
-    itemcode: "",
-    itemid: "",
-    diliveryperson: "",
-    supplierno: "",
-    cost: "",
-    warranty: "",
     serialno: "",
-    barcode: "",
-    reffno: "",
+    itemcode: "",
+    remark: "",
   };
 
   const [value, setValue] = useState({
     docno: "",
     date: CurrentDate(),
-    itemcode: "",
-    supplierno: "",
     serialno: "",
-    barcode: "",
-    cost: "",
-    warranty: "",
-    diliveryperson: "",
-    reffno: "",
+    itemcode: "",
+    remark: "",
   });
 
   const options = {
@@ -238,15 +227,7 @@ export default function InventoryIN() {
   };
 
   const handleChange = (props) => (event) => {
-    if (props === "cost") {
-      if (/^[0-9]*$/.test(event.target.value)) {
-        setValue({ ...value, [props]: event.target.value });
-      }
-    } else {
-      setValue({ ...value, [props]: event.target.value });
-    }
-
-    // setValue({ ...value, [props]: event.target.value });
+    setValue({ ...value, [props]: event.target.value });
   };
 
   function handleDateChange(event) {
@@ -256,25 +237,6 @@ export default function InventoryIN() {
 
   const handleClear = () => {
     setValue({ ...initialState });
-  };
-
-  const addData = () => {
-    if (requiredFeilds()) {
-      tableData.push([
-        value.docno,
-        value.date,
-        value.itemcode,
-        value.supplierno,
-        value.serialno,
-        value.barcode,
-        value.cost,
-        value.warranty,
-        value.diliveryperson,
-      ]);
-      setValue({ ...initialState });
-
-      console.log(value);
-    }
   };
 
   const body = (
@@ -312,11 +274,12 @@ export default function InventoryIN() {
       <main className={classes.layout}>
         <Paper className={classes.paper} elevation={2}>
           <Typography variant="h6" gutterBottom className={classes.heading}>
-            Inventory GRN
+            ADD Repair Items
           </Typography>
           <Grid container spacing={3}>
             <Grid item xs={12}>
               <TextField
+                disabled
                 type="date"
                 label="Date"
                 defaultValue={CurrentDate()}
@@ -326,116 +289,36 @@ export default function InventoryIN() {
                 }}
               />
             </Grid>
-
-            <Grid item xs={3}>
-              <FormControl className={clsx(classes.margin, classes.textField)}>
-                <InputLabel htmlFor="standard-adornment-password">
-                  Supplier No
-                </InputLabel>
-                <Input
-                  name="supplier"
-                  value={value.supplierno}
-                  endAdornment={
-                    <InputAdornment position="end">
-                      <IconButton
-                        // aria-label="toggle password visibility"
-                        onClick={() => {
-                          pickListOpen("supplier");
-                        }}
-                      >
-                        <AddIcon />
-                      </IconButton>
-                    </InputAdornment>
-                  }
-                />
-              </FormControl>
-            </Grid>
-
-            <Grid item xs={3}>
-              <FormControl className={clsx(classes.margin, classes.textField)}>
-                <InputLabel htmlFor="standard-adornment-password">
-                  Item Code
-                </InputLabel>
-                <Input
-                  id="standard-adornment-password"
-                  value={value.itemcode}
-                  endAdornment={
-                    <InputAdornment position="end">
-                      <IconButton
-                        aria-label="toggle password visibility"
-                        onClick={() => {
-                          pickListOpen("item");
-                        }}
-                      >
-                        <AddIcon />
-                      </IconButton>
-                    </InputAdornment>
-                  }
-                />
-              </FormControl>
-            </Grid>
-
             <Grid item xs={3}>
               <TextField
                 fullWidth
-                inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
-                id="cost"
-                label="Cost(Rs.)"
-                name="cost"
-                value={value.cost}
-                onChange={handleChange("cost")}
+                id="itemcode"
+                label="Item Code"
+                name="itemcode"
+                value={value.itemcode}
+                onChange={handleChange("itemcode")}
               />
             </Grid>
             <Grid item xs={3}>
               <TextField
+                disabled
                 fullWidth
-                id="serialno"
-                label="Serial No"
-                name="serialno"
-                value={value.serialno}
-                onChange={handleChange("serialno")}
+                id="docod"
+                label="Document"
+                name="docod"
+                value={value.docod}
+                onChange={handleChange("docod")}
               />
             </Grid>
-            <Grid item xs={3}>
+            <Grid item xs={12}>
               <TextField
                 fullWidth
-                id="barcode"
-                label="Barcode"
-                name="barcode"
-                value={value.barcode}
-                onChange={handleChange("barcode")}
-              />
-            </Grid>
-
-            <Grid item xs={3}>
-              <TextField
-                fullWidth
-                id="warranty"
-                label="Warranty (Months)"
-                name="warranty"
-                value={value.warranty}
-                onChange={handleChange("warranty")}
-              />
-            </Grid>
-
-            <Grid item xs={3}>
-              <TextField
-                fullWidth
-                id="refno"
-                label="Refferance No"
-                name="reffno"
-                value={value.reffno}
-                onChange={handleChange("reffno")}
-              />
-            </Grid>
-            <Grid item xs={3}>
-              <TextField
-                fullWidth
-                id="diliveryperson"
-                label="Delivery person"
-                name="diliveryperson"
-                value={value.diliveryperson}
-                onChange={handleChange("diliveryperson")}
+                multiline
+                id="remark"
+                label="Pre Detarmine Case"
+                name="remark"
+                value={value.remark}
+                onChange={handleChange("remark")}
               />
             </Grid>
 
@@ -444,7 +327,6 @@ export default function InventoryIN() {
                 className={classes.button}
                 variant="contained"
                 color="primary"
-                onClick={addData}
               >
                 Add
               </Button>

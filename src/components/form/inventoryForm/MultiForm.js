@@ -7,10 +7,9 @@ import Paper from "@material-ui/core/Paper";
 import Stepper from "@material-ui/core/Stepper";
 import Step from "@material-ui/core/Step";
 import StepLabel from "@material-ui/core/StepLabel";
-import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
-import AddressForm from "./FormOne";
-import PaymentForm from "./FormTwo";
+import Form_1 from "./FormOne";
+import Form_2 from "./FormTwo";
 import Review from "./SummaryForm";
 
 const useStyles = makeStyles((theme) => ({
@@ -50,9 +49,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const steps = ["Basic Details", "More Details", "Summary"];
-
-
+// const steps = ["Basic Details", "More Details", "Summary"];
 
 export default function Checkout() {
   const [formData, setValues] = useForm(FORM_INITAL_VALUE);
@@ -62,9 +59,9 @@ export default function Checkout() {
   function getStepContent(step) {
     switch (step) {
       case 0:
-        return <AddressForm {...props} />;
+        return <Form_1 {...props} />;
       case 1:
-        return <PaymentForm {...props} />;
+        return <Form_2 {...props} />;
       case 2:
         return <Review {...props} />;
       default:
@@ -74,15 +71,15 @@ export default function Checkout() {
 
   const classes = useStyles();
 
-  const [activeStep, setActiveStep] = React.useState(0);
+  // const [activeStep, setActiveStep] = React.useState(0);
 
-  const handleNext = () => {
-    setActiveStep(activeStep + 1);
-  };
+  // const handleNext = () => {
+  //   setActiveStep(activeStep + 1);
+  // };
 
-  const handleBack = () => {
-    setActiveStep(activeStep - 1);
-  };
+  // const handleBack = () => {
+  //   setActiveStep(activeStep - 1);
+  // };
 
   return (
     <React.Fragment>
@@ -93,7 +90,9 @@ export default function Checkout() {
           <Typography component="h5" variant="h5" align="left">
             Item Create
           </Typography>
-          <Stepper activeStep={activeStep} className={classes.stepper}>
+          {getStepContent(0)}
+          
+          {/* <Stepper activeStep={activeStep} className={classes.stepper}>
             {steps.map((label) => (
               <Step key={label}>
                 <StepLabel>{label}</StepLabel>
@@ -103,11 +102,9 @@ export default function Checkout() {
           <React.Fragment>
             {activeStep === steps.length ? (
               <React.Fragment>
-                <Typography variant="h5" gutterBottom>
-                  
-                </Typography>
+                <Typography variant="h5" gutterBottom></Typography>
                 <Typography variant="subtitle1">
-                 Item Sucessfully Created
+                  Item Sucessfully Created
                 </Typography>
               </React.Fragment>
             ) : (
@@ -130,7 +127,7 @@ export default function Checkout() {
                 </div>
               </React.Fragment>
             )}
-          </React.Fragment>
+          </React.Fragment> */}
         </Paper>
       </main>
     </React.Fragment>
