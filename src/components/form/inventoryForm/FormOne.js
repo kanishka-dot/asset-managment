@@ -19,17 +19,16 @@ import {
 import MUIDataTable from "mui-datatables";
 import clsx from "clsx";
 import AddIcon from "@material-ui/icons/Add";
-import Autocomplete from '@material-ui/lab/Autocomplete';
+import Autocomplete from "@material-ui/lab/Autocomplete";
 
 const useStyles = makeStyles((theme) => ({
-
   modal: {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
   },
   left_margin: {
-    marginLeft: 50
+    marginLeft: 50,
   },
 
   margin: {
@@ -40,10 +39,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-
 export default function Form_1({ formData, setValues }) {
   console.log(setValues);
-  
+
   const classes = useStyles();
   const { itemCode, itemGroup, itemDesc, supNo, status } = formData;
   const responsive = "vertical";
@@ -54,7 +52,6 @@ export default function Form_1({ formData, setValues }) {
   const [ModalOpen, setModalOpen] = useState(false);
   const [severity, setSeverity] = useState("warning");
 
-
   const supplier_date = [
     ["25425", "kamal tenakaon"],
     ["47200", "sadun nimalarathna"],
@@ -63,7 +60,6 @@ export default function Form_1({ formData, setValues }) {
     ["24872", "atek lanka"],
   ];
 
-
   const itemcode_date = [
     ["IT205", "Pos Machine"],
     ["PS2546", "Power Supply"],
@@ -71,7 +67,6 @@ export default function Form_1({ formData, setValues }) {
     ["PC5458", "Executive PC"],
     ["PRN5254", "printer laserjet"],
   ];
-
 
   const pickList_header = ["ID", "Name"];
 
@@ -132,20 +127,16 @@ export default function Form_1({ formData, setValues }) {
   );
 
   const top100Films = [
-    { title: 'The Shawshank Redemption', year: 1994 },
-    { title: 'The Godfather', year: 1972 },
-    { title: 'The Godfather: Part II', year: 1974 },
-    { title: 'The Dark Knight', year: 2008 },
-    { title: '12 Angry Men', year: 1957 },
-    { title: "Schindler's List", year: 1993 },]
-
-
+    { title: "The Shawshank Redemption", year: 1994 },
+    { title: "The Godfather", year: 1972 },
+    { title: "The Godfather: Part II", year: 1974 },
+    { title: "The Dark Knight", year: 2008 },
+    { title: "12 Angry Men", year: 1957 },
+    { title: "Schindler's List", year: 1993 },
+  ];
 
   return (
-   
-    
     <React.Fragment>
-     
       <Modal className={classes.modal} open={ModalOpen} onClose={pickListClose}>
         {body}
       </Modal>
@@ -167,7 +158,7 @@ export default function Form_1({ formData, setValues }) {
           <FormControl className={clsx(classes.margin, classes.textField)}>
             <InputLabel htmlFor="standard-adornment-password">
               Item Group
-                </InputLabel>
+            </InputLabel>
             <Input
               id="standard-adornment-password"
               value={itemGroup}
@@ -192,12 +183,18 @@ export default function Form_1({ formData, setValues }) {
             options={top100Films}
             getOptionLabel={(option) => option.title}
             style={{ width: 300 }}
-            
-            renderInput={(params) => <TextField {...params}     id="itemCode"
-            label="Item Code"
-            name="itemCode"
-            value={itemCode}
-            onChange={setValues} label="Combo box" variant="outlined" />}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                id="itemCode"
+                label="Item Code"
+                name="itemCode"
+                value={itemCode}
+                onChange={setValues}
+                label="Combo box"
+                variant="outlined"
+              />
+            )}
           />
         </Grid>
 
