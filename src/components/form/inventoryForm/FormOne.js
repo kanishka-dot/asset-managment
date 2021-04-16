@@ -3,7 +3,8 @@ import Grid from "@material-ui/core/Grid";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
-import InputMask from "react-input-mask";
+import Button from "@material-ui/core/Button";
+import { FORM_INITAL_VALUE } from "./DataState";
 import {
   FormControl,
   FormControlLabel,
@@ -19,7 +20,6 @@ import {
 import MUIDataTable from "mui-datatables";
 import clsx from "clsx";
 import AddIcon from "@material-ui/icons/Add";
-import Autocomplete from '@material-ui/lab/Autocomplete';
 
 const useStyles = makeStyles((theme) => ({
 
@@ -28,24 +28,37 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     justifyContent: "center",
   },
-  left_margin: {
-    marginLeft: 50
+  left_margin_itmgrp: {
+    marginLeft: 40
   },
+  left_margin_sup: {
+    marginLeft: 100
+  },
+
 
   margin: {
     margin: theme.spacing(0),
   },
   textField: {
-    width: "25ch",
+    width: "28ch",
+  },
+  button: {
+    marginTop: theme.spacing(3),
+    marginLeft: theme.spacing(1),
+  },
+  buttons: {
+    display: "flex",
+    justifyContent: "flex-end",
   },
 }));
 
 
-export default function Form_1({ formData, setValues }) {
-  console.log(setValues);
-  
+export default function Form_1() {
+
+
   const classes = useStyles();
-  const { itemCode, itemGroup, itemDesc, supNo, status } = formData;
+  const [value, setValue] = useState(FORM_INITAL_VALUE);
+
   const responsive = "vertical";
   const tableBodyHeight = "100%";
   const tableBodyMaxHeight = "";
@@ -77,9 +90,11 @@ export default function Form_1({ formData, setValues }) {
 
   const handleRowClick = (dataIndex) => {
     if (type === "supplier") {
-      setValues({ supplierno: dataIndex[0] });
+      console.log(value.supNo);
+      
+      setValue({...value, supNo: dataIndex[0]});
     } else {
-      setValues({ itemcode: dataIndex[0] });
+      setValue({...value, itemGroup: dataIndex[0] });
     }
 
     pickListClose();
@@ -118,7 +133,13 @@ export default function Form_1({ formData, setValues }) {
     setModalOpen(false);
   };
 
-  /*Drop down list items mapping*/
+  const handleChange = (props) => (event) => {
+    console.log(props);
+    
+      setValue({ ...value, [props]: event.target.value });
+    }
+
+
 
   const body = (
     <div className={classes.paper_modal}>
@@ -131,27 +152,11 @@ export default function Form_1({ formData, setValues }) {
     </div>
   );
 
-  const top100Films = [
-    { title: 'The Shawshank Redemption', year: 1994 },
-    { title: 'The Godfather', year: 1972 },
-    { title: 'The Godfather: Part II', year: 1974 },
-    { title: 'The Dark Knight', year: 2008 },
-    { title: '12 Angry Men', year: 1957 },
-    { title: "Schindler's List", year: 1993 },]
-
-
-
   return (
-   
-    
     <React.Fragment>
-     
       <Modal className={classes.modal} open={ModalOpen} onClose={pickListClose}>
         {body}
       </Modal>
-      <Typography variant="h6" gutterBottom>
-        Basic Details
-      </Typography>
       <Grid container spacing={3}>
         <Grid item xs={3}>
           <TextField
@@ -159,18 +164,18 @@ export default function Form_1({ formData, setValues }) {
             id="itemCode"
             label="Item Code"
             name="itemCode"
-            value={itemCode}
-            onChange={setValues}
+            value={value.itemCode}
+            onChange={handleChange("itemCode")}
           />
         </Grid>
-        <Grid item xs={3}>
+        <Grid item xs={3} className={classes.left_margin_itmgrp}>
           <FormControl className={clsx(classes.margin, classes.textField)}>
             <InputLabel htmlFor="standard-adornment-password">
               Item Group
                 </InputLabel>
             <Input
               id="standard-adornment-password"
-              value={itemGroup}
+              value={value.itemGroup}
               endAdornment={
                 <InputAdornment position="end">
                   <IconButton
@@ -186,19 +191,28 @@ export default function Form_1({ formData, setValues }) {
             />
           </FormControl>
         </Grid>
-        <Grid item xs={3} className={classes.left_margin}>
-          <Autocomplete
-            id="combo-box-demo"
-            options={top100Films}
-            getOptionLabel={(option) => option.title}
-            style={{ width: 300 }}
-            
-            renderInput={(params) => <TextField {...params}     id="itemCode"
-            label="Item Code"
-            name="itemCode"
-            value={itemCode}
-            onChange={setValues} label="Combo box" variant="outlined" />}
-          />
+        <Grid item xs={3} className={classes.left_margin_sup}>
+          <FormControl className={clsx(classes.margin, classes.textField)}>
+            <InputLabel htmlFor="standard-adornment-password">
+              Supplier
+                </InputLabel>
+            <Input
+              id="standard-adornment-password"
+              value={value.supNo}
+              endAdornment={
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={() => {
+                      pickListOpen("supplier");
+                    }}
+                  >
+                    <AddIcon />
+                  </IconButton>
+                </InputAdornment>
+              }
+            />
+          </FormControl>
         </Grid>
 
         <Grid item xs={12}>
@@ -207,15 +221,86 @@ export default function Form_1({ formData, setValues }) {
             id="itemDesc"
             label="Item Description"
             name="itemDesc"
-            value={itemDesc}
-            onChange={setValues}
+            value={value.itemDesc}
+            onChange={handleChange("itemDesc")}
+          />
+        </Grid>
+
+        <Grid item xs={12} md={6}>
+          <TextField
+            fullWidth
+            id="standard-basic"
+            label="Brand"
+            name="brand"
+            value={value.brand}
+            onChange={handleChange("brand")}
+          />
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <TextField
+            fullWidth
+            id="standard-basic"
+            label="Model"
+            name="model"
+            value={value.model}
+            onChange={handleChange("model")}
+          />
+        </Grid>
+        <Grid item xs={12} md={3}>
+          <TextField
+            fullWidth
+            id="standard-basic"
+            label="Processor"
+            name="processor"
+            value={value.processor}
+            onChange={handleChange("processor")}
+          />
+        </Grid>
+        <Grid item xs={12} md={3}>
+          <TextField
+            fullWidth
+            id="standard-basic"
+            label="RAM"
+            name="ram"
+            value={value.ram}
+            onChange={handleChange("ram")}
+          />
+        </Grid>
+        <Grid item xs={12} md={3}>
+          <TextField
+            fullWidth
+            id="standard-basic"
+            label="Capacity"
+            name="capacity"
+            value={value.capacity}
+            onChange={handleChange("capacity")}
+          />
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <TextField
+            fullWidth
+            id="standard-basic"
+            label="Ref1"
+            name="ref1"
+            value={value.ref1}
+            onChange={handleChange("ref1")}
+          />
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <TextField
+            fullWidth
+            id="standard-basic"
+            label="Ref2"
+            name="ref2"
+            value={value.ref2}
+            onChange={handleChange("ref2")}
           />
         </Grid>
 
         <Grid item xs={12} sm={12}>
           <FormControl>
             <FormLabel>Status</FormLabel>
-            <RadioGroup name="status" value={status} onChange={setValues}>
+            <RadioGroup name="status" value={value.status} onChange={handleChange}>
               <FormControlLabel
                 value="Active"
                 control={<Radio />}
@@ -229,7 +314,17 @@ export default function Form_1({ formData, setValues }) {
             </RadioGroup>
           </FormControl>
         </Grid>
+  
       </Grid>
+      <div className={classes.buttons}>
+        <Button
+          variant="contained"
+          color="primary"
+          className={classes.button}
+        >
+          Create
+        </Button>
+        </div>
     </React.Fragment>
   );
 }
