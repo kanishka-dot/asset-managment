@@ -49,7 +49,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+
 // const steps = ["Basic Details", "More Details", "Summary"];
+
 
 export default function Checkout() {
   const [formData, setValues] = useForm(FORM_INITAL_VALUE);
