@@ -1,5 +1,5 @@
 import React from "react";
-import MultiForm from "../../form/supplierForm/MultiForm";
+import Supplier from "../../form/supplierForm/Supplier";
 import { Grid } from "@material-ui/core";
 
 const divStyle = {
@@ -12,7 +12,7 @@ function CreateUserForm() {
     <div style={divStyle}>
       <Grid container>
         <Grid item xs>
-          <MultiForm />
+          <Supplier />
         </Grid>
       </Grid>
     </div>

@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import Grid from "@material-ui/core/Grid";
 import { makeStyles } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
-import { FORM_INITAL_VALUE } from "./DataState";
+import { FORM_INITAL_VALUE, FORM_CLEAR } from "./DataState";
+import { Alert } from "@material-ui/lab";
+import { PORT, URL } from "../../../connection/defaultconfig";
+import { axios } from "../../../connection/axios";
 import {
   FormControl,
   FormControlLabel,
@@ -16,23 +18,25 @@ import {
   IconButton,
   InputLabel,
   Input,
+  Select,
+  Snackbar,
+  MenuItem,
 } from "@material-ui/core";
 import MUIDataTable from "mui-datatables";
 import clsx from "clsx";
 import AddIcon from "@material-ui/icons/Add";
 
 const useStyles = makeStyles((theme) => ({
-
   modal: {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
   },
   left_margin_itmgrp: {
-    marginLeft: 40
+    marginLeft: 40,
   },
   left_margin_sup: {
-    marginLeft: 100
+    marginLeft: 100,
   },
 
   margin: {
@@ -40,6 +44,9 @@ const useStyles = makeStyles((theme) => ({
   },
   textField: {
     width: "28ch",
+  },
+  textField_select: {
+    width: "22ch",
   },
   button: {
     marginTop: theme.spacing(3),
@@ -51,10 +58,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-
 export default function Form_1() {
-
-
   const classes = useStyles();
   const [value, setValue] = useState(FORM_INITAL_VALUE);
 
@@ -62,42 +66,36 @@ export default function Form_1() {
   const tableBodyHeight = "100%";
   const tableBodyMaxHeight = "";
   const [open, setOpen] = useState(false);
+  const [disable_itemcode, setDisable_itemcode] = useState(false);
+  const [disable_fields, setDisable_fields] = useState(false);
   const [type, setType] = useState("supplier");
   const [ModalOpen, setModalOpen] = useState(false);
   const [severity, setSeverity] = useState("warning");
-
+  const [message, setMessage] = useState("");
 
   const supplier_date = [
-    ["25425", "kamal tenakaon"],
-    ["47200", "sadun nimalarathna"],
-    ["69685", "Gunasearka perera"],
-    ["95671", "malkanthi nona"],
-    ["24872", "atek lanka"],
+    ["1", "kamal tenakaon"],
+    ["5", "sadun nimalarathna"],
   ];
-
 
   const itemcode_date = [
-    ["IT205", "Pos Machine"],
-    ["PS2546", "Power Supply"],
-    ["POS205", "Point of sale machine 01"],
-    ["PC5458", "Executive PC"],
-    ["PRN5254", "printer laserjet"],
+    ["IT305", "Pos Machine"],
+    ["CD202", "Power Supply"],
+    ["CD201", "Point of sale machine 01"],
+    ["CD204", "Executive PC"],
+    ["CD255", "printer laserjet"],
   ];
-
 
   const pickList_header = ["ID", "Name"];
 
   const handleRowClick = (dataIndex) => {
     if (type === "supplier") {
-      console.log(value.supNo);
-      
-      setValue({...value, supNo: dataIndex[0]});
+      setValue({ ...value, supNo: dataIndex[0] });
     } else {
-      setValue({...value, itemGroup: dataIndex[0] });
+      setValue({ ...value, itemGroup: dataIndex[0] });
     }
 
     pickListClose();
-    console.log(dataIndex[0]);
   };
 
   const picklistOptions = {
@@ -133,12 +131,87 @@ export default function Form_1() {
   };
 
   const handleChange = (props) => (event) => {
-    console.log(props);
-    
-      setValue({ ...value, [props]: event.target.value });
+    setValue({ ...value, [props]: event.target.value });
+  };
+
+  const pushData = async () => {
+    axios
+      .post(`http://${URL}:${PORT}/inventory/createitem`, {
+        itemcode: value.itemCode,
+        itemdesc: value.itemDesc,
+        brand: value.brand,
+        model: value.model,
+        capacity: value.capacity,
+        processor: value.processor,
+        ram: value.ram,
+        itemgroup: value.itemGroup,
+        supplierid: value.supNo,
+        status: value.status,
+        type: value.type,
+        mod_by: "kanishka",
+        mod_date: "2021-04-18",
+        cre_by: "kanishka",
+        cre_date: "2021-04-18",
+      })
+      .then(
+        (response) => {
+          console.log(response);
+          setMessage("Item Code Successfully created");
+          setSeverity("success");
+          setOpen(true);
+          handleClear();
+        },
+        (error) => {
+          setMessage("Unxepected Error");
+          setSeverity("error");
+          setOpen(true);
+          handleClear();
+          console.log(error);
+        }
+      );
+  };
+
+  const handleSubmit = () => {
+    if (value.itemCode.trim() === "") {
+      setMessage("Item Code is Required");
+      setOpen(true);
+    } else if (value.itemGroup.trim() === "") {
+      setMessage("Item group is Required");
+      setOpen(true);
+    } else if (value.supNo.trim() === "") {
+      setMessage("Supplier is Required");
+      setOpen(true);
+    } else if (value.itemDesc.trim() === "") {
+      setMessage("Item Descrption is Required");
+      setOpen(true);
+    } else if (value.brand.trim() === "") {
+      setMessage("Item brand is Required");
+      setOpen(true);
+    } else if (value.model.trim() === "") {
+      setMessage("Item model is Required");
+      setOpen(true);
+    } else if (value.type.trim() === "") {
+      setMessage("Item Type is required");
+      setOpen(true);
+    } else {
+      // if (sup_update) {
+      //   updateData();
+      // } else {
+      pushData();
+      // }
     }
+  };
 
+  function handleClear() {
+    setValue(FORM_CLEAR);
+  }
 
+  const handleSnackBarClose = (reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpen(false);
+  };
 
   const body = (
     <div className={classes.paper_modal}>
@@ -150,32 +223,25 @@ export default function Form_1() {
       />
     </div>
   );
-
-  const body = (
-    <div className={classes.paper_modal}>
-      <MUIDataTable
-        title={"Pick List"}
-        data={picklistData()}
-        columns={pickList_header}
-        options={picklistOptions}
-      />
-    </div>
-  );
-
-  const top100Films = [
-    { title: "The Shawshank Redemption", year: 1994 },
-    { title: "The Godfather", year: 1972 },
-    { title: "The Godfather: Part II", year: 1974 },
-    { title: "The Dark Knight", year: 2008 },
-    { title: "12 Angry Men", year: 1957 },
-    { title: "Schindler's List", year: 1993 },
-  ];
 
   return (
     <React.Fragment>
       <Modal className={classes.modal} open={ModalOpen} onClose={pickListClose}>
         {body}
       </Modal>
+      <Snackbar
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "right",
+        }}
+        open={open}
+        onClose={handleSnackBarClose}
+        autoHideDuration={2000}
+      >
+        <Alert onClose={handleSnackBarClose} severity={severity}>
+          {message}
+        </Alert>
+      </Snackbar>
       <Grid container spacing={3}>
         <Grid item xs={3}>
           <TextField
@@ -191,13 +257,14 @@ export default function Form_1() {
           <FormControl className={clsx(classes.margin, classes.textField)}>
             <InputLabel htmlFor="standard-adornment-password">
               Item Group
-                </InputLabel>
+            </InputLabel>
             <Input
               id="standard-adornment-password"
               value={value.itemGroup}
               endAdornment={
                 <InputAdornment position="end">
                   <IconButton
+                    disabled={disable_fields}
                     aria-label="toggle password visibility"
                     onClick={() => {
                       pickListOpen("item");
@@ -214,13 +281,14 @@ export default function Form_1() {
           <FormControl className={clsx(classes.margin, classes.textField)}>
             <InputLabel htmlFor="standard-adornment-password">
               Supplier
-                </InputLabel>
+            </InputLabel>
             <Input
               id="standard-adornment-password"
               value={value.supNo}
               endAdornment={
                 <InputAdornment position="end">
                   <IconButton
+                    disabled={disable_fields}
                     aria-label="toggle password visibility"
                     onClick={() => {
                       pickListOpen("supplier");
@@ -234,9 +302,10 @@ export default function Form_1() {
           </FormControl>
         </Grid>
 
-        <Grid item xs={12}>
+        <Grid item xs={6}>
           <TextField
             fullWidth
+            disabled={disable_fields}
             id="itemDesc"
             label="Item Description"
             name="itemDesc"
@@ -244,10 +313,10 @@ export default function Form_1() {
             onChange={handleChange("itemDesc")}
           />
         </Grid>
-
         <Grid item xs={12} md={6}>
           <TextField
             fullWidth
+            disabled={disable_fields}
             id="standard-basic"
             label="Brand"
             name="brand"
@@ -258,6 +327,7 @@ export default function Form_1() {
         <Grid item xs={12} md={6}>
           <TextField
             fullWidth
+            disabled={disable_fields}
             id="standard-basic"
             label="Model"
             name="model"
@@ -268,6 +338,7 @@ export default function Form_1() {
         <Grid item xs={12} md={3}>
           <TextField
             fullWidth
+            disabled={disable_fields}
             id="standard-basic"
             label="Processor"
             name="processor"
@@ -278,6 +349,7 @@ export default function Form_1() {
         <Grid item xs={12} md={3}>
           <TextField
             fullWidth
+            disabled={disable_fields}
             id="standard-basic"
             label="RAM"
             name="ram"
@@ -288,6 +360,7 @@ export default function Form_1() {
         <Grid item xs={12} md={3}>
           <TextField
             fullWidth
+            disabled={disable_fields}
             id="standard-basic"
             label="Capacity"
             name="capacity"
@@ -295,55 +368,67 @@ export default function Form_1() {
             onChange={handleChange("capacity")}
           />
         </Grid>
-        <Grid item xs={12} md={6}>
-          <TextField
-            fullWidth
-            id="standard-basic"
-            label="Ref1"
-            name="ref1"
-            value={value.ref1}
-            onChange={handleChange("ref1")}
-          />
-        </Grid>
-        <Grid item xs={12} md={6}>
-          <TextField
-            fullWidth
-            id="standard-basic"
-            label="Ref2"
-            name="ref2"
-            value={value.ref2}
-            onChange={handleChange("ref2")}
-          />
-        </Grid>
 
+        <Grid item xs={6}>
+          <FormControl
+            className={clsx(classes.margin, classes.textField_select)}
+          >
+            <InputLabel>Type</InputLabel>
+            <Select
+              id="type"
+              disabled={disable_fields}
+              name="type"
+              value={value.type}
+              onChange={handleChange("type")}
+            >
+              <MenuItem value={"Primary"}>Primary</MenuItem>
+              <MenuItem value={"MRO"}>MRO</MenuItem>
+            </Select>
+          </FormControl>
+        </Grid>
         <Grid item xs={12} sm={12}>
           <FormControl>
             <FormLabel>Status</FormLabel>
-            <RadioGroup name="status" value={value.status} onChange={handleChange}>
+            <RadioGroup
+              name="status"
+              value={value.status}
+              onChange={handleChange("status")}
+            >
               <FormControlLabel
-                value="Active"
+                value="active"
+                disabled={disable_fields}
                 control={<Radio />}
                 label="Active"
               />
               <FormControlLabel
-                value="Insactive"
+                value="inactive"
+                disabled={disable_fields}
                 control={<Radio />}
                 label="Inactive"
               />
             </RadioGroup>
           </FormControl>
         </Grid>
-  
       </Grid>
       <div className={classes.buttons}>
         <Button
+          className={classes.button}
           variant="contained"
+          color="secondary"
+          onClick={handleClear}
+        >
+          Clear
+        </Button>
+        <Button
+          variant="contained"
+          disabled={disable_fields}
           color="primary"
           className={classes.button}
+          onClick={handleSubmit}
         >
           Create
         </Button>
-        </div>
+      </div>
     </React.Fragment>
   );
 }

@@ -73,7 +73,7 @@ export default function SearchLocations() {
     tableBodyHeight,
     tableBodyMaxHeight,
     onRowsDelete: false,
-    selectableRows: false,
+    selectableRows: "none",
   };
 
   const popErrorNotify = () => {

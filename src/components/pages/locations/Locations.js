@@ -51,8 +51,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const steps = ["User Details", "Summary"];
-
 export default function Location() {
   const classes = useStyles();
   const locationRef = useRef(null);
@@ -74,11 +72,11 @@ export default function Location() {
   const popNotify = (result) => {
     if (result === 1) {
       setSeverity("success");
-      setMessage("Item Group Sucessfully Created.");
+      setMessage("Location Sucessfully Created.");
       setOpen(true);
     } else if (result === 0) {
       setSeverity("error");
-      setMessage("Item Group Already Exsist.");
+      setMessage("Location Already Exsist.");
       setOpen(true);
     }
   };
@@ -91,10 +89,20 @@ export default function Location() {
     setOpen(false);
   };
 
-  const handleChange = (event) => {
-    let nam = event.target.name;
-    let val = event.target.value;
-    setValues({ ...values, [nam]: val });
+  const handleChange = (props) => (event) => {
+    if (props === "location") {
+      if (/^[0-9]*$/.test(event.target.value)) {
+        let nam = event.target.name;
+        let val = event.target.value;
+        setValues({ ...values, [nam]: val });
+      }
+    } else if (props === "locname") {
+      if (/^[a-zA-Z]*$/.test(event.target.value)) {
+        let nam = event.target.name;
+        let val = event.target.value;
+        setValues({ ...values, [nam]: val });
+      }
+    }
   };
 
   const changeFocus = (event) => {
@@ -184,7 +192,7 @@ export default function Location() {
                 label="Location"
                 name="location"
                 value={values.location}
-                onChange={handleChange}
+                onChange={handleChange("location")}
                 onKeyPress={changeFocus}
               />
             </Grid>
@@ -197,7 +205,7 @@ export default function Location() {
                 name="locname"
                 value={values.locname}
                 inputRef={locationRef}
-                onChange={handleChange}
+                onChange={handleChange("locname")}
                 onKeyPress={changeFocus}
               />
             </Grid>
