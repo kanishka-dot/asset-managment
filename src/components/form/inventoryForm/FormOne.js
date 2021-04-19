@@ -21,6 +21,7 @@ import {
   Select,
   Snackbar,
   MenuItem,
+  Typography,
 } from "@material-ui/core";
 import MUIDataTable from "mui-datatables";
 import clsx from "clsx";
@@ -66,8 +67,9 @@ export default function Form_1() {
   const tableBodyHeight = "100%";
   const tableBodyMaxHeight = "";
   const [open, setOpen] = useState(false);
+  const [item_update, setItemUpdate] = useState(false);
   const [disable_itemcode, setDisable_itemcode] = useState(false);
-  const [disable_fields, setDisable_fields] = useState(false);
+  const [disable_fields, setDisable_fields] = useState(true);
   const [type, setType] = useState("supplier");
   const [ModalOpen, setModalOpen] = useState(false);
   const [severity, setSeverity] = useState("warning");
@@ -171,6 +173,90 @@ export default function Form_1() {
       );
   };
 
+  const getData = async (name) => {
+
+    axios.get(`http://${URL}:${PORT}/inventory/getitem/${name}`).then(
+      (response) => {
+        if (response.data !== "") {
+          console.log(response);
+          setItemUpdate(true);
+          setDisable_itemcode(true);
+          setDisable_fields(false);
+          setModalOpen(true)
+          setValue({
+            ...value,
+            itemGroup: response.data.itemgroup,
+            itemDesc: response.data.itemdesc,
+            type: response.data.type,
+            supNo: response.data.supplierid,
+            status: response.data.status,
+            brand: response.data.brand,
+            model: response.data.model,
+            processor: response.data.processor,
+            ram: response.data.ram,
+            capacity: response.data.capacity,
+          });
+        } else {
+          console.log(response.data);
+          setDisable_fields(false);
+          setItemUpdate(false)
+        }
+      },
+      (error) => {
+        setMessage("Unxepected Error");
+        setSeverity("error");
+        setOpen(true);
+        handleClear();
+        console.log(error);
+      }
+    );
+  }
+
+  const updateData = async () => {
+    axios
+      .post(`http://${URL}:${PORT}/inventory/createitem`, {
+        itemcode: value.itemCode,
+        itemdesc: value.itemDesc,
+        brand: value.brand,
+        model: value.model,
+        capacity: value.capacity,
+        processor: value.processor,
+        ram: value.ram,
+        itemgroup: value.itemGroup,
+        supplierid: value.supNo,
+        status: value.status,
+        type: value.type,
+        mod_by: "kanishka",
+        mod_date: "2021-04-18",
+        cre_by: "kanishka",
+        cre_date: "2021-04-18",
+      })
+      .then(
+        (response) => {
+          console.log(response);
+          setMessage("Item Code Successfully created");
+          setSeverity("success");
+          setOpen(true);
+          handleClear();
+        },
+        (error) => {
+          setMessage("Unxepected Error");
+          setSeverity("error");
+          setOpen(true);
+          handleClear();
+          console.log(error);
+        }
+      );
+  };
+
+  function checkItemCode(event) {
+    const name = event.target.value;
+    if (name.trim() !== "") {
+      getData(name);
+    }
+  }
+
+
   const handleSubmit = () => {
     if (value.itemCode.trim() === "") {
       setMessage("Item Code is Required");
@@ -194,16 +280,19 @@ export default function Form_1() {
       setMessage("Item Type is required");
       setOpen(true);
     } else {
-      // if (sup_update) {
-      //   updateData();
-      // } else {
-      pushData();
-      // }
+      if (item_update) {
+        // updateData();
+      } else {
+        pushData();
+      }
     }
   };
 
   function handleClear() {
     setValue(FORM_CLEAR);
+    setItemUpdate(false);
+    setDisable_itemcode(false);
+    setDisable_fields(true)
   }
 
   const handleSnackBarClose = (reason) => {
@@ -221,6 +310,13 @@ export default function Form_1() {
         columns={pickList_header}
         options={picklistOptions}
       />
+    </div>
+  );
+  const modal_message = (
+    <div className={classes.paper_modal}>
+      <Typography>
+        Item Code Already Exsist
+     </Typography>
     </div>
   );
 
@@ -246,11 +342,13 @@ export default function Form_1() {
         <Grid item xs={3}>
           <TextField
             fullWidth
+            disabled={disable_itemcode}
             id="itemCode"
             label="Item Code"
             name="itemCode"
             value={value.itemCode}
             onChange={handleChange("itemCode")}
+            onBlur={checkItemCode}
           />
         </Grid>
         <Grid item xs={3} className={classes.left_margin_itmgrp}>
@@ -426,7 +524,7 @@ export default function Form_1() {
           className={classes.button}
           onClick={handleSubmit}
         >
-          Create
+          {item_update === true ? "Update" : "Create"}
         </Button>
       </div>
     </React.Fragment>

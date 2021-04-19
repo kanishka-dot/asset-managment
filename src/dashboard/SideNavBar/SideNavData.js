@@ -45,7 +45,7 @@ const Items = [
       },
       {
         title: "Search Item Codes",
-        path: "/app/inventory/itemgroup/search",
+        path: "/app/inventory/itemcode/search",
         icon: <SearchIcon style={{ color: color }}  />,
       },
       {
