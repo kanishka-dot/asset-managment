@@ -174,7 +174,6 @@ export default function Form_1() {
   };
 
   const getData = async (name) => {
-
     axios.get(`http://${URL}:${PORT}/inventory/getitem/${name}`).then(
       (response) => {
         if (response.data !== "") {
@@ -182,7 +181,9 @@ export default function Form_1() {
           setItemUpdate(true);
           setDisable_itemcode(true);
           setDisable_fields(false);
-          setModalOpen(true)
+          setMessage("Item Code Already Exsist");
+          setSeverity("info");
+          setOpen(true);
           setValue({
             ...value,
             itemGroup: response.data.itemgroup,
@@ -199,7 +200,7 @@ export default function Form_1() {
         } else {
           console.log(response.data);
           setDisable_fields(false);
-          setItemUpdate(false)
+          setItemUpdate(false);
         }
       },
       (error) => {
@@ -210,11 +211,11 @@ export default function Form_1() {
         console.log(error);
       }
     );
-  }
+  };
 
   const updateData = async () => {
     axios
-      .post(`http://${URL}:${PORT}/inventory/createitem`, {
+      .post(`http://${URL}:${PORT}/inventory/updateItems`, {
         itemcode: value.itemCode,
         itemdesc: value.itemDesc,
         brand: value.brand,
@@ -234,7 +235,7 @@ export default function Form_1() {
       .then(
         (response) => {
           console.log(response);
-          setMessage("Item Code Successfully created");
+          setMessage("Item Code Successfully updated");
           setSeverity("success");
           setOpen(true);
           handleClear();
@@ -255,7 +256,6 @@ export default function Form_1() {
       getData(name);
     }
   }
-
 
   const handleSubmit = () => {
     if (value.itemCode.trim() === "") {
@@ -281,7 +281,7 @@ export default function Form_1() {
       setOpen(true);
     } else {
       if (item_update) {
-        // updateData();
+        updateData();
       } else {
         pushData();
       }
@@ -292,7 +292,7 @@ export default function Form_1() {
     setValue(FORM_CLEAR);
     setItemUpdate(false);
     setDisable_itemcode(false);
-    setDisable_fields(true)
+    setDisable_fields(true);
   }
 
   const handleSnackBarClose = (reason) => {
@@ -314,9 +314,7 @@ export default function Form_1() {
   );
   const modal_message = (
     <div className={classes.paper_modal}>
-      <Typography>
-        Item Code Already Exsist
-     </Typography>
+      <Typography>Item Code Already Exsist</Typography>
     </div>
   );
 
@@ -325,6 +323,7 @@ export default function Form_1() {
       <Modal className={classes.modal} open={ModalOpen} onClose={pickListClose}>
         {body}
       </Modal>
+
       <Snackbar
         anchorOrigin={{
           vertical: "bottom",
