@@ -213,6 +213,7 @@ export default function Form_1() {
     );
   };
 
+  // update existing inventory item data
   const updateData = async () => {
     axios
       .post(`http://${URL}:${PORT}/inventory/updateItems`, {

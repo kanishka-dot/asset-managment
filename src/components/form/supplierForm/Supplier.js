@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Grid from "@material-ui/core/Grid";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
@@ -85,7 +85,6 @@ const useStyles = makeStyles((theme) => ({
 export default function Supplier() {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
-  const [isdisable, setIsdisable] = useState(false);
   const [sup_update, setUpdate] = useState(false);
   const [supname_disable, setSupname_disable] = useState(false);
   const [fields_disable, setFields_disable] = useState(true);
@@ -97,7 +96,7 @@ export default function Supplier() {
     NIC: false,
     telephone: false,
   });
-  const [dirty, setDirty] = useState({
+  const [dirty] = useState({
     suppname: "Supplier name must be more than 3 character",
     NIC: "Invalid NIC Number",
     telephone: "Invalid Telephone No",
@@ -171,6 +170,7 @@ export default function Supplier() {
     setValue({ ...initialState });
     setSupname_disable(false);
     setFields_disable(true);
+    setUpdate(false);
   };
 
   const pickListClose = () => {
@@ -276,6 +276,7 @@ export default function Supplier() {
         } else {
           console.log(response.data);
           setFields_disable(false);
+          setUpdate(false);
         }
       },
       (error) => {

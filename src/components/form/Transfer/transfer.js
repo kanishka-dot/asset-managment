@@ -102,7 +102,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function InventoryIN() {
+export default function Transfer() {
   const classes = useStyles();
   const responsive = "vertical";
   const tableBodyHeight = "100%";
@@ -112,56 +112,47 @@ export default function InventoryIN() {
   const [ModalOpen, setModalOpen] = useState(false);
   const [severity, setSeverity] = useState("warning");
   const [message, setMessage] = useState("");
-  const [type, setType] = useState("item");
-  const [itemsPick, setItemsPick] = useState();
-  const [supplierPick, setSupplierPick] = useState();
+  const [type, setType] = useState("location");
+  const [inventory, setInventory] = useState();
+  const [locations, setLocations] = useState();
   const [tableData, setTableData] = useState([]);
   const [dataList, setDataList] = useState([]);
   const [loading, setLoading] = useState(false);
   const [saveBtnDisb, setSaveBtnDisb] = useState(false);
   const [data, setData] = useState({
-    doccode: "GRN",
-    locationid: 100,
-    date: CurrentDate(),
+    docno: "",
+    doccode: "",
+    frmloc: "",
+    toloc: "",
     serialno: "",
-    status: "NAP",
-    dilvryprson: "",
-    auth: "",
-    itmcode: "",
-    barcode: "",
-    cost: "",
-    supplierid: "",
-    warrenty_period: "",
+    itemcode: "",
+    remark: "",
     refno: "",
-    mod_by: "kanishka",
-    mod_date: "2021-04-21",
-    cre_by: "kanishka",
-    cre_date: "2021-04-21",
+    status: "",
+    app_by: "",
+    app_date: "",
+    mod_by: "",
+    mod_date: "",
+    cre_by: "",
+    cre_date: "",
   });
   const [value, setValue] = useState({
-    docno: "",
-    date: CurrentDate(),
-    itemcode: "",
-    supplierno: "",
+    frmloc: "100",
+    toloc: "",
     serialno: "",
-    barcode: "",
-    cost: "",
-    warranty: "",
-    diliveryperson: "",
-    reffno: "",
+    itemcode: "",
+    remark: "",
+    refno: "",
+    cre_date: "",
   });
   const initialState = {
-    docno: "",
-    date: CurrentDate(),
-    itemcode: "",
-    itemid: "",
-    diliveryperson: "",
-    supplierno: "",
-    cost: "",
-    warranty: "",
+    frmloc: "",
+    toloc: "",
     serialno: "",
-    barcode: "",
-    reffno: "",
+    itemcode: "",
+    remark: "",
+    refno: "",
+    cre_date: CurrentDate(),
   };
 
   const options = {
@@ -178,23 +169,16 @@ export default function InventoryIN() {
     rowsPerPageOptions: [3],
     rowsPerPage: 3,
   };
-  const header = [
-    "Item Code",
-    "Serial No",
-    "Barcode",
-    "Cost",
-    "Warranty Period",
-  ];
+  const header = ["Serial No", "Item Code", "Remark"];
 
   const pickList_header = ["ID", "Name"];
 
   /* pick list data select function*/
   const handleRowClick = (dataIndex) => {
-    if (type === "supplier") {
-      setValue({ ...value, supplierno: dataIndex[0] });
-      setDtl_fld(false);
+    if (type === "location") {
+      setValue({ ...value, toloc: dataIndex[0] });
     } else {
-      setValue({ ...value, itemcode: dataIndex[0] });
+      setValue({ ...value, serialno: dataIndex[0], itemcode: dataIndex[1] });
     }
     pickListClose();
   };
@@ -208,68 +192,71 @@ export default function InventoryIN() {
   /**
    * Get data for picklist
    */
-  const getAllSupplierPickListData = () => {
+  const getLocations = () => {
     axios
-      .get(`http://${URL}:${PORT}/supplier/getsupplier/status/active`)
+      .get(`http://${URL}:${PORT}/location/get_all_locations/100`)
       .then((response) => {
-        const data = response.data.map((data) => [data.supplierid, data.name]);
-        setSupplierPick(data);
+        const data = response.data.map((data) => [
+          data.locationid,
+          data.locationname,
+        ]);
+        setLocations(data);
       })
       .catch((error) => console.error(`Error:${error}`));
   };
 
-  const getAllItemsPickListData = () => {
+  const getLocInventory = () => {
     axios
-      .get(`http://${URL}:${PORT}/inventory/getitems/status/active`)
+      .get(`http://${URL}:${PORT}/inventory/location/100/LOC`)
       .then((response) => {
         const data = response.data.map((data) => [
+          data.serialno,
           data.itemcode,
-          data.itemdesc,
         ]);
-        setItemsPick(data);
+        setInventory(data);
       })
       .catch((error) => console.error(`Error:${error}`));
   };
 
   const pushData = async () => {
-    if (dataList[0] == null) {
+    if (tableData[0] == null) {
       setOpen(true);
       setMessage("No data to save");
     } else {
+      console.log(dataList);
       setLoading(true);
       setSaveBtnDisb(true);
-      axios
-        .post(`http://${URL}:${PORT}/inventory/savesuppliergrn`, dataList)
-        .then(
-          (response) => {
-            console.log(dataList);
-            console.log(response);
-            if (response.data === "GRN CREATE SUCESSFULL") {
-              setSeverity("success");
-              setOpen(true);
-              setMessage("GRN CREATE SUCESSFULL");
-              setDefault();
-              setLoading(false);
-              setSaveBtnDisb(false);
-            } else {
-              setSeverity("error");
-              setOpen(true);
-              setMessage(response.data);
-              setDefault();
-              setLoading(false);
-              setSaveBtnDisb(false);
-            }
-          },
-          (error) => {
-            setSeverity("error");
+      axios.post(`http://${URL}:${PORT}/inventory/tranfer/data`, dataList).then(
+        (response) => {
+          console.log(dataList);
+          console.log(response);
+          if (response.data === "GTN Sucessfully Save") {
+            setSeverity("success");
             setOpen(true);
-            setMessage("Unexpected Error. Check the console for more details");
+            setMessage("GTN Sucessfully Saved");
             setDefault();
             setLoading(false);
             setSaveBtnDisb(false);
-            console.log(error);
+            getLocInventory(); // fetch once again to update location inventory after success save
+          } else {
+            setSeverity("error");
+            setOpen(true);
+            setMessage(response.data);
+            setDefault();
+            setLoading(false);
+            setSaveBtnDisb(false);
           }
-        );
+        },
+        (error) => {
+          setSeverity("error");
+          setOpen(true);
+          setMessage("Unexpected Error. Check the console for more details");
+          setDefault();
+          setLoading(false);
+          setSaveBtnDisb(false);
+          console.log(error);
+        }
+      );
     }
   };
 
@@ -290,10 +277,10 @@ export default function InventoryIN() {
 
   /*change picklist based on field type select*/
   function picklistData() {
-    if (type === "supplier") {
-      return supplierPick;
+    if (type === "location") {
+      return locations;
     } else {
-      return itemsPick;
+      return inventory;
     }
   }
 
@@ -301,53 +288,48 @@ export default function InventoryIN() {
   useEffect(() => {
     setData({
       ...data,
-      doccode: "GRN",
-      locationid: 100,
-      date: CurrentDate(),
+      docno: "",
+      doccode: "GTN",
+      frmloc: 100,
+      toloc: value.toloc,
       serialno: value.serialno,
-      status: "NAP",
-      dilvryprson: value.diliveryperson,
-      auth: "",
-      itmcode: value.itemcode,
-      barcode: value.barcode,
-      cost: value.cost,
-      supplierid: value.supplierno,
-      warrenty_period: value.warranty,
-      refno: value.reffno,
+      itemcode: value.itemcode,
+      remark: value.remark,
+      refno: value.refno,
+      status: "INTRAN",
+      app_by: "",
+      app_date: "",
       mod_by: "kanishka",
-      mod_date: "2021-04-21",
+      mod_date: value.cre_date,
       cre_by: "kanishka",
-      cre_date: "2021-04-21",
+      cre_date: value.cre_date,
     });
   }, [value]);
 
   // Picklist call
   useEffect(() => {
-    getAllSupplierPickListData();
-    getAllItemsPickListData();
+    getLocations();
+    getLocInventory();
   }, []);
 
+  // tolocation and MON no. must
+  useEffect(() => {
+    if (value.refno.trim() !== "" && value.toloc !== "") {
+      setDtl_fld(false);
+    } else {
+      setDtl_fld(true);
+    }
+  }, [value.toloc, value.refno]);
+
   function requiredFeilds() {
-    if (value.itemcode === "") {
-      setSeverity("warning");
-      setOpen(true);
-      setMessage("Item Code is Required");
-    } else if (value.supplierno === "") {
-      setSeverity("warning");
-      setOpen(true);
-      setMessage("Supplier No is Required");
-    } else if (value.date === "") {
-      setSeverity("warning");
-      setOpen(true);
-      setMessage("Valid date is Required");
-    } else if (value.cost.trim() === "") {
-      setSeverity("warning");
-      setOpen(true);
-      setMessage("Cost is Required");
-    } else if (value.serialno.trim() === "") {
+    if (value.serialno.trim() === "") {
       setSeverity("warning");
       setOpen(true);
       setMessage("Serial No is Required");
+    } else if (value.remark.trim() === "") {
+      setSeverity("warning");
+      setOpen(true);
+      setMessage("Remark is Required");
     } else {
       return true;
     }
@@ -370,20 +352,31 @@ export default function InventoryIN() {
   };
 
   const handleChange = (props) => (event) => {
-    if (props === "cost") {
-      if (/^[0-9]*$/.test(event.target.value)) {
-        setValue({ ...value, [props]: event.target.value });
-      }
-    } else {
-      setValue({ ...value, [props]: event.target.value });
-    }
+    setValue({ ...value, [props]: event.target.value });
 
     // setValue({ ...value, [props]: event.target.value });
   };
 
   function handleDateChange(event) {
-    setValue({ ...value, date: event.target.value });
+    setValue({ ...value, cre_date: event.target.value });
     console.log(event.persist);
+  }
+
+  // used to check serial duplicate in the table
+  function checkDuplicateSerial() {
+    if (tableData[0] != undefined) {
+      let element = new Array();
+      for (let index = 0; index < tableData.length; index++) {
+        element = tableData[index];
+
+        if (element.includes(value.serialno, 0)) {
+          return true;
+        }
+      }
+      return false;
+    }
+
+    return false;
   }
 
   // const handleClear = () => {
@@ -392,27 +385,23 @@ export default function InventoryIN() {
 
   const addData = () => {
     if (requiredFeilds()) {
-      tableData.push([
-        value.itemcode,
-        value.serialno,
-        value.barcode,
-        value.cost,
-        value.warranty,
-      ]);
-      //final data set for POST
-      //push data for the array
+      if (checkDuplicateSerial()) {
+        //check duplicate serial
+        setSeverity("warning");
+        setOpen(true);
+        setMessage("Item Already Added");
+      } else {
+        tableData.push([value.serialno, value.itemcode, value.remark]);
+        dataList.push(data);
+        setValue({
+          ...value,
+          itemcode: "",
+          serialno: "",
+          remark: "",
+        });
 
-      dataList.push(data);
-      setValue({
-        ...value,
-        itemcode: "",
-        serialno: "",
-        barcode: "",
-        cost: "",
-        warranty: "",
-      });
-
-      console.log(data);
+        console.log(data);
+      }
     }
   };
 
@@ -451,7 +440,7 @@ export default function InventoryIN() {
       <main className={classes.layout}>
         <Paper className={classes.paper} elevation={2}>
           <Typography variant="h6" gutterBottom className={classes.heading}>
-            Inventory GRN
+            Inventory GTN OUT
           </Typography>
           <Box border={1} className={classes.box}>
             <Grid container spacing={3}>
@@ -467,23 +456,33 @@ export default function InventoryIN() {
                   }}
                 />
               </Grid>
-
+              <Grid item xs={3}>
+                <TextField
+                  fullWidth
+                  id="frmloc"
+                  label="From Location"
+                  disabled={true}
+                  name="frmloc"
+                  value={value.frmloc}
+                  onChange={handleChange("frmloc")}
+                />
+              </Grid>
               <Grid item xs={3}>
                 <FormControl
                   className={clsx(classes.margin, classes.textField)}
                 >
                   <InputLabel htmlFor="standard-adornment-password">
-                    Supplier No
+                    To Location
                   </InputLabel>
                   <Input
-                    name="supplier"
-                    value={value.supplierno}
+                    name="toloc"
+                    value={value.toloc}
                     endAdornment={
                       <InputAdornment position="end">
                         <IconButton
                           // aria-label="toggle password visibility"
                           onClick={() => {
-                            pickListOpen("supplier");
+                            pickListOpen("location");
                           }}
                         >
                           <AddIcon />
@@ -497,22 +496,11 @@ export default function InventoryIN() {
               <Grid item xs={3}>
                 <TextField
                   fullWidth
-                  id="refno"
-                  label="Refferance No"
-                  name="reffno"
-                  value={value.reffno}
-                  onChange={handleChange("reffno")}
-                />
-              </Grid>
-
-              <Grid item xs={3}>
-                <TextField
-                  fullWidth
-                  id="diliveryperson"
-                  label="Delivery person"
-                  name="diliveryperson"
-                  value={value.diliveryperson}
-                  onChange={handleChange("diliveryperson")}
+                  id="remark"
+                  label="Ref MON No"
+                  name="refno"
+                  value={value.refno}
+                  onChange={handleChange("refno")}
                 />
               </Grid>
             </Grid>
@@ -522,11 +510,11 @@ export default function InventoryIN() {
             <Grid item xs={3}>
               <FormControl className={clsx(classes.margin, classes.textField)}>
                 <InputLabel htmlFor="standard-adornment-password">
-                  Item Code
+                  Serial No
                 </InputLabel>
                 <Input
-                  id="standard-adornment-password"
-                  value={value.itemcode}
+                  id="serialno"
+                  value={value.serialno}
                   disabled={dtl_fld}
                   endAdornment={
                     <InputAdornment position="end">
@@ -534,7 +522,7 @@ export default function InventoryIN() {
                         disabled={dtl_fld}
                         aria-label="toggle password visibility"
                         onClick={() => {
-                          pickListOpen("item");
+                          pickListOpen("serialno");
                         }}
                       >
                         <AddIcon />
@@ -548,47 +536,23 @@ export default function InventoryIN() {
             <Grid item xs={3}>
               <TextField
                 fullWidth
-                inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
-                id="cost"
-                disabled={dtl_fld}
-                label="Cost(Rs.)"
-                name="cost"
-                value={value.cost}
-                onChange={handleChange("cost")}
+                id="itemcode"
+                disabled={true}
+                label="Item Code"
+                name="itemcode"
+                value={value.itemcode}
+                onChange={handleChange("itemcode")}
               />
             </Grid>
-            <Grid item xs={3}>
+            <Grid item xs={6}>
               <TextField
                 fullWidth
-                id="serialno"
-                label="Serial No"
+                id="remark"
                 disabled={dtl_fld}
-                name="serialno"
-                value={value.serialno}
-                onChange={handleChange("serialno")}
-              />
-            </Grid>
-            <Grid item xs={3}>
-              <TextField
-                fullWidth
-                id="barcode"
-                label="Barcode"
-                disabled={dtl_fld}
-                name="barcode"
-                value={value.barcode}
-                onChange={handleChange("barcode")}
-              />
-            </Grid>
-
-            <Grid item xs={3}>
-              <TextField
-                fullWidth
-                id="warranty"
-                disabled={dtl_fld}
-                label="Warranty (Months)"
-                name="warranty"
-                value={value.warranty}
-                onChange={handleChange("warranty")}
+                label="Remark"
+                name="remark"
+                value={value.remark}
+                onChange={handleChange("remark")}
               />
             </Grid>
 
@@ -605,7 +569,7 @@ export default function InventoryIN() {
           </Grid>
           <Grid>
             <MUIDataTable
-              title={"Search Items"}
+              title={"Details"}
               data={tableData}
               columns={header}
               options={options}

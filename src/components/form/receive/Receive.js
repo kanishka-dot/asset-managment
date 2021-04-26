@@ -1,8 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Grid from "@material-ui/core/Grid";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
+import { PORT, URL } from "../../../connection/defaultconfig";
+import { axios } from "../../../connection/axios";
+import CircularProgress from "@material-ui/core/CircularProgress";
 import {
   Paper,
   Box,
@@ -42,6 +45,13 @@ const useStyles = makeStyles((theme) => ({
       padding: theme.spacing(3),
     },
   },
+  buttonProgress: {
+    position: "absolute",
+    top: "70%",
+    left: "45%",
+    marginTop: -12,
+    marginLeft: -12,
+  },
   paper_modal: {
     position: "absolute",
     width: 500,
@@ -54,12 +64,20 @@ const useStyles = makeStyles((theme) => ({
     marginRight: theme.spacing(3),
     marginBottom: theme.spacing(3),
   },
-
+  wrapper: {
+    margin: theme.spacing(1),
+    position: "relative",
+  },
   buttonSave: {
     marginTop: theme.spacing(3),
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(3),
     width: "8rem",
+  },
+
+  box: {
+    width: "57rem",
+    height: "5rem",
   },
 
   btn: {
@@ -84,43 +102,36 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function InventoryIN() {
+export default function Transfer() {
   const classes = useStyles();
   const responsive = "vertical";
   const tableBodyHeight = "100%";
   const tableBodyMaxHeight = "";
   const [open, setOpen] = useState(false);
+  const [dtl_fld, setDtl_fld] = useState(true);
   const [ModalOpen, setModalOpen] = useState(false);
   const [severity, setSeverity] = useState("warning");
   const [message, setMessage] = useState("");
-  const [type, setType] = useState("supplier");
-  const [tableData] = useState([]);
-  const initialState = {
+  const [type, setType] = useState("doc");
+  const [documents, setDocuments] = useState();
+  const [tableData, setTableData] = useState([]);
+  const [dataList, setDataList] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [saveBtnDisb, setSaveBtnDisb] = useState(false);
+  const [data, setData] = useState({
     docno: "",
-    date: CurrentDate(),
-    itemcode: "",
-    itemid: "",
-    diliveryperson: "",
-    supplierno: "",
-    cost: "",
-    warranty: "",
-    serialno: "",
-    barcode: "",
-    reffno: "",
-  };
-
+    app_by: "",
+    app_date: "",
+    mod_by: "",
+    mod_date: "",
+  });
   const [value, setValue] = useState({
     docno: "",
-    date: CurrentDate(),
-    itemcode: "",
-    supplierno: "",
-    serialno: "",
-    barcode: "",
-    cost: "",
-    warranty: "",
-    diliveryperson: "",
-    reffno: "",
   });
+  const initialState = {
+    docno: "",
+    cre_date: CurrentDate(),
+  };
 
   const options = {
     elevation: 1,
@@ -133,31 +144,100 @@ export default function InventoryIN() {
     tableBodyMaxHeight,
     onRowsDelete: false,
     selectableRows: "single",
+    rowsPerPageOptions: [3],
+    rowsPerPage: 3,
   };
-  const header = [
-    "Document No",
-    "Date",
-    "Item Code",
-    "Supplier No",
-    "Serial No",
-    "Barcode",
-    "Cost",
-    "Warranty Period",
-    "Delivery Persion",
-  ];
+  const header = ["Serial No", "Item Code", "Remark"];
 
-  const pickList_header = ["ID", "Name"];
+  const pickList_header = ["Location", "Document No"];
 
   /* pick list data select function*/
   const handleRowClick = (dataIndex) => {
-    if (type === "supplier") {
-      setValue({ ...value, supplierno: dataIndex[0] });
-    } else {
-      setValue({ ...value, itemcode: dataIndex[0] });
+    if (type === "doc") {
+      setValue({ ...value, docno: dataIndex[1] });
     }
-
     pickListClose();
-    console.log(dataIndex[0]);
+  };
+
+  function setDefault() {
+    setValue(initialState);
+    setDtl_fld(true);
+    setDataList([]);
+    setTableData([]);
+  }
+  /**
+   * Get data for picklist
+   */
+
+  const getInvData = () => {
+    axios
+      .get(`http://${URL}:${PORT}/inventory/receive/${25}`)
+      .then((response) => {
+        const data = response.data.map((data) => [data[1], data[0]]);
+        console.log(data);
+        setDocuments(data);
+      })
+      .catch((error) => console.error(`Error:${error}`));
+  };
+
+  const getData = (docno) => {
+    axios
+      .get(`http://${URL}:${PORT}/inventory/receive/getgtn/${docno}`)
+      .then((response) => {
+        const data = response.data.map((data) => [
+          data.serialno,
+          data.itemcode,
+          data.remark,
+        ]);
+        console.log(data);
+        setTableData(data);
+      })
+      .catch((error) => console.error(`Error:${error}`));
+  };
+
+  const saveGTN = async () => {
+    if (tableData[0] == null) {
+      setOpen(true);
+      setMessage("No data to save");
+    } else {
+      console.log(dataList);
+      setLoading(true);
+      setSaveBtnDisb(true);
+      axios
+        .post(
+          `http://${URL}:${PORT}/inventory/receive/approve/${value.docno}/kamal`
+        )
+        .then(
+          (response) => {
+            console.log(dataList);
+            console.log(response);
+            if (response.data === "GTN Sucessfully Approved") {
+              setSeverity("success");
+              setOpen(true);
+              setMessage("GTN Sucessfully Approved");
+              setDefault();
+              setLoading(false);
+              setSaveBtnDisb(false);
+            } else {
+              setSeverity("error");
+              setOpen(true);
+              setMessage(response.data);
+              setDefault();
+              setLoading(false);
+              setSaveBtnDisb(false);
+            }
+          },
+          (error) => {
+            setSeverity("error");
+            setOpen(true);
+            setMessage("Unexpected Error. Check the console for more details");
+            setDefault();
+            setLoading(false);
+            setSaveBtnDisb(false);
+            console.log(error);
+          }
+        );
+    }
   };
 
   const picklist_options = {
@@ -175,51 +255,45 @@ export default function InventoryIN() {
     onRowClick: handleRowClick,
   };
 
-  const supplier_date = [
-    ["25425", "kamal tenakaon"],
-    ["47200", "sadun nimalarathna"],
-    ["69685", "Gunasearka perera"],
-    ["95671", "malkanthi nona"],
-    ["24872", "atek lanka"],
-  ];
-
-  const itemcode_date = [
-    ["IT205", "Pos Machine"],
-    ["PS2546", "Power Supply"],
-    ["POS205", "Point of sale machine 01"],
-    ["PC5458", "Executive PC"],
-    ["PRN5254", "printer laserjet"],
-  ];
-
   /*change picklist based on field type select*/
   function picklistData() {
-    if (type === "supplier") {
-      return supplier_date;
-    } else {
-      return itemcode_date;
+    if (type === "doc") {
+      return documents;
     }
   }
 
+  // while data update in fileds this methods collect data to post( use to eliminate side effect in use state)
+  useEffect(() => {
+    setData({
+      ...data,
+      docno: value.docno,
+      app_by: "",
+      app_date: "",
+      mod_by: "",
+      mod_date: "",
+    });
+  }, [value]);
+
+  // Picklist call
+  // useEffect(() => {
+  //   getLocations();
+  //   getLocInventory();
+  // }, []);
+
   function requiredFeilds() {
-    if (value.itemcode.trim() === "") {
+    if (value.docno === "") {
+      setSeverity("warning");
       setOpen(true);
-      setMessage("Item Code is Required");
-    } else if (value.supplierno.trim() === "") {
-      setOpen(true);
-      setMessage("Supplier No is Required");
-    } else if (value.date.trim() === "") {
-      setOpen(true);
-      setMessage("Valid date is Required");
-    } else if (value.cost.trim() === "") {
-      setOpen(true);
-      setMessage("Cost is Required");
-    } else if (value.serialno.trim() === "") {
-      setOpen(true);
-      setMessage("Serial No is Required");
+      setMessage("Pick a Document to view");
     } else {
       return true;
     }
   }
+
+  // Picklist call
+  useEffect(() => {
+    getInvData();
+  }, []);
 
   const pickListOpen = (type) => {
     setType(type);
@@ -238,42 +312,23 @@ export default function InventoryIN() {
   };
 
   const handleChange = (props) => (event) => {
-    if (props === "cost") {
-      if (/^[0-9]*$/.test(event.target.value)) {
-        setValue({ ...value, [props]: event.target.value });
-      }
-    } else {
-      setValue({ ...value, [props]: event.target.value });
-    }
+    setValue({ ...value, [props]: event.target.value });
 
     // setValue({ ...value, [props]: event.target.value });
   };
 
   function handleDateChange(event) {
-    setValue({ ...value, date: event.target.value });
+    setValue({ ...value, cre_date: event.target.value });
     console.log(event.persist);
   }
 
-  const handleClear = () => {
-    setValue({ ...initialState });
-  };
+  // const handleClear = () => {
+  //   setValue({ ...initialState });
+  // };
 
-  const addData = () => {
+  const viewData = () => {
     if (requiredFeilds()) {
-      tableData.push([
-        value.docno,
-        value.date,
-        value.itemcode,
-        value.supplierno,
-        value.serialno,
-        value.barcode,
-        value.cost,
-        value.warranty,
-        value.diliveryperson,
-      ]);
-      setValue({ ...initialState });
-
-      console.log(value);
+      getData(value.docno);
     }
   };
 
@@ -301,7 +356,7 @@ export default function InventoryIN() {
         }}
         open={open}
         onClose={handleSnackBarClose}
-        autoHideDuration={2000}
+        autoHideDuration={4000}
       >
         <Alert onClose={handleSnackBarClose} severity={severity}>
           {message}
@@ -312,13 +367,15 @@ export default function InventoryIN() {
       <main className={classes.layout}>
         <Paper className={classes.paper} elevation={2}>
           <Typography variant="h6" gutterBottom className={classes.heading}>
-            Inventory GRN
+            Inventory GTN IN
           </Typography>
+
           <Grid container spacing={3}>
             <Grid item xs={12}>
               <TextField
                 type="date"
                 label="Date"
+                disabled={true}
                 defaultValue={CurrentDate()}
                 onChange={handleDateChange}
                 InputLabelProps={{
@@ -330,17 +387,17 @@ export default function InventoryIN() {
             <Grid item xs={3}>
               <FormControl className={clsx(classes.margin, classes.textField)}>
                 <InputLabel htmlFor="standard-adornment-password">
-                  Supplier No
+                  Document No
                 </InputLabel>
                 <Input
-                  name="supplier"
-                  value={value.supplierno}
+                  name="docno"
+                  value={value.docno}
                   endAdornment={
                     <InputAdornment position="end">
                       <IconButton
                         // aria-label="toggle password visibility"
                         onClick={() => {
-                          pickListOpen("supplier");
+                          pickListOpen("doc");
                         }}
                       >
                         <AddIcon />
@@ -351,129 +408,55 @@ export default function InventoryIN() {
               </FormControl>
             </Grid>
 
-            <Grid item xs={3}>
-              <FormControl className={clsx(classes.margin, classes.textField)}>
-                <InputLabel htmlFor="standard-adornment-password">
-                  Item Code
-                </InputLabel>
-                <Input
-                  id="standard-adornment-password"
-                  value={value.itemcode}
-                  endAdornment={
-                    <InputAdornment position="end">
-                      <IconButton
-                        aria-label="toggle password visibility"
-                        onClick={() => {
-                          pickListOpen("item");
-                        }}
-                      >
-                        <AddIcon />
-                      </IconButton>
-                    </InputAdornment>
-                  }
-                />
-              </FormControl>
-            </Grid>
-
-            <Grid item xs={3}>
-              <TextField
-                fullWidth
-                inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
-                id="cost"
-                label="Cost(Rs.)"
-                name="cost"
-                value={value.cost}
-                onChange={handleChange("cost")}
-              />
-            </Grid>
-            <Grid item xs={3}>
-              <TextField
-                fullWidth
-                id="serialno"
-                label="Serial No"
-                name="serialno"
-                value={value.serialno}
-                onChange={handleChange("serialno")}
-              />
-            </Grid>
-            <Grid item xs={3}>
-              <TextField
-                fullWidth
-                id="barcode"
-                label="Barcode"
-                name="barcode"
-                value={value.barcode}
-                onChange={handleChange("barcode")}
-              />
-            </Grid>
-
-            <Grid item xs={3}>
-              <TextField
-                fullWidth
-                id="warranty"
-                label="Warranty (Months)"
-                name="warranty"
-                value={value.warranty}
-                onChange={handleChange("warranty")}
-              />
-            </Grid>
-
-            <Grid item xs={3}>
-              <TextField
-                fullWidth
-                id="refno"
-                label="Refferance No"
-                name="reffno"
-                value={value.reffno}
-                onChange={handleChange("reffno")}
-              />
-            </Grid>
-            <Grid item xs={3}>
-              <TextField
-                fullWidth
-                id="diliveryperson"
-                label="Delivery person"
-                name="diliveryperson"
-                value={value.diliveryperson}
-                onChange={handleChange("diliveryperson")}
-              />
-            </Grid>
-
-            <Grid item xs={12} spacing={1}>
+            <Grid item xs={12}>
               <Button
                 className={classes.button}
                 variant="contained"
                 color="primary"
-                onClick={addData}
+                onClick={viewData}
               >
-                Add
-              </Button>
-              <Button
-                className={classes.button}
-                variant="contained"
-                color="secondary"
-                onClick={handleClear}
-              >
-                Clear
+                View
               </Button>
             </Grid>
           </Grid>
           <Grid>
             <MUIDataTable
-              title={"Search Items"}
+              title={"Details"}
               data={tableData}
               columns={header}
               options={options}
             />
           </Grid>
           <Box className={classes.btn}>
-            <Button
-              className={classes.buttonSave}
-              variant="contained"
-              color="primary"
-            >
-              Save
-            </Button>
+            <div className={classes.wrapper}>
+              <Button
+                className={classes.buttonSave}
+                variant="contained"
+                color="primary"
+                onClick={saveGTN}
+                disabled={saveBtnDisb}
+              >
+                Save
+              </Button>
+              {loading && (
+                <CircularProgress
+                  size={24}
+                  className={classes.buttonProgress}
+                />
+              )}
+            </div>
+            <div className={classes.wrapper}>
+              <Button
+                className={classes.buttonSave}
+                variant="contained"
+                color="secondary"
+                onClick={() => {
+                  setDefault();
+                }}
+              >
+                Clear
+              </Button>
+            </div>
           </Box>
         </Paper>
       </main>

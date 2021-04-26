@@ -96,6 +96,7 @@ export default function SearchLocations() {
             data.cre_by,
             data.cre_date,
           ]);
+          console.log(data);
           setFetchTableData(data);
         },
         (error) => {
