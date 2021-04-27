@@ -108,7 +108,6 @@ export default function Transfer() {
   const tableBodyHeight = "100%";
   const tableBodyMaxHeight = "";
   const [open, setOpen] = useState(false);
-  const [dtl_fld, setDtl_fld] = useState(true);
   const [ModalOpen, setModalOpen] = useState(false);
   const [severity, setSeverity] = useState("warning");
   const [message, setMessage] = useState("");
@@ -161,7 +160,6 @@ export default function Transfer() {
 
   function setDefault() {
     setValue(initialState);
-    setDtl_fld(true);
     setDataList([]);
     setTableData([]);
   }
@@ -311,11 +309,6 @@ export default function Transfer() {
     setOpen(false);
   };
 
-  const handleChange = (props) => (event) => {
-    setValue({ ...value, [props]: event.target.value });
-
-    // setValue({ ...value, [props]: event.target.value });
-  };
 
   function handleDateChange(event) {
     setValue({ ...value, cre_date: event.target.value });

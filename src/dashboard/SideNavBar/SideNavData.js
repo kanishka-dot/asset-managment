@@ -133,13 +133,13 @@ const Items = [
     items: [
       {
         title: "Add Inventory",
-        path: "/app/inventory/repair/add",
+        path: "/app/inventory/dispose/add",
         icon: <AddIcon style={{ color: color }}  />,
       },
 
       {
         title: "Approve Dispose Inventory",
-        path: "/app/inventory/repair/complete",
+        path: "/app/inventory/dispose/save",
         icon: <ThumbUpIcon style={{ color: color }}  />,
       },
      
