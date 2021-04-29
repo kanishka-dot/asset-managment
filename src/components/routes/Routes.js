@@ -20,7 +20,7 @@ import Receive from "../../components/pages/Inventory/Receive";
 import RepairIN from "../../components/pages/repair/Repair";
 import RepairOUT from "../../components/pages/repair/RepairOUT";
 import AddDispose from "../../components/pages/dispose/AddDispose"
-
+import SaveDispose from "../../components/pages/dispose/SaveDispose"
 
 function Routes() {
   return (
@@ -44,6 +44,7 @@ function Routes() {
         <Route path="/app/inventory/repair/add" component={RepairIN} />
         <Route path="/app/inventory/repair/complete" component={RepairOUT} />
         <Route path="/app/inventory/dispose/add" component={AddDispose} />
+        <Route path="/app/inventory/dispose/save" component={SaveDispose} />
         <Route
           path="/app/inventory/itemgroup/search"
           component={SearchItemGroup}

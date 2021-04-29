@@ -206,14 +206,14 @@ export default function Transfer() {
             console.log(dataList);
             setLoading(true);
             setSaveBtnDisb(true);
-            axios.post(`http://${URL}:${PORT}/inventory/tranfer/data`, dataList).then(
+            axios.post(`http://${URL}:${PORT}/inventory/dispose/data`, dataList).then(
                 (response) => {
                     console.log(dataList);
                     console.log(response);
-                    if (response.data === "GTN Sucessfully Save") {
+                    if (response.data[0] === "1") {
                         setSeverity("success");
                         setOpen(true);
-                        setMessage("GTN Sucessfully Saved");
+                        setMessage(response.data[1]);
                         setDefault();
                         setLoading(false);
                         setSaveBtnDisb(false);
@@ -221,7 +221,7 @@ export default function Transfer() {
                     } else {
                         setSeverity("error");
                         setOpen(true);
-                        setMessage(response.data);
+                        setMessage(response.data[1]);
                         setDefault();
                         setLoading(false);
                         setSaveBtnDisb(false);
@@ -273,8 +273,8 @@ export default function Transfer() {
             seqno: "",
             serialno: value.serialno,
             itemcode: value.itemcode,
-            remark: value.remark,
-            techrec: value.techrec,
+            remark: value.remark.trim(),
+            techrec: value.techrec.trim(),
             status: "",
             app_by: "",
             app_date: "",
@@ -375,7 +375,7 @@ export default function Transfer() {
                     ...value,
                     itemcode: "",
                     serialno: "",
-                    remark: "",
+                    techrec:""
                 });
 
                 console.log(data);
