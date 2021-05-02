@@ -1,20 +1,34 @@
-import React from 'react'
-import Header from '../header/Header'
-import SidenavAdmin from '../../dashboard/SideNavBar/SideNav'
-import Sidenav_HO_Manager from '../../dashboard/SideNavBar_HO_Manager/SideNav'
-import Sidenav_Manager from '../../dashboard/SideNavBar_Manager/SideNav'
-import Sidenav_HO_ITOfficer from '../../dashboard/SideNavBar_HO_ITOfficer/SideNav'
-import Sidenav_ITOfficer from '../../dashboard/SideNavBar_ITOfficer/SideNav'
+import React from "react";
+import Header from "../header/Header";
+import ADMINPANEL from "../../dashboard/SideNavBar/SideNav";
+import MANAGERPANEL from "../../dashboard/SideNavBar_HO_Manager/SideNav";
+import ITOFFICERPANEL from "../../dashboard/SideNavBar_HO_ITOfficer/SideNav";
+import USERPANEL from "../../dashboard/SideNavBar_ITOfficer/SideNav";
+import { ROLE } from "../../service/userDetails";
 
+export default function Layout() {
+  console.log(ROLE);
 
+  function getSideNav() {
+    switch (ROLE) {
+      case "ADMIN":
+        return <ADMINPANEL />;
+      case "MANAGER":
+        return <MANAGERPANEL />;
+      case "OFFICER":
+        return <ITOFFICERPANEL />;
+      case "USER":
+        return <USERPANEL />;
+      default:
+      // code block
+    }
+  }
 
-export default function App() {
   return (
     <div>
       {/* ****To provide diffrent layouts based on user role**** */}
       <Header />
-      <SidenavAdmin />
-      
+      {getSideNav()}
     </div>
   );
 }

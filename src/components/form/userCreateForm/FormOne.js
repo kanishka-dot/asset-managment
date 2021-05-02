@@ -88,11 +88,10 @@ export default function Form_1() {
   ];
 
   const role = [
-    ["1", "IT Officer"],
-    ["CD202", "Power Supply"],
-    ["CD201", "Point of sale machine 01"],
-    ["CD204", "Executive PC"],
-    ["CD255", "printer laserjet"],
+    ["1", "ADMIN"],
+    ["2", "MANAGER"],
+    ["3", "OFFICER"],
+    ["4", "USER"],
   ];
 
   const pickList_header = ["ID", "Name"];
@@ -164,12 +163,15 @@ export default function Form_1() {
   const pushData = async () => {
     axios
       .post(`http://${URL}:${PORT}/user/createuser`, {
-        userid: value.userId,
+        userpk: {
+          userid: value.userId,
+          locationid: value.location,
+        },
         name: value.userName,
         nic: value.NIC,
         password: "12345678",
         roleid: value.role,
-        locationid: value.location,
+
         status: value.status,
         mod_by: "kanishka",
         mod_date: "2021-04-18",
