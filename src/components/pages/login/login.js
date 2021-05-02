@@ -1,29 +1,12 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
-import Hidden from "@material-ui/core/Hidden";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
 import Button from "@material-ui/core/Button";
-import Link from "@material-ui/core/Link";
 import logoimg from "../../../assets/images/Arpico1.jpg";
-import { useHistory } from "react-router-dom";
-
-function Copyright() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {"Copyright © "}
-      <Link color="inherit" href="https://material-ui.com/">
-        Your Website
-      </Link>{" "}
-      {new Date().getFullYear()}
-      {"."}
-    </Typography>
-  );
-}
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -34,6 +17,21 @@ const useStyles = makeStyles((theme) => ({
   background_img: {
     height: "250px",
     width: "250px",
+  },
+  paper_modal: {
+    position: "absolute",
+    width: 450,
+    backgroundColor: "white",
+    padding: theme.spacing(2, 4, 3),
+  },
+  wrapper: {
+    margin: theme.spacing(1),
+    position: "relative",
+  },
+  modal: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
   },
 
   grid2: {
@@ -46,6 +44,13 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(2),
     textAlign: "center",
     color: theme.palette.text.secondary,
+  },
+  buttonProgress: {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    marginTop: -12,
+    marginLeft: -12,
   },
 
   grid1_paper: {
@@ -60,101 +65,95 @@ const useStyles = makeStyles((theme) => ({
     color: "#000000",
   },
 
+  submit: {
+    marginTop: "1rem",
+    marginBottom: "1rem",
+  },
+
   logo: {
-    width: "40%",
-    height: "30%",
+    width: "30%",
+    height: "25%",
   },
 }));
 
-
-
-
-function Login() {
-
+function Login({ userDetails, Errors, Loading }) {
   const classes = useStyles();
-  let History = useHistory();
+  const [isDisableBtn, setIsDisableBtn] = useState(false);
 
-  
+  const [loginDetails, setloginDetails] = useState({
+    location: "",
+    username: "",
+    password: "",
+  });
+
+  useEffect(() => {
+    if (Loading) {
+      setIsDisableBtn(true);
+    } else {
+      setIsDisableBtn(false);
+    }
+  }, [Loading]);
+
+  const handleChange = (e) => {
+    setloginDetails({ ...loginDetails, [e.target.name]: e.target.value });
+  };
+
   function handleSubmit(e) {
-   
-    History.push('/app/home')
+    e.preventDefault();
+    userDetails(loginDetails);
   }
-
 
   return (
     <div className={classes.root}>
       <div className={classes.grid2}>
         <Grid container spacing={1}>
-          {/* <Hidden smDown>
-            <Grid item xs>
-              <Paper className={classes.grid1_paper}>
-                <div className={classes.login_header}>
-                  <ThemeProvider theme={theme}>
-                    <Typography variant="subtitle2">
-                      IT Related Inventory Management and Help Desk
-                    </Typography>
-                  </ThemeProvider>
-                  <Box>
-                    <img
-                      src={BackgroundImg}
-                      className={classes.background_img}
-                    />
-                  </Box>
-
-                  <div>
-                    <Typography variant="caption">
-                      Login to Access Dashboard
-                    </Typography>
-                  </div>
-                </div>
-              </Paper>
-            </Grid>
-          </Hidden> */}
-          <Hidden>
-            <Grid item xs>
-              <Paper className={classes.paper}>
-                <img src={logoimg} alt="Logo" className={classes.logo} />
-                <Typography variant="subtitle2" gutterBottom>
-                  IT Related Inventory Management
-                </Typography>
-                <form className={classes.form} validate={true} onSubmit={handleSubmit}>
-                  <TextField
-                    variant="outlined"
-                    margin="normal"
-                    fullWidth
-                    id="location"
-                    label="Location"
-                    name="location"
-                    autoComplete="username"
-                    autoFocus
-                    required
-                  />
-                  <TextField
-                    variant="outlined"
-                    margin="normal"
-                    fullWidth
-                    id="username"
-                    label="Username"
-                    name="username"
-                    autoComplete="username"
-                    required
-                  />
-                  <TextField
-                    variant="outlined"
-                    margin="normal"
-                    fullWidth
-                    name="password"
-                    label="Password"
-                    type="password"
-                    id="password"
-                    autoComplete="current-password"
-                    required
-                  />
-                  <FormControlLabel
-                    control={<Checkbox value="remember" color="primary" />}
-                    label="Remember me"
-                  />
-               
+          <Grid item xs>
+            <Paper className={classes.paper}>
+              <img src={logoimg} alt="Logo" className={classes.logo} />
+              <Typography variant="h5" gutterBottom>
+                IT Related Inventory Management
+              </Typography>
+              <form className={classes.form} onSubmit={handleSubmit}>
+                <Typography style={{ color: "red" }}>{Errors}</Typography>
+                <TextField
+                  variant="outlined"
+                  margin="normal"
+                  fullWidth
+                  id="location"
+                  onChange={handleChange}
+                  value={loginDetails.location}
+                  label="Location"
+                  name="location"
+                  autoComplete="username"
+                  autoFocus
+                  required
+                />
+                <TextField
+                  variant="outlined"
+                  margin="normal"
+                  fullWidth
+                  id="username"
+                  onChange={handleChange}
+                  value={loginDetails.username}
+                  label="Username"
+                  name="username"
+                  autoComplete="username"
+                  required
+                />
+                <TextField
+                  variant="outlined"
+                  margin="normal"
+                  fullWidth
+                  name="password"
+                  onChange={handleChange}
+                  value={loginDetails.password}
+                  label="Password"
+                  type="password"
+                  id="password"
+                  autoComplete="current-password"
+                  required
+                />
+                <div className={classes.wrapper}>
                   <Button
                     type="submit"
                     fullWidth
@@ -162,25 +161,23 @@ function Login() {
                     color="primary"
                     value="submit"
                     className={classes.submit}
+                    disabled={isDisableBtn}
                   >
-                  
                     LOG IN
                   </Button>
-               
-                  <Grid container>
-                    <Grid item xs>
-                      <Link href="#" variant="body2">
-                        Forgot password?
-                      </Link>
-                    </Grid>
-                  </Grid>
-                </form>
-                <div style={{ paddingTop: "10px" }}>
-                  <Copyright />
+                  {Loading && (
+                    <CircularProgress
+                      size={24}
+                      className={classes.buttonProgress}
+                    />
+                  )}
                 </div>
-              </Paper>
-            </Grid>
-          </Hidden>
+                <Grid container>
+                  <Grid item xs></Grid>
+                </Grid>
+              </form>
+            </Paper>
+          </Grid>
         </Grid>
       </div>
     </div>
