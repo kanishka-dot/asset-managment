@@ -23,12 +23,14 @@ import AddDispose from "../../components/pages/dispose/AddDispose"
 import SaveDispose from "../../components/pages/dispose/SaveDispose"
 
 function Routes() {
+  console.log("routes");
+  
   return (
     <>
     <Layout />
       <Switch>
         <Route exact path="/app/home" component={Home} />
-        <Route path="/app/inventory/create" component={InventoryForm} />
+        <Route  path="/app/inventory/create" component={InventoryForm} />
         <Route path="/app/inventory/search" component={Search} />
         <Route path="/app/inventory/transfer" component={Transfer} />
         <Route path="/app/users/createuser" component={CreateUserForm} />

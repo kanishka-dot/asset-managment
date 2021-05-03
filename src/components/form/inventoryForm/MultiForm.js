@@ -55,7 +55,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Checkout() {
   const [formData, setValues] = useForm(FORM_INITAL_VALUE);
-
+  console.log("Item Form");
   const props = { formData, setValues };
 
   function getStepContent(step) {
@@ -86,7 +86,7 @@ export default function Checkout() {
   return (
     <React.Fragment>
       <CssBaseline />
-
+    
       <main className={classes.layout}>
         <Paper className={classes.paper}>
           <Typography component="h5" variant="h5" align="left">
