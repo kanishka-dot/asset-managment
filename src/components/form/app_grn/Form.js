@@ -10,9 +10,6 @@ import {
     FormControl,
     InputLabel,
     Input,
-    InputAdornment,
-    IconButton,
-    Modal,
     Snackbar,
 } from "@material-ui/core";
 import CurrentDate from "../../utils/Date";
@@ -239,94 +236,7 @@ export default function InventoryIN() {
                                 options={options}
                             />
                         </Grid>
-                        <Grid item xs={3}>
-                            <FormControl className={clsx(classes.margin, classes.textField)}>
-                                <InputLabel htmlFor="standard-adornment-password">
-                                    Supplier No
-                </InputLabel>
-                                <Input
-                                    name="supplier"
-                                    value={value.supplierno}
-                                />
-                            </FormControl>
-                        </Grid>
-
-                        <Grid item xs={3}>
-                            <FormControl className={clsx(classes.margin, classes.textField)}>
-                                <InputLabel htmlFor="standard-adornment-password">
-                                    Item Code
-                </InputLabel>
-                                <Input
-                                    id="standard-adornment-password"
-                                    value={value.itemcode}
-
-                                />
-                            </FormControl>
-                        </Grid>
-
-                        <Grid item xs={3}>
-                            <TextField
-                                fullWidth
-                                inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
-                                id="cost"
-                                label="Cost(Rs.)"
-                                name="cost"
-                                value={value.cost}
-
-                            />
-                        </Grid>
-                        <Grid item xs={3}>
-                            <TextField
-                                fullWidth
-                                id="serialno"
-                                label="Serial No"
-                                name="serialno"
-                                value={value.serialno}
-
-                            />
-                        </Grid>
-                        <Grid item xs={3}>
-                            <TextField
-                                fullWidth
-                                id="barcode"
-                                label="Barcode"
-                                name="barcode"
-                                value={value.barcode}
-
-                            />
-                        </Grid>
-
-                        <Grid item xs={3}>
-                            <TextField
-                                fullWidth
-                                id="warranty"
-                                label="Warranty (Months)"
-                                name="warranty"
-                                value={value.warranty}
-
-                            />
-                        </Grid>
-
-                        <Grid item xs={3}>
-                            <TextField
-                                fullWidth
-                                id="refno"
-                                label="Refferance No"
-                                name="reffno"
-                                value={value.reffno}
-
-                            />
-                        </Grid>
-                        <Grid item xs={3}>
-                            <TextField
-                                fullWidth
-                                id="diliveryperson"
-                                label="Delivery person"
-                                name="diliveryperson"
-                                value={value.diliveryperson}
-
-                            />
-                        </Grid>
+                       
                     </Grid>
 
                     <Box className={classes.btn}>

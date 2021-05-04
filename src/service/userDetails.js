@@ -1,11 +1,26 @@
-const USER_DETAILS = JSON.parse(sessionStorage.getItem("user"));
 
-const ROLE = USER_DETAILS.ROLE;
-const LOCATIONID = USER_DETAILS.LOCATION;
-const USERID = USER_DETAILS.USERID;
+ const USER_DETAILS = JSON.parse(sessionStorage.getItem("user"));
+
+ let ROLE = ""
+ let LOCATIONID = ""
+ let USERID = ""
+ 
+
+if(sessionStorage.getItem("user")){
+ 
+   ROLE = USER_DETAILS.ROLE;
+   LOCATIONID = USER_DETAILS.LOCATION;
+   USERID = USER_DETAILS.USERID;
+  
+}
 
 const logout = () => {
   localStorage.removeItem("user");
 };
 
+
+
 export { ROLE, LOCATIONID, USERID, logout };
+
+
+

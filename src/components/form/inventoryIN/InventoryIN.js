@@ -122,8 +122,12 @@ export default function InventoryIN() {
   const [loading, setLoading] = useState(false);
   const [saveBtnDisb, setSaveBtnDisb] = useState(false);
   const [data, setData] = useState({
-    doccode: "GRN",
-    locationid: "",
+    grnPk: {
+      docno: "",
+      doccode: "GRN",
+      locationid: "",
+      seqno: ""
+    },
     date: Date(),
     serialno: "",
     status: "NAP",
@@ -155,6 +159,7 @@ export default function InventoryIN() {
   });
   const initialState = {
     docno: "",
+    locationid: "",
     date: Date(),
     itemcode: "",
     itemid: "",
@@ -264,10 +269,10 @@ export default function InventoryIN() {
           (response) => {
             console.log(dataList);
             console.log(response);
-            if (response.data === "GRN CREATE SUCESSFULL") {
+            if (response.data[0] === "1") {
               setSeverity("success");
               setOpen(true);
-              setMessage("GRN CREATE SUCESSFULL");
+              setMessage(response.data[1]);
               setDefault();
               setLoading(false);
               setSaveBtnDisb(false);
@@ -322,9 +327,12 @@ export default function InventoryIN() {
   // while data update in fileds this methods collect data to post( use to eliminate side effect in use state)
   useEffect(() => {
     setData({
-      ...data,
-      doccode: "GRN",
-      locationid: value.locationid,
+      ...data, grnPk: {
+        doccode: "GRN",
+        locationid: value.locationid,
+        docno: "",
+        seqno: ""
+      },
       date: Date(),
       serialno: value.serialno,
       status: "NAP",
