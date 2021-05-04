@@ -4,7 +4,6 @@ import { makeStyles } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
-import Paper from "@material-ui/core/Paper";
 import SimpleCard from "../../../dashboard/charts/Card";
 import Barchart from "../../../dashboard/charts/Barchart";
 import Piechart from "../../../dashboard/charts/Piechart";

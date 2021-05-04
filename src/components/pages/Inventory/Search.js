@@ -6,6 +6,7 @@ import MUIDataTable from "mui-datatables";
 import Snackbar from "@material-ui/core/Snackbar";
 import { Alert } from "@material-ui/lab";
 import { PORT, URL } from "../../../connection/defaultconfig";
+import { Button } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -53,7 +54,10 @@ export default function SearchItemCodes() {
   const tableBodyMaxHeight = "";
   const [fetchTableData, setFetchTableData] = useState();
   const [open, setOpen] = useState(false);
- 
+  const [severity, setSeverity] = useState("info");
+  const [SnOpen, setSnOpen] = useState(false);
+  const [message, setMessage] = useState("");
+
   const header = [
     "Item Code",
     "Item Descrption",
@@ -83,14 +87,38 @@ export default function SearchItemCodes() {
     tableBodyMaxHeight,
     onRowsDelete: false,
     selectableRows: "none",
-  };
-
-  const popErrorNotify = () => {
-    setOpen(true);
+    rowsPerPageOptions: [10],
+    rowsPerPage: 10,
   };
 
   const handleClose = () => {
-    setOpen(false);
+    setSnOpen(false);
+  };
+
+  const onClickGenReport = () => {
+    setSeverity("info");
+    setMessage("please wait.Report Generating.");
+    setSnOpen(true);
+
+    axios
+      .get(`http://${URL}:${PORT}/report/itemmaster`)
+      .then((response) => {
+        if (response.data[0] === "1") {
+          setSeverity("success");
+          setMessage(response.data[1]);
+          setSnOpen(true);
+        } else {
+          setSeverity("error");
+          setMessage(response.data[1]);
+          setSnOpen(true);
+        }
+      })
+      .catch((error) => {
+        setSeverity("error");
+        setMessage("Error. Please check the concole");
+        setSnOpen(true);
+        console.error(`Error:${error}`);
+      });
   };
 
   useEffect(() => {
@@ -99,25 +127,27 @@ export default function SearchItemCodes() {
         (response) => {
           const data = response.data.map((data) => [
             data.itemcode,
-            data.itemdesc, 
-            data.brand, 
-            data.model, 
-            data.capacity, 
+            data.itemdesc,
+            data.brand,
+            data.model,
+            data.capacity,
             data.processor,
-            data.ram, 
-            data.itemgroup, 
-            data.supplierid, 
-            data.status, 
-            data.type, 
-            data.mod_by, 
-            data.mod_date, 
-            data.cre_by, 
-            data.cre_date
+            data.ram,
+            data.itemgroup,
+            data.supplierid,
+            data.status,
+            data.type,
+            data.mod_by,
+            data.mod_date,
+            data.cre_by,
+            data.cre_date,
           ]);
           setFetchTableData(data);
         },
         (error) => {
-          popErrorNotify();
+          setSeverity("error");
+          setSnOpen(true);
+          setMessage("Error. Problem in network connection.");
           console.log(error);
         }
       );
@@ -150,12 +180,13 @@ export default function SearchItemCodes() {
           vertical: "bottom",
           horizontal: "right",
         }}
-        open={open}
+        open={SnOpen}
+        onClose={handleClose}
         autoHideDuration={6000}
-        message="Problem in Network Connection. Please Check"
+        message={message}
       >
-        <Alert onClose={handleClose} severity="error">
-          Problem in Network Connection. Please Check
+        <Alert onClose={handleClose} severity={severity}>
+          {message}
         </Alert>
       </Snackbar>
       <main className={classes.layout}>
@@ -165,6 +196,9 @@ export default function SearchItemCodes() {
           columns={header}
           options={options}
         />
+        <Button color="primary" variant="contained" onClick={onClickGenReport}>
+          Generate Report
+        </Button>
       </main>
     </React.Fragment>
   );

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Grid from "@material-ui/core/Grid";
 import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
@@ -7,6 +7,8 @@ import { FORM_INITAL_VALUE, FORM_CLEAR } from "./DataState";
 import { Alert } from "@material-ui/lab";
 import { PORT, URL } from "../../../connection/defaultconfig";
 import { axios } from "../../../connection/axios";
+import { USERID } from "../../../service/userDetails";
+import Date from "../../utils/Date";
 import {
   FormControl,
   FormControlLabel,
@@ -21,7 +23,6 @@ import {
   Select,
   Snackbar,
   MenuItem,
-  Typography,
 } from "@material-ui/core";
 import MUIDataTable from "mui-datatables";
 import clsx from "clsx";
@@ -74,19 +75,21 @@ export default function Form_1() {
   const [ModalOpen, setModalOpen] = useState(false);
   const [severity, setSeverity] = useState("warning");
   const [message, setMessage] = useState("");
+  const [supplierPick, setSupplierPick] = useState();
+  const [ItemGrpPick, setItemGrpPick] = useState();
 
-  const supplier_date = [
-    ["1", "kamal tenakaon"],
-    ["5", "sadun nimalarathna"],
-  ];
+  // const supplier_date = [
+  //   ["1", "kamal tenakaon"],
+  //   ["5", "sadun nimalarathna"],
+  // ];
 
-  const itemcode_date = [
-    ["IT305", "Pos Machine"],
-    ["CD202", "Power Supply"],
-    ["CD201", "Point of sale machine 01"],
-    ["CD204", "Executive PC"],
-    ["CD255", "printer laserjet"],
-  ];
+  // const itemcode_date = [
+  //   ["IT305", "Pos Machine"],
+  //   ["CD202", "Power Supply"],
+  //   ["CD201", "Point of sale machine 01"],
+  //   ["CD204", "Executive PC"],
+  //   ["CD255", "printer laserjet"],
+  // ];
 
   const pickList_header = ["ID", "Name"];
 
@@ -117,9 +120,9 @@ export default function Form_1() {
 
   function picklistData() {
     if (type === "supplier") {
-      return supplier_date;
+      return supplierPick;
     } else {
-      return itemcode_date;
+      return ItemGrpPick;
     }
   }
 
@@ -136,6 +139,26 @@ export default function Form_1() {
     setValue({ ...value, [props]: event.target.value });
   };
 
+  const getAllSupplierPickListData = () => {
+    axios
+      .get(`http://${URL}:${PORT}/supplier/getsupplier/status/active`)
+      .then((response) => {
+        const data = response.data.map((data) => [data.supplierid, data.name]);
+        setSupplierPick(data);
+      })
+      .catch((error) => console.error(`Error:${error}`));
+  };
+
+  const getItemGroupPickListData = () => {
+    axios
+      .get(`http://${URL}:${PORT}/itemgroup/getitemgroups`)
+      .then((response) => {
+        const data = response.data.map((data) => [data.id, data.name]);
+        setItemGrpPick(data);
+      })
+      .catch((error) => console.error(`Error:${error}`));
+  };
+
   const pushData = async () => {
     axios
       .post(`http://${URL}:${PORT}/inventory/createitem`, {
@@ -150,10 +173,10 @@ export default function Form_1() {
         supplierid: value.supNo,
         status: value.status,
         type: value.type,
-        mod_by: "kanishka",
-        mod_date: "2021-04-18",
-        cre_by: "kanishka",
-        cre_date: "2021-04-18",
+        mod_by: "",
+        mod_date: "1000-01-01",
+        cre_by: USERID,
+        cre_date: Date(),
       })
       .then(
         (response) => {
@@ -228,10 +251,10 @@ export default function Form_1() {
         supplierid: value.supNo,
         status: value.status,
         type: value.type,
-        mod_by: "kanishka",
-        mod_date: "2021-04-18",
-        cre_by: "kanishka",
-        cre_date: "2021-04-18",
+        mod_by: USERID,
+        mod_date: Date(),
+        cre_by: "",
+        cre_date: "",
       })
       .then(
         (response) => {
@@ -260,24 +283,31 @@ export default function Form_1() {
 
   const handleSubmit = () => {
     if (value.itemCode.trim() === "") {
+      setSeverity("warning");
       setMessage("Item Code is Required");
       setOpen(true);
-    } else if (value.itemGroup.trim() === "") {
+    } else if (value.itemGroup === "") {
+      setSeverity("warning");
       setMessage("Item group is Required");
       setOpen(true);
-    } else if (value.supNo.trim() === "") {
+    } else if (value.supNo === "") {
+      setSeverity("warning");
       setMessage("Supplier is Required");
       setOpen(true);
     } else if (value.itemDesc.trim() === "") {
+      setSeverity("warning");
       setMessage("Item Descrption is Required");
       setOpen(true);
     } else if (value.brand.trim() === "") {
+      setSeverity("warning");
       setMessage("Item brand is Required");
       setOpen(true);
     } else if (value.model.trim() === "") {
+      setSeverity("warning");
       setMessage("Item model is Required");
       setOpen(true);
     } else if (value.type.trim() === "") {
+      setSeverity("warning");
       setMessage("Item Type is required");
       setOpen(true);
     } else {
@@ -288,6 +318,11 @@ export default function Form_1() {
       }
     }
   };
+
+  useEffect(() => {
+    getItemGroupPickListData();
+    getAllSupplierPickListData();
+  }, []);
 
   function handleClear() {
     setValue(FORM_CLEAR);
@@ -311,11 +346,6 @@ export default function Form_1() {
         columns={pickList_header}
         options={picklistOptions}
       />
-    </div>
-  );
-  const modal_message = (
-    <div className={classes.paper_modal}>
-      <Typography>Item Code Already Exsist</Typography>
     </div>
   );
 

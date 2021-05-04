@@ -9,7 +9,7 @@ import Auth from "../auth/LogingAuth";
 export default function Authentication() {
   const [errors, setErrors] = useState("");
   const [loading, setLoading] = useState(false);
-  let usehistory = useHistory();
+  const usehistory = useHistory();
 
   const login = (details) => {
     setLoading(true);
@@ -22,9 +22,10 @@ export default function Authentication() {
       .then((response) => {
         if (response.data.SUCCESS) {
           Auth.onAuthentication();
-          localStorage.setItem("user", JSON.stringify(response.data));
-          usehistory.push("/app/home");
+          sessionStorage.setItem("user", JSON.stringify(response.data));
           setLoading(false);
+          usehistory.push("/");
+          console.log("Success Login");
         } else {
           console.log(response.data.FAILED);
           setErrors(response.data.FAILED);
