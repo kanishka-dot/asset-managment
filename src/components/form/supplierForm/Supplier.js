@@ -5,12 +5,13 @@ import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
 import { PORT, URL } from "../../../connection/defaultconfig";
 import { axios } from "../../../connection/axios";
+import { USERID } from "../../../service/userDetails";
+import Date from "../../utils/Date";
 import {
   Paper,
   Box,
   Button,
   FormControl,
-  Modal,
   Snackbar,
   FormControlLabel,
   FormLabel,
@@ -46,7 +47,17 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: "white",
     padding: theme.spacing(2, 4, 3),
   },
-
+  // wrapper: {
+  //   margin: theme.spacing(1),
+  //   position: "relative",
+  // },
+  // buttonProgress: {
+  //   position: "absolute",
+  //   top: "70%",
+  //   left: "45%",
+  //   marginTop: -12,
+  //   marginLeft: -12,
+  // },
   button: {
     marginTop: theme.spacing(3),
     marginRight: theme.spacing(3),
@@ -88,7 +99,6 @@ export default function Supplier() {
   const [sup_update, setUpdate] = useState(false);
   const [supname_disable, setSupname_disable] = useState(false);
   const [fields_disable, setFields_disable] = useState(true);
-  const [ModalOpen, setModalOpen] = useState(false);
   const [severity, setSeverity] = useState("warning");
   const [message, setMessage] = useState("");
   const [error, setError] = useState({
@@ -143,15 +153,17 @@ export default function Supplier() {
         setError({ ...error, [props]: true });
         setValue({ ...value, [props]: event.target.value });
       }
-    } else if (props === "NIC") {
-      if (/^([0-9]{9}[x|X|v|V]|[0-9]{12})$/.test(event.target.value)) {
-        setError({ ...error, [props]: false });
-        setValue({ ...value, [props]: event.target.value });
-      } else {
-        setError({ ...error, [props]: true });
-        setValue({ ...value, [props]: event.target.value });
-      }
-    } else if (props === "telephone") {
+    }
+    // else if (props === "NIC") {
+    //   if (/^([0-9]{9}[x|X|v|V]|[0-9]{12})$/.test(event.target.value)) {
+    //     setError({ ...error, [props]: false });
+    //     setValue({ ...value, [props]: event.target.value });
+    //   } else {
+    //     setError({ ...error, [props]: true });
+    //     setValue({ ...value, [props]: event.target.value });
+    //   }
+    // }
+    else if (props === "telephone") {
       if (/^([0])+[1-9]\d{8}$/.test(event.target.value)) {
         setError({ ...error, [props]: false });
         setValue({ ...value, [props]: event.target.value });
@@ -173,10 +185,6 @@ export default function Supplier() {
     setUpdate(false);
   };
 
-  const pickListClose = () => {
-    setModalOpen(false);
-  };
-
   const pushData = async () => {
     axios
       .post(`http://${URL}:${PORT}/supplier/createnewsupplier`, {
@@ -186,10 +194,10 @@ export default function Supplier() {
         tel: value.telephone,
         status: value.status,
         remark: value.remark,
-        mod_by: "kanishka",
-        mod_date: "2021-04-17",
-        cre_by: "kanishka",
-        cre_date: "2021-04-17",
+        mod_by: "",
+        mod_date: "1000-01-01",
+        cre_by: USERID,
+        cre_date: Date(),
       })
       .then(
         (response) => {
@@ -219,10 +227,10 @@ export default function Supplier() {
         tel: value.telephone,
         status: value.status,
         remark: value.remark,
-        mod_by: "kanishka",
-        mod_date: "2021-04-17",
-        cre_by: "kanishka",
-        cre_date: "2021-04-17",
+        mod_by: "",
+        mod_date: "1000-01-01",
+        cre_by: USERID,
+        cre_date: Date(),
       })
       .then(
         (response) => {
@@ -263,7 +271,9 @@ export default function Supplier() {
           setUpdate(true);
           setSupname_disable(true);
           setFields_disable(false);
-          setModalOpen(true);
+          setMessage("Supplier Already Exsist");
+          setSeverity("info");
+          setOpen(true);
           setValue({
             ...value,
             id: response.data.supplierid,
@@ -319,11 +329,6 @@ export default function Supplier() {
       }
     }
   };
-  const body = (
-    <div className={classes.paper_modal}>
-      <Typography>Given Supplier name Already Exsist</Typography>
-    </div>
-  );
 
   //To check supplier already exsist
   function checkSupplier(event) {
@@ -336,10 +341,6 @@ export default function Supplier() {
 
   return (
     <React.Fragment>
-      <Modal className={classes.modal} open={ModalOpen} onClose={pickListClose}>
-        {body}
-      </Modal>
-
       <Snackbar
         anchorOrigin={{
           vertical: "bottom",
@@ -403,8 +404,8 @@ export default function Supplier() {
                 fullWidth
                 error={error.NIC}
                 id="NIC"
-                label="NIC"
-                placeholder="972953407V"
+                label="Business Reg No"
+                placeholder="PVS20"
                 name="NIC"
                 value={value.NIC}
                 disabled={fields_disable}
@@ -415,7 +416,7 @@ export default function Supplier() {
             <Grid item xs={3}>
               <TextField
                 fullWidth
-                placeholder="115866316"
+                placeholder="0115866316"
                 error={error.telephone}
                 id="standard-basic"
                 label="Telephone"
@@ -462,6 +463,7 @@ export default function Supplier() {
             </Grid>
           </Grid>
           <Box className={classes.btn}>
+            {/* <div className={classes.wrapper}> */}
             <Button
               className={classes.buttonSave}
               variant="contained"
@@ -471,6 +473,14 @@ export default function Supplier() {
             >
               {sup_update === true ? "Update" : "Create"}
             </Button>
+            {/* {loading && (
+                <CircularProgress
+                  size={24}
+                  className={classes.buttonProgress}
+                />
+              )} */}
+            {/* </div> */}
+            {/* <div className={classes.wrapper}> */}
             <Button
               className={classes.buttonSave}
               variant="contained"
@@ -479,6 +489,7 @@ export default function Supplier() {
             >
               Clear
             </Button>
+            {/* </div> */}
           </Box>
         </Paper>
       </main>

@@ -1,6 +1,10 @@
 const authentication = {
   isauthenticated: false,
 
+  voidAuthentication() {
+    this.isauthenticated = false;
+  },
+
   onAuthentication() {
     this.isauthenticated = true;
   },

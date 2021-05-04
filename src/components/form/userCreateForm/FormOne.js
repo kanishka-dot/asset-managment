@@ -72,6 +72,7 @@ export default function Form_1() {
   const [disable_fields, setDisable_fields] = useState(true);
   const [type, setType] = useState("location");
   const [ModalOpen, setModalOpen] = useState(false);
+  const [locations, setLocations] = useState();
   const [severity, setSeverity] = useState("warning");
   const [message, setMessage] = useState("");
   const [error, setError] = useState({
@@ -81,18 +82,19 @@ export default function Form_1() {
     NIC: "Invalid NIC Number",
   });
 
-  const location = [
-    ["100", "Head Office"],
-    ["10", "Nawinna"],
-    ["25", "Dehiwala SC"],
-  ];
+  // const location = [
+  //   ["100", "Head Office"],
+  //   ["10", "Nawinna"],
+  //   ["25", "Dehiwala SC"],
+  // ];
 
-  const role = [
+  const role1 = [
     ["1", "ADMIN"],
     ["2", "MANAGER"],
     ["3", "OFFICER"],
-    ["4", "USER"],
   ];
+
+  const role2 = [["4", "USER"]];
 
   const pickList_header = ["ID", "Name"];
 
@@ -123,9 +125,9 @@ export default function Form_1() {
 
   function picklistData() {
     if (type === "location") {
-      return location;
+      return locations;
     } else {
-      return role;
+      return value.location !== 100 ? role2 : role1;
     }
   }
 
@@ -158,6 +160,20 @@ export default function Form_1() {
     } else {
       setValue({ ...value, [props]: event.target.value });
     }
+  };
+
+  //Get locations
+  const getLocations = () => {
+    axios
+      .get(`http://${URL}:${PORT}/location/get_all_locations`)
+      .then((response) => {
+        const data = response.data.map((data) => [
+          data.locationid,
+          data.locationname,
+        ]);
+        setLocations(data);
+      })
+      .catch((error) => console.error(`Error:${error}`));
   };
 
   const pushData = async () => {
@@ -215,7 +231,6 @@ export default function Form_1() {
               userName: response.data.name,
               NIC: response.data.nic,
               role: response.data.roleid,
-              location: response.data.locationid,
               status: response.data.status,
             });
           } else {
@@ -238,11 +253,11 @@ export default function Form_1() {
   const updateData = async () => {
     axios
       .post(`http://${URL}:${PORT}/user/updateuser`, {
-        userid: value.userId,
+        userpk: { userid: value.userId, locationid: value.location },
         name: value.userName,
         nic: value.NIC,
         roleid: value.role,
-        locationid: value.location,
+
         status: value.status,
         mod_by: "kanishka",
         mod_date: "2021-04-18",
@@ -264,6 +279,10 @@ export default function Form_1() {
         }
       );
   };
+  // Get all location details constructor
+  useEffect(() => {
+    getLocations();
+  }, []);
 
   function checkUserId(event) {
     const name = event.target.value;
@@ -288,6 +307,9 @@ export default function Form_1() {
     } else if (value.NIC.trim() === "") {
       setMessage("Nic No is Required");
       setOpen(true);
+    } else if (error.NIC) {
+      setMessage("Invalid NIC No");
+      setOpen(true);
     } else {
       if (user_update) {
         updateData();
@@ -299,7 +321,7 @@ export default function Form_1() {
 
   function handleClear() {
     setValue(FORM_CLEAR);
-
+    setError({ ...error, NIC: false });
     setUserUpdate(false);
     setDisable_userid(true);
     setDisable_fields(true);

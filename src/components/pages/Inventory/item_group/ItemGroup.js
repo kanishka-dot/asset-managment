@@ -9,6 +9,8 @@ import Snackbar from "@material-ui/core/Snackbar";
 import { Alert } from "@material-ui/lab";
 import InputMask from "react-input-mask";
 import { PORT, URL } from "../../../../connection/defaultconfig";
+import { USERID } from "../../../../service/userDetails";
+import Date from "../../../../components/utils/Date";
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -99,10 +101,10 @@ export default function ItemGroup() {
           id: values.Itmgrp,
           name: values.ItmGrpNm,
           depriciation: values.depriciation,
-          mod_by: "kanishka",
-          mod_date: "2021-03-07",
-          cre_by: "kanishka",
-          cre_date: "2021-03-07",
+          mod_by: "",
+          mod_date: "1000-01-01",
+          cre_by: USERID,
+          cre_date: Date(),
         })
         .then(
           (response) => {

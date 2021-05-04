@@ -1,6 +1,6 @@
 import React from "react";
 import { Switch, Route } from "react-router-dom";
-import Layout  from "../layout/Layout"
+import Layout from "../layout/Layout";
 import InventoryForm from "../pages/Inventory/Create";
 import Search from "../pages/Inventory/Search";
 import Transfer from "../../components/pages/Inventory/Transfer";
@@ -19,18 +19,18 @@ import AppGRN from "../../components/pages/Inventory/AppGRN";
 import Receive from "../../components/pages/Inventory/Receive";
 import RepairIN from "../../components/pages/repair/Repair";
 import RepairOUT from "../../components/pages/repair/RepairOUT";
-import AddDispose from "../../components/pages/dispose/AddDispose"
-import SaveDispose from "../../components/pages/dispose/SaveDispose"
+import AddDispose from "../../components/pages/dispose/AddDispose";
+import SaveDispose from "../../components/pages/dispose/SaveDispose";
 
 function Routes() {
   console.log("routes");
-  
+
   return (
     <>
-    <Layout />
+      <Layout />
       <Switch>
-        <Route exact path="/app/home" component={Home} />
-        <Route  path="/app/inventory/create" component={InventoryForm} />
+        <Route exact path="/" component={Home} />
+        <Route path="/app/inventory/create" component={InventoryForm} />
         <Route path="/app/inventory/search" component={Search} />
         <Route path="/app/inventory/transfer" component={Transfer} />
         <Route path="/app/users/createuser" component={CreateUserForm} />
@@ -38,7 +38,10 @@ function Routes() {
         <Route path="/app/suppliers/create" component={Supplier} />
         <Route path="/app/location/create" component={Locations} />
         <Route path="/app/inventory/item_group" component={ItemGroup} />
-        <Route path="/app/inventory/itemcode/search" component={SearchItemItem} />
+        <Route
+          path="/app/inventory/itemcode/search"
+          component={SearchItemItem}
+        />
         <Route path="/app/suppliers/search" component={SearchSupplier} />
         <Route path="/app/inventory/grn" component={InventoryGrn} />
         <Route path="/app/inventory/approve_grn" component={AppGRN} />
@@ -51,10 +54,7 @@ function Routes() {
           path="/app/inventory/itemgroup/search"
           component={SearchItemGroup}
         />
-         <Route
-          path="/app/location/search"
-          component={SearchLocations}
-        />
+        <Route path="/app/location/search" component={SearchLocations} />
       </Switch>
     </>
   );

@@ -5,6 +5,8 @@ import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
 import { PORT, URL } from "../../../connection/defaultconfig";
 import { axios } from "../../../connection/axios";
+import { USERID } from "../../../service/userDetails";
+import Date from "../../utils/Date";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import {
   Paper,
@@ -18,7 +20,6 @@ import {
   Modal,
   Snackbar,
 } from "@material-ui/core";
-import CurrentDate from "../../utils/Date";
 import MUIDataTable from "mui-datatables";
 import clsx from "clsx";
 import AddIcon from "@material-ui/icons/Add";
@@ -114,6 +115,7 @@ export default function InventoryIN() {
   const [message, setMessage] = useState("");
   const [type, setType] = useState("item");
   const [itemsPick, setItemsPick] = useState();
+  const [locationPick, setlocationPick] = useState();
   const [supplierPick, setSupplierPick] = useState();
   const [tableData, setTableData] = useState([]);
   const [dataList, setDataList] = useState([]);
@@ -121,8 +123,8 @@ export default function InventoryIN() {
   const [saveBtnDisb, setSaveBtnDisb] = useState(false);
   const [data, setData] = useState({
     doccode: "GRN",
-    locationid: 100,
-    date: CurrentDate(),
+    locationid: "",
+    date: Date(),
     serialno: "",
     status: "NAP",
     dilvryprson: "",
@@ -133,14 +135,14 @@ export default function InventoryIN() {
     supplierid: "",
     warrenty_period: "",
     refno: "",
-    mod_by: "kanishka",
-    mod_date: "2021-04-21",
-    cre_by: "kanishka",
-    cre_date: "2021-04-21",
+    mod_by: "",
+    mod_date: "1000-01-01",
+    cre_by: USERID,
+    cre_date: Date(),
   });
   const [value, setValue] = useState({
     docno: "",
-    date: CurrentDate(),
+    date: Date(),
     itemcode: "",
     supplierno: "",
     serialno: "",
@@ -149,10 +151,11 @@ export default function InventoryIN() {
     warranty: "",
     diliveryperson: "",
     reffno: "",
+    locationid: "",
   });
   const initialState = {
     docno: "",
-    date: CurrentDate(),
+    date: Date(),
     itemcode: "",
     itemid: "",
     diliveryperson: "",
@@ -179,6 +182,7 @@ export default function InventoryIN() {
     rowsPerPage: 3,
   };
   const header = [
+    "Location Code",
     "Item Code",
     "Serial No",
     "Barcode",
@@ -193,6 +197,8 @@ export default function InventoryIN() {
     if (type === "supplier") {
       setValue({ ...value, supplierno: dataIndex[0] });
       setDtl_fld(false);
+    } else if (type === "location") {
+      setValue({ ...value, locationid: dataIndex[0] });
     } else {
       setValue({ ...value, itemcode: dataIndex[0] });
     }
@@ -227,6 +233,20 @@ export default function InventoryIN() {
           data.itemdesc,
         ]);
         setItemsPick(data);
+      })
+      .catch((error) => console.error(`Error:${error}`));
+  };
+
+  //Get locations
+  const getLocations = () => {
+    axios
+      .get(`http://${URL}:${PORT}/location/get_all_locations`)
+      .then((response) => {
+        const data = response.data.map((data) => [
+          data.locationid,
+          data.locationname,
+        ]);
+        setlocationPick(data);
       })
       .catch((error) => console.error(`Error:${error}`));
   };
@@ -292,6 +312,8 @@ export default function InventoryIN() {
   function picklistData() {
     if (type === "supplier") {
       return supplierPick;
+    } else if (type === "location") {
+      return locationPick;
     } else {
       return itemsPick;
     }
@@ -302,8 +324,8 @@ export default function InventoryIN() {
     setData({
       ...data,
       doccode: "GRN",
-      locationid: 100,
-      date: CurrentDate(),
+      locationid: value.locationid,
+      date: Date(),
       serialno: value.serialno,
       status: "NAP",
       dilvryprson: value.diliveryperson,
@@ -314,10 +336,10 @@ export default function InventoryIN() {
       supplierid: value.supplierno,
       warrenty_period: value.warranty,
       refno: value.reffno,
-      mod_by: "kanishka",
-      mod_date: "2021-04-21",
-      cre_by: "kanishka",
-      cre_date: "2021-04-21",
+      mod_by: "",
+      mod_date: "1000-01-01",
+      cre_by: USERID,
+      cre_date: Date(),
     });
   }, [value]);
 
@@ -325,6 +347,7 @@ export default function InventoryIN() {
   useEffect(() => {
     getAllSupplierPickListData();
     getAllItemsPickListData();
+    getLocations();
   }, []);
 
   function requiredFeilds() {
@@ -348,6 +371,10 @@ export default function InventoryIN() {
       setSeverity("warning");
       setOpen(true);
       setMessage("Serial No is Required");
+    } else if (value.locationid === "") {
+      setSeverity("warning");
+      setOpen(true);
+      setMessage("Location is Required");
     } else {
       return true;
     }
@@ -393,6 +420,7 @@ export default function InventoryIN() {
   const addData = () => {
     if (requiredFeilds()) {
       tableData.push([
+        value.locationid,
         value.itemcode,
         value.serialno,
         value.barcode,
@@ -406,6 +434,7 @@ export default function InventoryIN() {
       setValue({
         ...value,
         itemcode: "",
+        locationid: "",
         serialno: "",
         barcode: "",
         cost: "",
@@ -460,7 +489,7 @@ export default function InventoryIN() {
                   type="date"
                   label="Date"
                   disabled={true}
-                  defaultValue={CurrentDate()}
+                  defaultValue={Date()}
                   onChange={handleDateChange}
                   InputLabelProps={{
                     shrink: true,
@@ -535,6 +564,31 @@ export default function InventoryIN() {
                         aria-label="toggle password visibility"
                         onClick={() => {
                           pickListOpen("item");
+                        }}
+                      >
+                        <AddIcon />
+                      </IconButton>
+                    </InputAdornment>
+                  }
+                />
+              </FormControl>
+            </Grid>
+            <Grid item xs={3}>
+              <FormControl className={clsx(classes.margin, classes.textField)}>
+                <InputLabel htmlFor="standard-adornment-password">
+                  Location
+                </InputLabel>
+                <Input
+                  id="locationid"
+                  value={value.locationid}
+                  disabled={dtl_fld}
+                  endAdornment={
+                    <InputAdornment position="end">
+                      <IconButton
+                        disabled={dtl_fld}
+                        aria-label="toggle password visibility"
+                        onClick={() => {
+                          pickListOpen("location");
                         }}
                       >
                         <AddIcon />

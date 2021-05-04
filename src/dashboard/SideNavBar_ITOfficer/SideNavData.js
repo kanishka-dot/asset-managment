@@ -12,7 +12,7 @@ const Items = [
   {
     title: "Dashboard",
     icon: <DashboardIcon style={{ color: color }} />,
-    path: "/app/home",
+    path: "/",
   },
 
   {

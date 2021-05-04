@@ -58,8 +58,6 @@ export default function SearchItemGroups() {
     "Item Group",
     "Item Group Name",
     "Depriciation Rate(%)",
-    "Modify By",
-    "Modify Date",
     "Create By",
     "Create Date",
   ];
@@ -93,8 +91,6 @@ export default function SearchItemGroups() {
             data.id,
             data.name,
             data.depriciation,
-            data.mod_by,
-            data.mod_date,
             data.cre_by,
             data.cre_date,
           ]);
