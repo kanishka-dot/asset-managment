@@ -5,6 +5,8 @@ import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
 import { PORT, URL } from "../../../connection/defaultconfig";
 import { axios } from "../../../connection/axios";
+import { USERID, LOCATIONID } from "../../../service/userDetails";
+
 import CircularProgress from "@material-ui/core/CircularProgress";
 import {
   Paper,
@@ -148,7 +150,7 @@ export default function Transfer() {
   };
   const header = ["Serial No", "Item Code", "Remark"];
 
-  const pickList_header = ["Location", "Document No"];
+  const pickList_header = ["Location", "Document No", "MON No"];
 
   /* pick list data select function*/
   const handleRowClick = (dataIndex) => {
@@ -169,9 +171,14 @@ export default function Transfer() {
 
   const getInvData = () => {
     axios
-      .get(`http://${URL}:${PORT}/inventory/receive/${25}`)
+      .get(`http://${URL}:${PORT}/inventory/receive/${LOCATIONID}`)
       .then((response) => {
-        const data = response.data.map((data) => [data[1], data[0]]);
+        console.log(response);
+        const data = response.data.map((data) => [
+          data.frmloc,
+          data.gtnPK.docno,
+          data.refno,
+        ]);
         console.log(data);
         setDocuments(data);
       })
@@ -184,7 +191,7 @@ export default function Transfer() {
       .then((response) => {
         const data = response.data.map((data) => [
           data.serialno,
-          data.itemcode,
+          data.gtnPK.itemcode,
           data.remark,
         ]);
         console.log(data);
@@ -203,25 +210,27 @@ export default function Transfer() {
       setSaveBtnDisb(true);
       axios
         .post(
-          `http://${URL}:${PORT}/inventory/receive/approve/${value.docno}/kamal`
+          `http://${URL}:${PORT}/inventory/receive/approve/${value.docno}/${USERID}`
         )
         .then(
           (response) => {
             console.log(dataList);
             console.log(response);
-            if (response.data === "GTN Sucessfully Approved") {
+            if (response.data[0] === "1") {
               setSeverity("success");
               setOpen(true);
-              setMessage("GTN Sucessfully Approved");
+              setMessage(response.data[1]);
               setDefault();
               setLoading(false);
+              getInvData();
               setSaveBtnDisb(false);
             } else {
               setSeverity("error");
               setOpen(true);
-              setMessage(response.data);
+              setMessage(response.data[1]);
               setDefault();
               setLoading(false);
+              getInvData();
               setSaveBtnDisb(false);
             }
           },
@@ -231,6 +240,7 @@ export default function Transfer() {
             setMessage("Unexpected Error. Check the console for more details");
             setDefault();
             setLoading(false);
+            getInvData();
             setSaveBtnDisb(false);
             console.log(error);
           }
@@ -308,7 +318,6 @@ export default function Transfer() {
     }
     setOpen(false);
   };
-
 
   function handleDateChange(event) {
     setValue({ ...value, cre_date: event.target.value });

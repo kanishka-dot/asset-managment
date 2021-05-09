@@ -1,24 +1,29 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Grid from "@material-ui/core/Grid";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
-import { Paper, Box, Button, Modal, Snackbar } from "@material-ui/core";
-import CurrentDate from "../../utils/Date";
-import MUIDataTable from "mui-datatables";
 import { PORT, URL } from "../../../connection/defaultconfig";
 import { axios } from "../../../connection/axios";
+import { USERID } from "../../../service/userDetails";
 import Date from "../../utils/Date";
-import { USERID, LOCATIONID } from "../../../service/userDetails";
-import { Alert } from "@material-ui/lab";
-import { FormControl } from "@material-ui/core";
-import { InputLabel } from "@material-ui/core";
-import { Input } from "@material-ui/core";
-import { InputAdornment } from "@material-ui/core";
-import { IconButton } from "@material-ui/core";
-import AddIcon from "@material-ui/icons/Add";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import {
+  Paper,
+  Box,
+  Button,
+  FormControl,
+  InputLabel,
+  Input,
+  InputAdornment,
+  IconButton,
+  Modal,
+  Snackbar,
+} from "@material-ui/core";
+import MUIDataTable from "mui-datatables";
 import clsx from "clsx";
-import { CircularProgress } from "@material-ui/core";
+import AddIcon from "@material-ui/icons/Add";
+import { Alert } from "@material-ui/lab";
 
 const useStyles = makeStyles((theme) => ({
   layout: {
@@ -41,12 +46,6 @@ const useStyles = makeStyles((theme) => ({
       padding: theme.spacing(3),
     },
   },
-  paper_modal: {
-    position: "absolute",
-    width: 500,
-    backgroundColor: "white",
-    padding: theme.spacing(2, 4, 3),
-  },
   buttonProgress: {
     position: "absolute",
     top: "70%",
@@ -54,9 +53,11 @@ const useStyles = makeStyles((theme) => ({
     marginTop: -12,
     marginLeft: -12,
   },
-  wrapper: {
-    margin: theme.spacing(1),
-    position: "relative",
+  paper_modal: {
+    position: "absolute",
+    width: 500,
+    backgroundColor: "white",
+    padding: theme.spacing(2, 4, 3),
   },
 
   button: {
@@ -64,12 +65,20 @@ const useStyles = makeStyles((theme) => ({
     marginRight: theme.spacing(3),
     marginBottom: theme.spacing(3),
   },
-
+  wrapper: {
+    margin: theme.spacing(1),
+    position: "relative",
+  },
   buttonSave: {
     marginTop: theme.spacing(3),
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(3),
     width: "8rem",
+  },
+
+  box: {
+    width: "57rem",
+    height: "5rem",
   },
 
   btn: {
@@ -94,59 +103,165 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Repair() {
+export default function InventoryIN() {
   const classes = useStyles();
   const responsive = "vertical";
   const tableBodyHeight = "100%";
   const tableBodyMaxHeight = "";
   const [open, setOpen] = useState(false);
+  const [dtl_fld, setDtl_fld] = useState(false);
   const [ModalOpen, setModalOpen] = useState(false);
   const [severity, setSeverity] = useState("warning");
   const [message, setMessage] = useState("");
-  const [type, setType] = useState("supplier");
+  const [type, setType] = useState("item");
+  const [itemsPick, setItemsPick] = useState();
+  const [tableData, setTableData] = useState([]);
+  const [dataList, setDataList] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [inventory, setInventory] = useState();
+  const [error, setError] = useState(false);
   const [saveBtnDisb, setSaveBtnDisb] = useState(false);
   const [data, setData] = useState({
-    repairPK: {
+    mroPK: {
       docno: "",
-      doccode: "",
-      serialno: "",
+      doccode: "MROOUT",
+      seqno: "",
+      item_code: "",
     },
-    itemcode: "",
-    pre_det_caus: "",
-    post_det_caus: "",
-    src_doccode: "",
-    src_docno: "",
-    status: "INREP",
+    date: Date(),
+    serialno: "",
+    qty: 0,
+    cost: 0,
+    tot_cost: 0,
+    supplier: "",
+    remark: "",
     mod_by: "",
     mod_date: "1000-01-01",
     cre_by: USERID,
     cre_date: Date(),
   });
+  const [value, setValue] = useState({
+    docno: "",
+    date: Date(),
+    item_code: "",
+    supplierno: "",
+    cost: "",
+    balance: "",
+    qty: "",
+    tot_cost: "",
+    diliveryperson: "",
+    remark: "",
+    locationid: "",
+  });
   const initialState = {
-    serialno: "",
-    itemcode: "",
-    pre_det_caus: "",
+    item_code: "",
+    qty: "",
+    remark: "",
+    balance: "",
   };
 
-  const [value, setValue] = useState({
-    serialno: "",
-    itemcode: "",
-    pre_det_caus: "",
-  });
+  const options = {
+    elevation: 1,
+    filter: false,
+    print: false,
+    download: false,
+    filterType: "dropdown",
+    responsive,
+    tableBodyHeight,
+    tableBodyMaxHeight,
+    onRowsDelete: false,
+    rowsPerPageOptions: [3],
+    rowsPerPage: 3,
+    selectableRows: "none",
+  };
+  const header = ["Item Code", "Issue Qty", "Remark"];
 
   const pickList_header = ["ID", "Name"];
 
   /* pick list data select function*/
   const handleRowClick = (dataIndex) => {
-    if (type === "serialno") {
-      setValue({ ...value, serialno: dataIndex[0], itemcode: dataIndex[1] });
-      // setValue({ ...value,  });
+    if (type === "item") {
+      setValue({ ...value, item_code: dataIndex[0] });
     }
-
     pickListClose();
-    console.log(dataIndex[0]);
+  };
+
+  function setDefault() {
+    setValue(initialState);
+    setDataList([]);
+    setTableData([]);
+  }
+  /**
+   * Get data for picklist
+   */
+
+  const getAllItemsPickListData = () => {
+    axios
+      .get(`http://${URL}:${PORT}/inventory/getitems/status/active/MRO`)
+      .then((response) => {
+        const data = response.data.map((data) => [
+          data.itemcode,
+          data.itemdesc,
+        ]);
+        setItemsPick(data);
+      })
+      .catch((error) => console.error(`Error:${error}`));
+  };
+
+  const getBalanceQty = () => {
+    axios
+      .get(
+        `http://${URL}:${PORT}/inventory/mro_supplies/balQty/${value.item_code}`
+      )
+      .then((response) => {
+        setValue({ ...value, balance: response.data });
+      })
+      .catch((error) => console.error(`Error:${error}`));
+  };
+
+  const pushData = async () => {
+    if (dataList[0] == null) {
+      setOpen(true);
+      setMessage("No data to save");
+    } else {
+      setLoading(true);
+      setSaveBtnDisb(true);
+      console.log(dataList);
+      axios
+        .post(
+          `http://${URL}:${PORT}/inventory/mro_supplies/save/mroOUT`,
+          dataList
+        )
+        .then(
+          (response) => {
+            console.log(dataList);
+            console.log(response);
+            if (response.data[0] === "1") {
+              setSeverity("success");
+              setOpen(true);
+              setMessage(response.data[1]);
+              setDefault();
+              setLoading(false);
+              setSaveBtnDisb(false);
+            } else {
+              setSeverity("error");
+              setOpen(true);
+              setMessage(response.data);
+              setDefault();
+              setLoading(false);
+              setSaveBtnDisb(false);
+            }
+          },
+          (error) => {
+            setSeverity("error");
+            setOpen(true);
+            setMessage("Unexpected Error. Check the console for more details");
+            setDefault();
+            setLoading(false);
+            setSaveBtnDisb(false);
+            console.log(error);
+          }
+        );
+    }
   };
 
   const picklist_options = {
@@ -164,20 +279,28 @@ export default function Repair() {
     onRowClick: handleRowClick,
   };
 
+  /*change picklist based on field type select*/
+  function picklistData() {
+    if (type === "item") {
+      return itemsPick;
+    }
+  }
+
+  // while data update in fileds this methods collect data to post( use to eliminate side effect in use state)
   useEffect(() => {
     setData({
       ...data,
-      repairPK: {
+      mroPK: {
         docno: "",
-        doccode: "INREP",
-        serialno: value.serialno,
+        doccode: "MROOUT",
+        seqno: "",
+        item_code: value.item_code,
       },
-      itemcode: value.itemcode,
-      pre_det_caus: value.pre_det_caus,
-      post_det_caus: "",
-      src_doccode: "",
-      src_docno: "",
-      status: "INREP",
+      qty: value.qty,
+      cost: "",
+      tot_cost: "",
+      supplier: "",
+      remark: value.remark,
       mod_by: "",
       mod_date: "1000-01-01",
       cre_by: USERID,
@@ -185,82 +308,24 @@ export default function Repair() {
     });
   }, [value]);
 
-  const getLocInventory = () => {
-    axios
-      .get(`http://${URL}:${PORT}/inventory/location/${LOCATIONID}/LOC`)
-      .then((response) => {
-        const data = response.data.map((data) => [
-          data.serialno,
-          data.itemcode,
-        ]);
-        setInventory(data);
-      })
-      .catch((error) => console.error(`Error:${error}`));
-  };
-
-  const pushData = async () => {
-    if (requiredFeilds()) {
-      setLoading(true);
-      setSaveBtnDisb(true);
-      console.log(data);
-      axios
-        .post(`http://${URL}:${PORT}/inventory/repair/addRepaiItem`, data)
-        .then(
-          (response) => {
-            console.log(response);
-            if (response.data[0] === "1") {
-              setSeverity("success");
-              setOpen(true);
-              setMessage(response.data[1]);
-              setValue({ ...initialState });
-              setLoading(false);
-              setSaveBtnDisb(false);
-              getLocInventory(); // fetch once again to update location inventory after success save
-            } else {
-              setSeverity("error");
-              setOpen(true);
-              setMessage(response.data[1]);
-              setValue({ ...initialState });
-              setLoading(false);
-              setSaveBtnDisb(false);
-              getLocInventory();
-            }
-          },
-          (error) => {
-            setSeverity("error");
-            setOpen(true);
-            setMessage("Unexpected Error. Check the console for more details");
-
-            setLoading(false);
-            setSaveBtnDisb(false);
-            getLocInventory();
-            console.log(error);
-          }
-        );
-    }
-  };
-
-  /*change picklist based on field type select*/
-  function picklistData() {
-    if (type === "serialno") {
-      return inventory;
-    }
-  }
-
   // Picklist call
   useEffect(() => {
-    getLocInventory();
+    getAllItemsPickListData();
   }, []);
 
+  useEffect(() => {
+    getBalanceQty();
+  }, [value.item_code]);
+
   function requiredFeilds() {
-    if (value.serialno === "") {
+    if (value.itemcode === "") {
       setSeverity("warning");
-      setMessage("Serial no is Required");
       setOpen(true);
-    } else if (value.pre_det_caus === "") {
+      setMessage("Item Code is Required");
+    } else if (value.qty.trim() === "") {
       setSeverity("warning");
-      setMessage("Pre Detrmine Case is Required");
       setOpen(true);
+      setMessage("Qty is Required");
     } else {
       return true;
     }
@@ -283,16 +348,52 @@ export default function Repair() {
   };
 
   const handleChange = (props) => (event) => {
-    setValue({ ...value, [props]: event.target.value });
+    if (props === "qty") {
+      if (/^[0-9]*$/.test(event.target.value)) {
+        setValue({ ...value, [props]: event.target.value });
+      }
+    } else {
+      setValue({ ...value, [props]: event.target.value });
+    }
+
+    // setValue({ ...value, [props]: event.target.value });
   };
+
+  // Picklist call
+  useEffect(() => {
+    if (value.qty > value.balance) {
+      setError(true);
+    } else {
+      setError(false);
+    }
+  }, [value.qty]);
 
   function handleDateChange(event) {
     setValue({ ...value, date: event.target.value });
     console.log(event.persist);
   }
 
-  const handleClear = () => {
-    setValue({ ...initialState });
+  // const handleClear = () => {
+  //   setValue({ ...initialState });
+  // };
+
+  const addData = () => {
+    if (requiredFeilds()) {
+      tableData.push([value.item_code, value.qty, value.remark]);
+      //final data set for POST
+      //push data for the array
+
+      dataList.push(data);
+      setValue({
+        ...value,
+        item_code: "",
+        remark: "",
+        qty: "",
+        balance: "",
+      });
+
+      console.log(data);
+    }
   };
 
   const body = (
@@ -330,35 +431,39 @@ export default function Repair() {
       <main className={classes.layout}>
         <Paper className={classes.paper} elevation={2}>
           <Typography variant="h6" gutterBottom className={classes.heading}>
-            ADD Repair Items
+            MRO Dispatch
           </Typography>
+
           <Grid container spacing={3}>
-            <Grid item xs={12}>
+            <Grid item xs={3}>
               <TextField
-                disabled
                 type="date"
                 label="Date"
-                defaultValue={CurrentDate()}
+                disabled={true}
+                defaultValue={Date()}
                 onChange={handleDateChange}
                 InputLabelProps={{
                   shrink: true,
                 }}
               />
             </Grid>
+          </Grid>
+
+          <Grid container spacing={3}>
             <Grid item xs={3}>
               <FormControl className={clsx(classes.margin, classes.textField)}>
                 <InputLabel htmlFor="standard-adornment-password">
-                  Serial No
+                  Item Code
                 </InputLabel>
                 <Input
-                  id="serialno"
-                  value={value.serialno}
+                  id="standard-adornment-password"
+                  value={value.item_code}
                   endAdornment={
                     <InputAdornment position="end">
                       <IconButton
                         aria-label="toggle password visibility"
                         onClick={() => {
-                          pickListOpen("serialno");
+                          pickListOpen("item");
                         }}
                       >
                         <AddIcon />
@@ -368,30 +473,60 @@ export default function Repair() {
                 />
               </FormControl>
             </Grid>
+
             <Grid item xs={3}>
               <TextField
-                disabled
                 fullWidth
-                id="itemcode"
-                label="Item Code"
-                name="itemcode"
-                value={value.itemcode}
-                onChange={handleChange("itemcode")}
+                id="balance"
+                disabled={true}
+                label="Balance Qty"
+                name="balance"
+                value={value.balance}
+              />
+            </Grid>
+            <Grid item xs={3}>
+              <TextField
+                fullWidth
+                error={error}
+                helperText={error ? "Issue Qty Greater than balance Qty" : ""}
+                id="qty"
+                disabled={dtl_fld}
+                label="Issue Qty"
+                name="qty"
+                value={value.qty}
+                onChange={handleChange("qty")}
               />
             </Grid>
             <Grid item xs={6}>
               <TextField
                 fullWidth
-                multiline
-                id="'pre_det_caus'"
-                label="Pre Detarmine Case"
+                id="remark"
+                label="Remark"
                 name="remark"
-                value={value.pre_det_caus}
-                onChange={handleChange("pre_det_caus")}
+                value={value.remark}
+                onChange={handleChange("remark")}
               />
             </Grid>
-          </Grid>
 
+            <Grid item xs={12}>
+              <Button
+                className={classes.button}
+                variant="contained"
+                color="primary"
+                onClick={addData}
+              >
+                Add
+              </Button>
+            </Grid>
+          </Grid>
+          <Grid>
+            <MUIDataTable
+              title={"Search Items"}
+              data={tableData}
+              columns={header}
+              options={options}
+            />
+          </Grid>
           <Box className={classes.btn}>
             <div className={classes.wrapper}>
               <Button
@@ -415,7 +550,9 @@ export default function Repair() {
                 className={classes.buttonSave}
                 variant="contained"
                 color="secondary"
-                onClick={handleClear}
+                onClick={() => {
+                  setDefault();
+                }}
               >
                 Clear
               </Button>

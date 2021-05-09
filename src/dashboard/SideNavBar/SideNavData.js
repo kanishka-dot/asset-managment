@@ -1,6 +1,6 @@
 import React from "react";
 import DashboardIcon from "@material-ui/icons/Dashboard";
-import ViewWeekIcon from "@material-ui/icons/ViewWeek";
+// import ViewWeekIcon from "@material-ui/icons/ViewWeek";
 import AddIcon from "@material-ui/icons/Add";
 import FileCopyIcon from "@material-ui/icons/FileCopy";
 import ReportIcon from "@material-ui/icons/Report";
@@ -19,6 +19,7 @@ import AutorenewIcon from "@material-ui/icons/Autorenew";
 import ThumbUpIcon from "@material-ui/icons/ThumbUp";
 import AirportShuttleIcon from "@material-ui/icons/AirportShuttle";
 import DeleteIcon from "@material-ui/icons/Delete";
+import RemoveIcon from "@material-ui/icons/Remove";
 
 const color = "#FFFFFF";
 
@@ -93,11 +94,6 @@ const Items = [
         path: "/app/inventory/repair/complete",
         icon: <DoneIcon style={{ color: color }} />,
       },
-      {
-        title: "Search",
-        path: "/app/inventory/repair/search",
-        icon: <SearchIcon style={{ color: color }} />,
-      },
     ],
   },
   {
@@ -105,20 +101,14 @@ const Items = [
     icon: <AirportShuttleIcon style={{ color: color }} />,
     items: [
       {
-        title: "GRN",
-        path: "/app/inventory/repair/add",
+        title: "IN",
+        path: "/app/inventory/mro/grn",
         icon: <AddIcon style={{ color: color }} />,
       },
-
       {
-        title: "Repair OUT",
-        path: "/app/inventory/repair/complete",
-        icon: <DoneIcon style={{ color: color }} />,
-      },
-      {
-        title: "Search",
-        path: "/app/inventory/repair/search",
-        icon: <SearchIcon style={{ color: color }} />,
+        title: "Dispatch",
+        path: "/app/inventory/mro/dispatch",
+        icon: <RemoveIcon style={{ color: color }} />,
       },
     ],
   },
@@ -164,16 +154,11 @@ const Items = [
         path: "/app/users/createuser",
         icon: <AddIcon style={{ color: color }} />,
       },
-      {
-        title: "Search Users",
-        path: "/app/users/search",
-        icon: <SearchIcon style={{ color: color }} />,
-      },
-      {
-        title: "Reset Password",
-        path: "/app/users/reset_password",
-        icon: <AutorenewIcon style={{ color: color }} />,
-      },
+      // {
+      //   title: "Reset Password",
+      //   path: "/app/users/reset_password",
+      //   icon: <AutorenewIcon style={{ color: color }} />,
+      // },
     ],
   },
   {
@@ -200,6 +185,11 @@ const Items = [
         title: "Inventory Items Reports",
         path: "/app/inventory/itemcode/search",
         icon: <ReportIcon style={{ color: color }} />,
+      },
+      {
+        title: "Pending Repair Items Reports",
+        path: "/app/inventory/pending/repair",
+        icon: <FileCopyIcon style={{ color: color }} />,
       },
     ],
   },

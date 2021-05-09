@@ -21,6 +21,10 @@ import RepairIN from "../../components/pages/repair/Repair";
 import RepairOUT from "../../components/pages/repair/RepairOUT";
 import AddDispose from "../../components/pages/dispose/AddDispose";
 import SaveDispose from "../../components/pages/dispose/SaveDispose";
+import MroGrn from "../pages/mro/MroIn";
+import MroOut from "../pages/mro/MroOut";
+import PenRep from "../pages/Report/PenItemsReport";
+import PenRep3 from "../pages/Report/Beyond";
 
 function Routes() {
   console.log("routes");
@@ -55,6 +59,13 @@ function Routes() {
           component={SearchItemGroup}
         />
         <Route path="/app/location/search" component={SearchLocations} />
+        <Route path="/app/inventory/mro/grn" component={MroGrn} />
+        <Route path="/app/inventory/mro/dispatch" component={MroOut} />
+        <Route path="/app/inventory/pending/repair" component={PenRep} />
+        <Route
+          path="/app/inventory/pending/repairbeyond3days"
+          component={PenRep3}
+        />
       </Switch>
     </>
   );
