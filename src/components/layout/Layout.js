@@ -21,7 +21,6 @@ export default function Layout() {
       case "USER":
         return <USERPANEL />;
       default:
-      // code block
     }
   }
 

@@ -5,7 +5,7 @@ import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
 import { PORT, URL } from "../../../connection/defaultconfig";
 import { axios } from "../../../connection/axios";
-import { LOCATIONID, USERID } from "../../../service/userDetails";
+import { USERID } from "../../../service/userDetails";
 import Date from "../../utils/Date";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import {
@@ -20,7 +20,6 @@ import {
   Modal,
   Snackbar,
 } from "@material-ui/core";
-import CurrentDate from "../../utils/Date";
 import MUIDataTable from "mui-datatables";
 import clsx from "clsx";
 import AddIcon from "@material-ui/icons/Add";
@@ -104,34 +103,65 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Transfer() {
+export default function InventoryIN() {
   const classes = useStyles();
   const responsive = "vertical";
   const tableBodyHeight = "100%";
   const tableBodyMaxHeight = "";
   const [open, setOpen] = useState(false);
+  const [dtl_fld, setDtl_fld] = useState(true);
   const [ModalOpen, setModalOpen] = useState(false);
   const [severity, setSeverity] = useState("warning");
   const [message, setMessage] = useState("");
-  const [type, setType] = useState("doc");
-  const [documents, setDocuments] = useState();
+  const [type, setType] = useState("item");
+  const [itemsPick, setItemsPick] = useState();
+  const [supplierPick, setSupplierPick] = useState();
   const [tableData, setTableData] = useState([]);
   const [dataList, setDataList] = useState([]);
   const [loading, setLoading] = useState(false);
   const [saveBtnDisb, setSaveBtnDisb] = useState(false);
   const [data, setData] = useState({
-    docno: "",
-    app_by: "",
-    app_date: "",
+    mroPK: {
+      docno: "",
+      doccode: "MROIN",
+      seqno: "",
+      item_code: "",
+    },
+    date: Date(),
+    serialno: "",
+    qty: 0,
+    cost: 0,
+    tot_cost: 0,
+    supplier: "",
+    remark: "",
     mod_by: "",
-    mod_date: "",
+    mod_date: "1000-01-01",
+    cre_by: USERID,
+    cre_date: Date(),
   });
   const [value, setValue] = useState({
     docno: "",
+    date: Date(),
+    item_code: "",
+    supplierno: "",
+    cost: "",
+    qty: "",
+    tot_cost: "",
+    diliveryperson: "",
+    remark: "",
+    locationid: "",
   });
   const initialState = {
     docno: "",
-    cre_date: CurrentDate(),
+    locationid: "",
+    date: Date(),
+    item_code: "",
+    qty: "",
+    itemid: "",
+    tot_cost: "",
+    supplierno: "",
+    cost: "",
+    remark: "",
   };
 
   const options = {
@@ -144,74 +174,69 @@ export default function Transfer() {
     tableBodyHeight,
     tableBodyMaxHeight,
     onRowsDelete: false,
-    selectableRows: "single",
     rowsPerPageOptions: [3],
     rowsPerPage: 3,
+    selectableRows: "none",
   };
-  const header = ["Serial No", "Item Code", "Remark"];
+  const header = ["Item Code", "Cost", "Qty", "Net"];
 
-  const pickList_header = ["Document No", "Remark"];
+  const pickList_header = ["ID", "Name"];
 
   /* pick list data select function*/
   const handleRowClick = (dataIndex) => {
-    if (type === "doc") {
-      setValue({ ...value, docno: dataIndex[0] });
+    if (type === "supplier") {
+      setValue({ ...value, supplierno: dataIndex[0] });
+      setDtl_fld(false);
+    } else {
+      setValue({ ...value, item_code: dataIndex[0] });
     }
     pickListClose();
   };
 
   function setDefault() {
     setValue(initialState);
+    setDtl_fld(true);
     setDataList([]);
     setTableData([]);
   }
   /**
    * Get data for picklist
    */
-
-  const getInvData = () => {
+  const getAllSupplierPickListData = () => {
     axios
-      .get(`http://${URL}:${PORT}/inventory/dispose/availble`)
+      .get(`http://${URL}:${PORT}/supplier/getsupplier/status/active`)
       .then((response) => {
-        const data = response.data.map((data) => [
-          data.invDisposePK.docno,
-          data.remark,
-        ]);
-        console.log(response);
-        console.log(response.data);
-        console.log(response.data[0]);
-        console.log(data);
-        setDocuments(data);
+        const data = response.data.map((data) => [data.supplierid, data.name]);
+        setSupplierPick(data);
       })
       .catch((error) => console.error(`Error:${error}`));
   };
 
-  const getData = (docno) => {
+  const getAllItemsPickListData = () => {
     axios
-      .get(`http://${URL}:${PORT}/inventory/dispose/data/${docno}`)
+      .get(`http://${URL}:${PORT}/inventory/getitems/status/active/MRO`)
       .then((response) => {
         const data = response.data.map((data) => [
-          data.serialno,
-          data.itemcod,
-          data.techrec,
+          data.itemcode,
+          data.itemdesc,
         ]);
-        console.log(data);
-        setTableData(data);
+        setItemsPick(data);
       })
       .catch((error) => console.error(`Error:${error}`));
   };
 
-  const saveGDN = async () => {
-    if (tableData[0] == null) {
+  const pushData = async () => {
+    if (dataList[0] == null) {
       setOpen(true);
       setMessage("No data to save");
     } else {
-      console.log(dataList);
       setLoading(true);
       setSaveBtnDisb(true);
+      console.log(dataList);
       axios
         .post(
-          `http://${URL}:${PORT}/inventory/dispose/approve/${value.docno}/${USERID}`
+          `http://${URL}:${PORT}/inventory/mro_supplies/save/mroIN`,
+          dataList
         )
         .then(
           (response) => {
@@ -227,7 +252,7 @@ export default function Transfer() {
             } else {
               setSeverity("error");
               setOpen(true);
-              setMessage(response.data[1]);
+              setMessage(response.data);
               setDefault();
               setLoading(false);
               setSaveBtnDisb(false);
@@ -263,8 +288,10 @@ export default function Transfer() {
 
   /*change picklist based on field type select*/
   function picklistData() {
-    if (type === "doc") {
-      return documents;
+    if (type === "supplier") {
+      return supplierPick;
+    } else {
+      return itemsPick;
     }
   }
 
@@ -272,34 +299,59 @@ export default function Transfer() {
   useEffect(() => {
     setData({
       ...data,
-      docno: value.docno,
-      app_by: "",
-      app_date: "",
+      mroPK: {
+        docno: "",
+        doccode: "MROIN",
+        seqno: "",
+        item_code: value.item_code,
+      },
+      qty: value.qty,
+      cost: value.cost,
+      tot_cost: value.tot_cost,
+      supplier: value.supplierno,
+      remark: value.remark,
       mod_by: "",
-      mod_date: "",
+      mod_date: "1000-01-01",
+      cre_by: USERID,
+      cre_date: Date(),
     });
   }, [value]);
 
   // Picklist call
-  // useEffect(() => {
-  //   getLocations();
-  //   getLocInventory();
-  // }, []);
+  useEffect(() => {
+    getAllSupplierPickListData();
+    getAllItemsPickListData();
+  }, []);
 
   function requiredFeilds() {
-    if (value.docno === "") {
+    if (value.itemcode === "") {
       setSeverity("warning");
       setOpen(true);
-      setMessage("Pick a Document to view");
+      setMessage("Item Code is Required");
+    } else if (value.supplierno === "") {
+      setSeverity("warning");
+      setOpen(true);
+      setMessage("Supplier No is Required");
+    } else if (value.date === "") {
+      setSeverity("warning");
+      setOpen(true);
+      setMessage("Valid date is Required");
+    } else if (value.cost.trim() === "") {
+      setSeverity("warning");
+      setOpen(true);
+      setMessage("Cost is Required");
+    } else if (value.qty.trim() === "") {
+      setSeverity("warning");
+      setOpen(true);
+      setMessage("Qty is Required");
+    } else if (value.tot_cost === "") {
+      setSeverity("warning");
+      setOpen(true);
+      setMessage("Total Cost not calculated");
     } else {
       return true;
     }
   }
-
-  // Picklist call
-  useEffect(() => {
-    getInvData();
-  }, []);
 
   const pickListOpen = (type) => {
     setType(type);
@@ -317,8 +369,29 @@ export default function Transfer() {
     setOpen(false);
   };
 
+  const handleChange = (props) => (event) => {
+    if (props === "cost") {
+      if (/^[0-9]*$/.test(event.target.value)) {
+        setValue({ ...value, [props]: event.target.value });
+      }
+    } else if (props === "qty") {
+      if (/^[0-9]*$/.test(event.target.value)) {
+        setValue({ ...value, [props]: event.target.value });
+      }
+    } else {
+      setValue({ ...value, [props]: event.target.value });
+    }
+
+    // setValue({ ...value, [props]: event.target.value });
+  };
+
+  // Picklist call
+  useEffect(() => {
+    setValue({ ...value, tot_cost: value.cost * value.qty });
+  }, [value.qty]);
+
   function handleDateChange(event) {
-    setValue({ ...value, cre_date: event.target.value });
+    setValue({ ...value, date: event.target.value });
     console.log(event.persist);
   }
 
@@ -326,9 +399,22 @@ export default function Transfer() {
   //   setValue({ ...initialState });
   // };
 
-  const viewData = () => {
+  const addData = () => {
     if (requiredFeilds()) {
-      getData(value.docno);
+      tableData.push([value.item_code, value.cost, value.qty, value.tot_cost]);
+      //final data set for POST
+      //push data for the array
+
+      dataList.push(data);
+      setValue({
+        ...value,
+        item_code: "",
+        cost: "",
+        qty: "",
+        tot_cost: "",
+      });
+
+      console.log(data);
     }
   };
 
@@ -367,37 +453,79 @@ export default function Transfer() {
       <main className={classes.layout}>
         <Paper className={classes.paper} elevation={2}>
           <Typography variant="h6" gutterBottom className={classes.heading}>
-            Save Dispose Items
+            Receive MRO Items
           </Typography>
+          <Box border={1} className={classes.box}>
+            <Grid container spacing={3}>
+              <Grid item xs={3}>
+                <TextField
+                  type="date"
+                  label="Date"
+                  disabled={true}
+                  defaultValue={Date()}
+                  onChange={handleDateChange}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                />
+              </Grid>
+
+              <Grid item xs={3}>
+                <FormControl
+                  className={clsx(classes.margin, classes.textField)}
+                >
+                  <InputLabel htmlFor="standard-adornment-password">
+                    Supplier No
+                  </InputLabel>
+                  <Input
+                    name="supplier"
+                    value={value.supplierno}
+                    endAdornment={
+                      <InputAdornment position="end">
+                        <IconButton
+                          // aria-label="toggle password visibility"
+                          onClick={() => {
+                            pickListOpen("supplier");
+                          }}
+                        >
+                          <AddIcon />
+                        </IconButton>
+                      </InputAdornment>
+                    }
+                  />
+                </FormControl>
+              </Grid>
+
+              <Grid item xs={3}>
+                <TextField
+                  fullWidth
+                  id="refno"
+                  label="Refferance No"
+                  name="reffno"
+                  value={value.remark}
+                  onChange={handleChange("remark")}
+                />
+              </Grid>
+            </Grid>
+          </Box>
 
           <Grid container spacing={3}>
-            <Grid item xs={12}>
-              <TextField
-                type="date"
-                label="Date"
-                disabled={true}
-                defaultValue={CurrentDate()}
-                onChange={handleDateChange}
-                InputLabelProps={{
-                  shrink: true,
-                }}
-              />
-            </Grid>
-
             <Grid item xs={3}>
               <FormControl className={clsx(classes.margin, classes.textField)}>
                 <InputLabel htmlFor="standard-adornment-password">
-                  Document No
+                  Item Code
                 </InputLabel>
                 <Input
-                  name="docno"
-                  value={value.docno}
+                  id="standard-adornment-password"
+                  value={value.item_code}
+                  disabled={dtl_fld}
                   endAdornment={
                     <InputAdornment position="end">
                       <IconButton
-                        // aria-label="toggle password visibility"
+                        disabled={dtl_fld}
+                        aria-label="toggle password visibility"
                         onClick={() => {
-                          pickListOpen("doc");
+                          pickListOpen("item");
                         }}
                       >
                         <AddIcon />
@@ -408,20 +536,55 @@ export default function Transfer() {
               </FormControl>
             </Grid>
 
+            <Grid item xs={3}>
+              <TextField
+                fullWidth
+                inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
+                id="cost"
+                disabled={dtl_fld}
+                label="Cost(Rs.)"
+                name="cost"
+                value={value.cost}
+                onChange={handleChange("cost")}
+              />
+            </Grid>
+            <Grid item xs={3}>
+              <TextField
+                fullWidth
+                id="qty"
+                label="Qty"
+                disabled={dtl_fld}
+                name="qty"
+                value={value.qty}
+                onChange={handleChange("qty")}
+              />
+            </Grid>
+            <Grid item xs={3}>
+              <TextField
+                fullWidth
+                id="totalcost"
+                label="Total Cost"
+                disabled={true}
+                name="totalcost"
+                value={value.tot_cost}
+                onChange={handleChange("tot_cost")}
+              />
+            </Grid>
+
             <Grid item xs={12}>
               <Button
                 className={classes.button}
                 variant="contained"
                 color="primary"
-                onClick={viewData}
+                onClick={addData}
               >
-                View
+                Add
               </Button>
             </Grid>
           </Grid>
           <Grid>
             <MUIDataTable
-              title={"Details"}
+              title={"Search Items"}
               data={tableData}
               columns={header}
               options={options}
@@ -433,7 +596,7 @@ export default function Transfer() {
                 className={classes.buttonSave}
                 variant="contained"
                 color="primary"
-                onClick={saveGDN}
+                onClick={pushData}
                 disabled={saveBtnDisb}
               >
                 Save

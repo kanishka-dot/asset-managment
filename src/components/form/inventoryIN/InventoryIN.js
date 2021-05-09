@@ -122,11 +122,11 @@ export default function InventoryIN() {
   const [loading, setLoading] = useState(false);
   const [saveBtnDisb, setSaveBtnDisb] = useState(false);
   const [data, setData] = useState({
-    grnPk: {
+    grnPK: {
       docno: "",
       doccode: "GRN",
       locationid: "",
-      seqno: ""
+      seqno: "",
     },
     date: Date(),
     serialno: "",
@@ -197,15 +197,25 @@ export default function InventoryIN() {
 
   const pickList_header = ["ID", "Name"];
 
+  const pickList_headerItem = ["ID", "Name", "Supplier No"];
+
+  function getHeader() {
+    if (type === "location") {
+      return pickList_header;
+    } else {
+      return pickList_headerItem;
+    }
+  }
+
   /* pick list data select function*/
   const handleRowClick = (dataIndex) => {
     if (type === "supplier") {
       setValue({ ...value, supplierno: dataIndex[0] });
-      setDtl_fld(false);
     } else if (type === "location") {
       setValue({ ...value, locationid: dataIndex[0] });
     } else {
-      setValue({ ...value, itemcode: dataIndex[0] });
+      setValue({ ...value, itemcode: dataIndex[0], supplierno: dataIndex[2] });
+      setDtl_fld(false);
     }
     pickListClose();
   };
@@ -231,11 +241,12 @@ export default function InventoryIN() {
 
   const getAllItemsPickListData = () => {
     axios
-      .get(`http://${URL}:${PORT}/inventory/getitems/status/active`)
+      .get(`http://${URL}:${PORT}/inventory/getitems/status/active/Primary`)
       .then((response) => {
         const data = response.data.map((data) => [
           data.itemcode,
           data.itemdesc,
+          data.supplierid,
         ]);
         setItemsPick(data);
       })
@@ -327,11 +338,12 @@ export default function InventoryIN() {
   // while data update in fileds this methods collect data to post( use to eliminate side effect in use state)
   useEffect(() => {
     setData({
-      ...data, grnPk: {
+      ...data,
+      grnPK: {
         doccode: "GRN",
         locationid: value.locationid,
         docno: "",
-        seqno: ""
+        seqno: "",
       },
       date: Date(),
       serialno: value.serialno,
@@ -409,6 +421,10 @@ export default function InventoryIN() {
       if (/^[0-9]*$/.test(event.target.value)) {
         setValue({ ...value, [props]: event.target.value });
       }
+    } else if (props === "warranty") {
+      if (/^[0-9]*$/.test(event.target.value)) {
+        setValue({ ...value, [props]: event.target.value });
+      }
     } else {
       setValue({ ...value, [props]: event.target.value });
     }
@@ -458,7 +474,7 @@ export default function InventoryIN() {
       <MUIDataTable
         title={"Pick List"}
         data={picklistData()}
-        columns={pickList_header}
+        columns={getHeader()}
         options={picklist_options}
       />
     </div>
@@ -515,10 +531,12 @@ export default function InventoryIN() {
                   <Input
                     name="supplier"
                     value={value.supplierno}
+                    disabled={true}
                     endAdornment={
                       <InputAdornment position="end">
                         <IconButton
                           // aria-label="toggle password visibility"
+                          disabled={true}
                           onClick={() => {
                             pickListOpen("supplier");
                           }}
@@ -564,11 +582,11 @@ export default function InventoryIN() {
                 <Input
                   id="standard-adornment-password"
                   value={value.itemcode}
-                  disabled={dtl_fld}
+                  // disabled={dtl_fld}
                   endAdornment={
                     <InputAdornment position="end">
                       <IconButton
-                        disabled={dtl_fld}
+                        // disabled={dtl_fld}
                         aria-label="toggle password visibility"
                         onClick={() => {
                           pickListOpen("item");

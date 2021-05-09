@@ -5,6 +5,8 @@ import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
 import { PORT, URL } from "../../../connection/defaultconfig";
 import { axios } from "../../../connection/axios";
+import { USERID, LOCATIONID } from "../../../service/userDetails";
+import Date from "../../utils/Date";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import {
   Paper,
@@ -120,12 +122,15 @@ export default function Transfer() {
   const [loading, setLoading] = useState(false);
   const [saveBtnDisb, setSaveBtnDisb] = useState(false);
   const [data, setData] = useState({
-    docno: "",
-    doccode: "",
+    gtnPK: {
+      docno: "",
+      doccode: "",
+      seqno: "",
+      itemcode: "",
+    },
     frmloc: "",
     toloc: "",
     serialno: "",
-    itemcode: "",
     remark: "",
     refno: "",
     status: "",
@@ -137,7 +142,7 @@ export default function Transfer() {
     cre_date: "",
   });
   const [value, setValue] = useState({
-    frmloc: "100",
+    frmloc: LOCATIONID,
     toloc: "",
     serialno: "",
     itemcode: "",
@@ -194,7 +199,7 @@ export default function Transfer() {
    */
   const getLocations = () => {
     axios
-      .get(`http://${URL}:${PORT}/location/get_all_locations/100`)
+      .get(`http://${URL}:${PORT}/location/get_all_locations/${LOCATIONID}`)
       .then((response) => {
         const data = response.data.map((data) => [
           data.locationid,
@@ -207,7 +212,7 @@ export default function Transfer() {
 
   const getLocInventory = () => {
     axios
-      .get(`http://${URL}:${PORT}/inventory/location/100/LOC`)
+      .get(`http://${URL}:${PORT}/inventory/location/${LOCATIONID}/LOC`)
       .then((response) => {
         const data = response.data.map((data) => [
           data.serialno,
@@ -230,10 +235,10 @@ export default function Transfer() {
         (response) => {
           console.log(dataList);
           console.log(response);
-          if (response.data === "GTN Sucessfully Save") {
+          if (response.data[0] === "1") {
             setSeverity("success");
             setOpen(true);
-            setMessage("GTN Sucessfully Saved");
+            setMessage(response.data[1]);
             setDefault();
             setLoading(false);
             setSaveBtnDisb(false);
@@ -241,7 +246,7 @@ export default function Transfer() {
           } else {
             setSeverity("error");
             setOpen(true);
-            setMessage(response.data);
+            setMessage(response.data[1]);
             setDefault();
             setLoading(false);
             setSaveBtnDisb(false);
@@ -288,21 +293,24 @@ export default function Transfer() {
   useEffect(() => {
     setData({
       ...data,
-      docno: "",
-      doccode: "GTN",
-      frmloc: 100,
+      gtnPK: {
+        docno: "",
+        doccode: "GTN",
+        seqno: "",
+        itemcode: value.itemcode,
+      },
+      frmloc: LOCATIONID,
       toloc: value.toloc,
       serialno: value.serialno,
-      itemcode: value.itemcode,
       remark: value.remark,
       refno: value.refno,
-      status: "INTRAN",
+      status: "NAP",
       app_by: "",
       app_date: "",
-      mod_by: "kanishka",
-      mod_date: value.cre_date,
-      cre_by: "kanishka",
-      cre_date: value.cre_date,
+      mod_by: "",
+      mod_date: "1000-01-01",
+      cre_by: USERID,
+      cre_date: Date(),
     });
   }, [value]);
 
@@ -322,7 +330,7 @@ export default function Transfer() {
   }, [value.toloc, value.refno]);
 
   function requiredFeilds() {
-    if (value.serialno.trim() === "") {
+    if (value.serialno === "") {
       setSeverity("warning");
       setOpen(true);
       setMessage("Serial No is Required");
@@ -364,8 +372,8 @@ export default function Transfer() {
 
   // used to check serial duplicate in the table
   function checkDuplicateSerial() {
-    if (tableData[0] != undefined) {
-      let element = new Array();
+    if (tableData[0] !== undefined) {
+      let element = [];
       for (let index = 0; index < tableData.length; index++) {
         element = tableData[index];
 

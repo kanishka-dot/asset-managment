@@ -7,8 +7,8 @@ function privateRoute(props) {
     <Route
       path={props.path}
       render={(data) =>
-        Authentication.getAuthenticationStatus() ? (
-          // true
+        // Authentication.getAuthenticationStatus()
+        true ? (
           <props.component {...data}></props.component>
         ) : (
           <Redirect to={{ pathname: "/app/login" }}></Redirect>

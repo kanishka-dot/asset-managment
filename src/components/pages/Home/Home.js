@@ -1,14 +1,15 @@
-import React from "react";
-import clsx from "clsx";
+import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import SimpleCard from "../../../dashboard/charts/Card";
-import Barchart from "../../../dashboard/charts/Barchart";
-import Piechart from "../../../dashboard/charts/Piechart";
+// import Barchart from "../../../dashboard/charts/Barchart";
+// import Piechart from "../../../dashboard/charts/Piechart";
 import SimpleTable from "../../../components/Table/DataTable";
 import { Typography } from "@material-ui/core";
+import { PORT, URL } from "../../../connection/defaultconfig";
+import { axios } from "../../../connection/axios";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -57,7 +58,45 @@ const useStyles = makeStyles((theme) => ({
 export default function Dashboard() {
   const classes = useStyles();
 
-  const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
+  const [invitems, setInvitems] = useState("loading...");
+  const [repItems, setRepItems] = useState("loading...");
+  const [disItems, setDisItems] = useState("loading...");
+
+  const getAllInvItems = () => {
+    axios
+      .get(`http://${URL}:${PORT}/inventory/item/count`)
+      .then((response) => {
+        const data = response.data;
+        setInvitems(data);
+      })
+      .catch((error) => console.error(`Error:${error}`));
+  };
+
+  const getAllPenRepItems = () => {
+    axios
+      .get(`http://${URL}:${PORT}/inventory/repair/penitems/count`)
+      .then((response) => {
+        const data = response.data;
+        setRepItems(data);
+      })
+      .catch((error) => console.error(`Error:${error}`));
+  };
+
+  const getDisItemCount = () => {
+    axios
+      .get(`http://${URL}:${PORT}/inventory/dispose/item/count`)
+      .then((response) => {
+        const data = response.data;
+        setDisItems(data);
+      })
+      .catch((error) => console.error(`Error:${error}`));
+  };
+
+  useEffect(() => {
+    getAllInvItems();
+    getAllPenRepItems();
+    getDisItemCount();
+  }, []);
 
   return (
     <div className={classes.root}>
@@ -68,21 +107,36 @@ export default function Dashboard() {
         <Grid container justify="center" spacing={5}>
           {/* Chart */}
           <Grid item xs={4}>
-            <SimpleCard bkcolor="#1565c2" count="25" />
+            <SimpleCard
+              name="Total Active Inventory Item Count"
+              bkcolor="#1565c2"
+              count={invitems}
+              url="/app/inventory/itemcode/search"
+            />
           </Grid>
           <Grid item xs={4}>
-            <SimpleCard bkcolor="#00b0ff" count="15" />
+            <SimpleCard
+              name="Pending Repair Items count"
+              bkcolor="#00b0ff"
+              count={repItems}
+              url="/app/inventory/pending/repair"
+            />
           </Grid>
           <Grid item xs={4}>
-            <SimpleCard bkcolor="#3492ca" count="05" />
+            <SimpleCard
+              name="Dispose Items Count"
+              bkcolor="#3492ca"
+              count={disItems}
+              url="/app/inventory/itemcode/search"
+            />
           </Grid>
 
-          <Grid item xs={8}>
+          {/* <Grid item xs={8}>
             <Barchart />
           </Grid>
           <Grid item xs={4}>
             <Piechart />
-          </Grid>
+          </Grid> */}
 
           <Typography>Recent User Login</Typography>
 
