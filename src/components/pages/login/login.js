@@ -111,7 +111,7 @@ function Login({ userDetails, Errors, Loading }) {
             <Paper className={classes.paper}>
               <img src={logoimg} alt="Logo" className={classes.logo} />
               <Typography variant="h5" gutterBottom>
-                IT Related Inventory Management
+                IT Assets Management System
               </Typography>
               <form className={classes.form} onSubmit={handleSubmit}>
                 <Typography style={{ color: "red" }}>{Errors}</Typography>
