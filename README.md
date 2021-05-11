@@ -4,8 +4,14 @@
 
 **Item Create Screen**
 
-![Item Create](https://user-images.githubusercontent.com/57704517/103175706-f7378200-4891-11eb-8347-977e8cd3def0.PNG)
+![Item Create](img/itm.PNG)
 
-**Search Table Screen**
+**Supplier**
 
-![Search Screen](https://user-images.githubusercontent.com/57704517/103175708-fa327280-4891-11eb-88ea-6a1426b4a874.PNG)
+![Search Screen](img/sup.PNG)
+
+**Inventory IN**
+![GRN](img/grn.PNG)
+
+**Report**
+![GRN](img/rep.PNG)
