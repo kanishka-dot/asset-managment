@@ -1,4 +1,6 @@
 
+This application developed in order to manage business IT assets
+
 **Check Backend --->**
 https://github.com/kanishka-dot/asset-management-backend.git
 
