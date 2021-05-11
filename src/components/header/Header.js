@@ -392,7 +392,7 @@ export default function Headers() {
         <AppBar position="static" className={classes.appBar}>
           <Toolbar>
             <Typography variant="h6" noWrap className={classes.title}>
-              IT Related Inventory Management
+              IT Assets Management
             </Typography>
             <div>
               <IconButton
