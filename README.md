@@ -4,9 +4,7 @@ This application developed in order to manage business IT assets
 **Check Backend --->**
 https://github.com/kanishka-dot/asset-management-backend.git
 
-**Login Screen**
 
-![Login Screen](img/login.PNG)
 
 **Item Create Screen**
 
@@ -19,5 +17,3 @@ https://github.com/kanishka-dot/asset-management-backend.git
 **Inventory IN**
 ![GRN](img/grn.PNG)
 
-**Report**
-![GRN](img/rep.PNG)
